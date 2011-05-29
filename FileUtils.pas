@@ -119,7 +119,12 @@ begin
         if OutputStream <> nil then
         begin
             if Result = -1 then // not found yet
-                OutputStream.Write(Buffer,NumRead)
+                begin
+                if NumRead < SizeOf(Buffer) then
+                    OutputStream.Write(Buffer,NumRead)
+                else
+                    OutputStream.Write(Buffer,SizeOf(Buffer) div 2);
+                end
             else
                 OutputStream.Write(Buffer,Result + Size + NumRead - Stream.Position);
         end;
