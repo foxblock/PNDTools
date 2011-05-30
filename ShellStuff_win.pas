@@ -30,7 +30,11 @@ function  DeleteFileEx(FileName : String): Boolean;
   latter case }
 function  ExecuteProgram(const FileName : String; const Params : String;
     const ExecDir : String = ''; const Verb : String = 'runas';
-    const WaitForFinish : Boolean = true) : Boolean;
+    const WaitForFinish : Boolean = true) : Boolean;     
+
+{ Tries to convert a DOS path into a POSIX path used by Cygwin applications
+  The Linux version should simply return Path or convert any '\' to '/' }
+function ConvertPath(const Path : String) : String;
 
 implementation
 
@@ -90,6 +94,20 @@ begin
             GetExitCodeProcess(ShExecInfo.hProcess,ExitCode); //while the process is running
         until (ExitCode <> STILL_ACTIVE);
     end;
+end;   
+
+function ConvertPath(const Path : String) : String;
+var
+    Drive : String;
+begin
+    Drive := ExtractFileDrive(Path);
+    Result := Path;
+    if Length(Drive) > 1 then
+    begin
+        Result := StringReplace(Result,Drive,'',[]);
+        Result := 'cygdrive/' + Drive[1] + Result;
+    end;
+    Result := StringReplace(Result,'\','/',[rfReplaceAll]);
 end;
 
 end.

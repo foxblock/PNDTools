@@ -25,10 +25,6 @@ function FindStringDataInStream(const Data : String; Stream : TFileStream;
     const StartPos : Int64 = 0; const Backwards : Boolean = false;
     OutputStream : TFileStream = nil) : Int64;
 
-{ Tries to convert a DOS path into a POSIX path
-  Currently simply replaces '\' with '/' and tries to make the path relative }
-function ConvertPath(const Path : String) : String;
-
 implementation
 
 uses Math, Forms;
@@ -141,12 +137,6 @@ begin
     // forward: read less bytes than buffer means end of file
     // backward: seeking does not change position means beginning of file
     until (NumRead < SizeOf(Buffer)) OR (Stream.Position = Pos);
-end;
-
-function ConvertPath(const Path : String) : String;
-begin
-    Result := ExtractRelativePath(ExtractFilePath(Application.ExeName),Path);
-    Result := StringReplace(Result,'\','/',[rfReplaceAll]);
 end;
 
 end.
