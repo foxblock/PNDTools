@@ -96,8 +96,8 @@ type
   end;
 
 const
-    VERSION : String = '0.1.0';
-    BUILD_DATE : String = '28.05.2011';
+    VERSION : String = '0.1.3';
+    BUILD_DATE : String = '01.06.2011';
     LOG_ERROR_COLOR : TColor = clRed;
     LOG_WARNING_COLOR : TColor = $0000AAFF;
     LOG_SUCCESS_COLOR : TColor = clGreen;
@@ -615,15 +615,15 @@ begin
     LogLine(redLog,'Appending icon and PXML data (if found).');
     PNDFile := TFileStream.Create(sadPND.FileName,fmOpenReadWrite);
     try
-        if (edtIcon.Text <> '') AND FileExists(edtIcon.Text) then
-            AppendDataToFileStream(PNDFile,edtIcon.Text)
-        else
-            LogLine(redLog,'No icon found or icon could not be accessed',
-                LOG_WARNING_COLOR);
         if not NoPXML then  
             AppendDataToFileStream(PNDFile,edtPXML.Text)
         else
             LogLine(redLog,'Creating PND without PXML data (you should not do this!)',
+                LOG_WARNING_COLOR); 
+        if (edtIcon.Text <> '') AND FileExists(edtIcon.Text) then
+            AppendDataToFileStream(PNDFile,edtIcon.Text)
+        else
+            LogLine(redLog,'No icon found or icon could not be accessed',
                 LOG_WARNING_COLOR);
     finally
         PNDFile.Free;
