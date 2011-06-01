@@ -8,12 +8,14 @@ uses
   FormatUtils in 'FormatUtils.pas',
   VSTIcons_win in 'VSTIcons_win.pas',
   ShellStuff_win in 'ShellStuff_win.pas',
-  FileUtils in 'FileUtils.pas';
+  FileUtils in 'FileUtils.pas',
+  PXMLForm in 'PXMLForm.pas' {frmPXML};
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Application.CreateForm(TfrmMain, frmMain);
+  Application.CreateForm(TfrmPXML, frmPXML);
   Application.Run;
 end.

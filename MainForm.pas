@@ -45,6 +45,8 @@ type
     grbPXML: TGroupBox;
     btnPXMLLoad: TButton;
     edtPXML: TEdit;
+    btnPXMLEdit: TButton;
+    procedure btnPXMLEditClick(Sender: TObject);
     procedure grbLogDblClick(Sender: TObject);
     procedure menMainHelpPNDClick(Sender: TObject);
     procedure menMainHelpPXMLClick(Sender: TObject);
@@ -124,7 +126,7 @@ implementation
     // NOTE: PND read and extraction code is in menMainFileOpenClick
 
 uses
-    VSTUtils, FormatUtils, FileUtils,
+    VSTUtils, FormatUtils, FileUtils, PXMLForm,
     {$Ifdef MSWINDOWS}
     VSTDragDrop_win, VSTIcons_win, ShellStuff_win;
     {$Else}
@@ -670,6 +672,15 @@ procedure TfrmMain.btnIconLoadClick(Sender: TObject);
 begin
     if opdIcon.Execute then
         edtIcon.Text := opdIcon.FileName;
+end;
+
+procedure TfrmMain.btnPXMLEditClick(Sender: TObject);
+begin
+    if (edtPXML.Text <> '') AND FileExists(edtPXML.Text) then
+    begin
+        frmPXML.LoadFromFile(edtPXML.Text);
+        frmPXML.Show;
+    end;
 end;
 
 procedure TfrmMain.btnPXMLLoadClick(Sender: TObject);
