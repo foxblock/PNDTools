@@ -8,6 +8,10 @@ uses
   Dialogs, StdCtrls, ImgList, ExtCtrls, XPMan, FileCtrl, ComCtrls, Menus;
 
 type
+  rSettings = record
+    SmartAdd : Boolean;
+  end;
+
   TfrmMain = class(TForm)
     imlFileTree: TImageList;
     pnlButtons: TPanel;
@@ -45,6 +49,11 @@ type
     grbPXML: TGroupBox;
     btnPXMLLoad: TButton;
     edtPXML: TEdit;
+    btnIconClear: TButton;
+    btnPXMLClear: TButton;
+    procedure btnPXMLClearClick(Sender: TObject);
+    procedure btnIconClearClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure grbLogDblClick(Sender: TObject);
     procedure menMainHelpPNDClick(Sender: TObject);
     procedure menMainHelpPXMLClick(Sender: TObject);
@@ -91,16 +100,29 @@ type
     procedure ExtractPNDMetaData(Stream : TFileStream; var PXML : String;
         var Icon : String);
   public
+    Settings : rSettings;   
+    const PXML_PATH : String = 'PXML.xml';
+    const ICON_PATH : String = 'icon.png';
+    const PND_EXT : String = '.pnd';
     procedure LogLine(Component: TRichEdit; const TextToAdd : String;
       const Color: TColor = clBlack);
+    procedure OpenPND(const FileName : String);
+    procedure SavePND(const FileName : String; const PXML : String;
+      const Icon : String);
+    procedure LoadSettings(const FileName : String; var S : rSettings);
+    procedure SaveSettings(const FileName : String; const S : rSettings);
   end;
 
 const
-    VERSION : String = '0.1.3';
-    BUILD_DATE : String = '01.06.2011';
-    LOG_ERROR_COLOR : TColor = clRed;
+    VERSION : String           = '0.1.3';
+    BUILD_DATE : String        = '01.06.2011';
+    LOG_ERROR_COLOR : TColor   = clRed;
     LOG_WARNING_COLOR : TColor = $0000AAFF;
-    LOG_SUCCESS_COLOR : TColor = clGreen;
+    LOG_SUCCESS_COLOR : TColor = clGreen;  
+    UNSQUASHFS_PATH : String   = 'tools\unsquashfs.exe';
+    MKSQUASH_PATH : String     = 'tools\mksquashfs.exe'; // Path to mkquashfs
+    CHMOD_PATH : String        = 'tools\chmod.exe';      // Path to cygwin's chmod
+    SETTINGS_PATH : String     = 'settings.ini';
 
 var
     frmMain: TfrmMain;
@@ -119,9 +141,6 @@ implementation
     // DONE: Clear temp folder on exit and start
     // DONE: Check for write access on start
     // TODO: Function for proper conversion from Windows to Cygwin POSIX path
-
-    // NOTE: PND creation code is in btnCreateClick
-    // NOTE: PND read and extraction code is in menMainFileOpenClick
 
 uses
     VSTUtils, FormatUtils, FileUtils,
@@ -230,22 +249,162 @@ begin
     Component.SelAttributes.Color := Color;
 end;
 
-// --- Menu --------------------------------------------------------------------
-
-procedure TfrmMain.menMainFileOpenClick(Sender: TObject);
+procedure TfrmMain.OpenPND(const FileName: string);   
 const
     TEMP_PATH : String = 'temp2'; // Relative path (from the .exe) to the temporary folder
     META_PATH : String = 'meta'; // Relative path to the meta folder (for PXML and Icon)
-    UNSQUASHFS_PATH : String = 'tools\unsquashfs.exe';
-    PXML_PATH : String = 'PXML.xml';
-    ICON_PATH : String = 'icon.png';
 var
     Stream : TFileStream;
     PXML, Icon, Prog, Param : String;
+    temp : Boolean;
+begin
+    // clean-up
+    vstFiles.Clear;
+    edtPXML.Clear;
+    edtIcon.Clear;
+    LogLine(redLog,'Deleting old temporary files');
+    Param := IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName) + META_PATH);
+    PXML := Param + PXML_PATH;
+    Icon := Param + ICON_PATH;
+    DeleteFileEx(PXML);
+    DeleteFileEx(Icon);
+    Prog := ExtractFilePath(Application.ExeName) + UNSQUASHFS_PATH;
+    Param := ExtractFilePath(Application.ExeName) + TEMP_PATH;
+    DeleteFileEx(Param);
+    CreateDir(Param);
+    CreateDir(ExtractFilePath(Application.ExeName) + META_PATH);
+
+    // extract PXML and Icon
+    Stream := TFileStream.Create(FileName,fmOpenRead);
+    try
+        ExtractPNDMetaData(Stream,PXML,ICON);
+    finally
+        Stream.Free;
+    end;
+
+    // Unsquash the PND
+    LogLine(redLog,'Extracting PND... this might take a while');
+    Param := '-f -d "' + ConvertPath(TEMP_PATH) + '" "' + ConvertPath(FileName) + '"';
+    LogLine(redLog,'Calling program: ' + Prog + ' ' + Param);
+    if not ExecuteProgram(Prog,Param) then
+    begin
+        MessageDlg('Encountered an error while extracting PND' + #13#10 +
+            'Error code: ' + IntToStr(GetLastError),mtError,[mbOK],0);
+        Exit;
+    end;
+
+    LogLine(redLog,'Adding files to tree, this might take a while...');
+
+    // add files to tree
+    vstFiles.BeginUpdate;
+
+    temp := Settings.SmartAdd;
+    Settings.SmartAdd := false;
+    try
+        AddFolder(vstFiles,nil,ExtractFilePath(Application.ExeName) + TEMP_PATH,true);
+    finally
+        vstFiles.EndUpdate;
+    end;
+    Settings.SmartAdd := temp;
+    vstFiles.SortTree(0,vstFiles.Header.SortDirection);
+    edtPXML.Text := PXML;
+    edtIcon.Text := Icon;
+    if vstFiles.GetFirst = nil then
+        LogLine(redLog,'No files have been added, this most likely is due to an ' +
+                       'error while extracting the PND',LOG_ERROR_COLOR)
+    else
+        LogLine(redLog,'PND successfully extracted to ' +
+            ExtractFilePath(Application.ExeName) + TEMP_PATH,LOG_SUCCESS_COLOR);
+end;
+
+procedure TfrmMain.SavePND(const FileName : String; const PXML : String;
+      const Icon : String);
+const                      
+    TEMP_PATH : String = 'temp'; // Relative path (from the .exe) to the temporary folder
+var
+    Prog, Param : String;
+    PNDFile : TFileStream;
+    Return : Integer;
+    NoPXML : Boolean;
+begin    
+    NoPXML := false;
+    if (PXML = '') OR (not FileExists(PXML)) then
+    begin
+        Return := MessageDlg('No PXML file was specified or the entered filename ' +
+            'could not be loaded!'#13#10 +
+            'This file is mandatory for the PND to work!',
+            mtWarning,[mbAbort,mbIgnore],0);
+        if Return = mrAbort then
+            Exit;
+        NoPXML := true;
+    end;
+    
+    // temporary data handling
+    Param := ExtractFilePath(Application.ExeName) + TEMP_PATH;
+    LogLine(redLog,'Deleting old temporary files');
+    DeleteFileEx(Param);  // clean-up
+    LogLine(redLog,'Copying new temporary files to folder ' + Param + ' - This may ' +
+                   'take a while.');
+    CopyTreeToFolder(vstFiles,Param);
+
+    // set corrent file flags to work on the Pandora
+    Prog := ExtractFilePath(Application.ExeName) + CHMOD_PATH;
+    Param := '-R 755 "' + ConvertPath(TEMP_PATH) + '/"';
+    LogLine(redLog,'Calling program: ' + Prog + ' ' + Param);
+    if not ExecuteProgram(Prog,Param) then
+    begin
+        MessageDlg('Encountered an error while trying to set file flags' + #13#10 +
+            'Error code: ' + IntToStr(GetLastError),mtError,[mbOK],0);
+        Exit;
+    end;
+
+    // Make the squashFS filesystem from the temporary files
+    Prog := ExtractFilePath(Application.ExeName) + MKSQUASH_PATH;
+    Param := '"' + ConvertPath(TEMP_PATH) + '" "' + ConvertPath(FileName) + '" -noappend';
+    LogLine(redLog,'Calling program: ' + Prog + ' ' + Param);
+    if not ExecuteProgram(Prog,Param) then
+    begin
+        MessageDlg('Encountered an error while creating SquashFS archive' + #13#10 +
+            'Error code: ' + IntToStr(GetLastError),mtError,[mbOK],0);
+        Exit;
+    end;
+
+    // append PXML and icon
+    LogLine(redLog,'Appending icon and PXML data (if found).');
+    PNDFile := TFileStream.Create(FileName,fmOpenReadWrite);
+    try
+        if not NoPXML then  
+            AppendDataToFileStream(PNDFile,PXML)
+        else
+            LogLine(redLog,'Creating PND without PXML data (you should not do this!)',
+                LOG_WARNING_COLOR); 
+        if (Icon <> '') AND FileExists(Icon) then
+            AppendDataToFileStream(PNDFile,Icon)
+        else
+            LogLine(redLog,'No icon found or icon could not be accessed',
+                LOG_WARNING_COLOR);
+    finally
+        PNDFile.Free;
+    end;
+    LogLine(redLog,'PND created successfully: ' + FileName,LOG_SUCCESS_COLOR);
+end;
+
+procedure TfrmMain.LoadSettings(const FileName: string; var S: rSettings);
+begin
+    S.SmartAdd := true;
+end;
+
+procedure TfrmMain.SaveSettings(const FileName: string; const S: rSettings);
+begin
+    //
+end;
+
+// --- Menu --------------------------------------------------------------------
+
+procedure TfrmMain.menMainFileOpenClick(Sender: TObject);
 begin
     // error checking
-    Prog := ExtractFilePath(Application.ExeName) + UNSQUASHFS_PATH;
-    if not FileExists(Prog) then
+    if not FileExists(ExtractFilePath(Application.ExeName) + UNSQUASHFS_PATH) then
     begin
         MessageDlg('The squashFS tools could not be found!'#13#10 +
         'Please make sure they are located in the ''tools'' folder next to the ' +
@@ -262,58 +421,7 @@ begin
     if not opdPND.Execute then
         Exit;
 
-    // clean-up
-    vstFiles.Clear;
-    edtPXML.Clear;
-    edtIcon.Clear;     
-    LogLine(redLog,'Deleting old temporary files');
-    Param := IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName) + META_PATH);
-    PXML := Param + PXML_PATH;
-    Icon := Param + ICON_PATH;
-    DeleteFileEx(PXML);
-    DeleteFileEx(Icon); 
-    Param := ExtractFilePath(Application.ExeName) + TEMP_PATH;
-    DeleteFileEx(Param);
-    CreateDir(Param);
-    CreateDir(ExtractFilePath(Application.ExeName) + META_PATH);
-
-    // extract PXML and Icon
-    Stream := TFileStream.Create(opdPND.FileName,fmOpenRead);
-    try
-        ExtractPNDMetaData(Stream,PXML,ICON);
-    finally
-        Stream.Free;
-    end;
-
-    // Unsquash the PND
-    LogLine(redLog,'Extracting PND... this might take a while');
-    Param := '-f -d "' + ConvertPath(TEMP_PATH) + '" "' + ConvertPath(opdPND.FileName) + '"';
-    LogLine(redLog,'Calling program: ' + Prog + ' ' + Param);
-    if not ExecuteProgram(Prog,Param) then
-    begin
-        MessageDlg('Encountered an error while extracting PND' + #13#10 +
-            'Error code: ' + IntToStr(GetLastError),mtError,[mbOK],0);
-        Exit;
-    end;
-
-    LogLine(redLog,'Adding files to tree, this might take a while...');
-
-    // add files to tree
-    vstFiles.BeginUpdate;
-    try
-        AddFolder(vstFiles,nil,ExtractFilePath(Application.ExeName) + TEMP_PATH,true);
-    finally
-        vstFiles.EndUpdate;
-    end;
-    vstFiles.SortTree(0,vstFiles.Header.SortDirection);
-    edtPXML.Text := PXML;
-    edtIcon.Text := Icon;
-    if vstFiles.GetFirst = nil then
-        LogLine(redLog,'No files have been added, this most likely is due to an ' +
-                       'error while extracting the PND',LOG_ERROR_COLOR)
-    else
-        LogLine(redLog,'PND successfully extracted to ' +
-            ExtractFilePath(Application.ExeName) + TEMP_PATH,LOG_SUCCESS_COLOR);
+    OpenPND(opdPND.FileName);
 end;
 
 procedure TfrmMain.menMainHelpAboutClick(Sender: TObject);
@@ -351,6 +459,11 @@ end;
 
 // --- Form --------------------------------------------------------------------
 
+procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+    SaveSettings(SETTINGS_PATH,Settings);
+end;
+
 procedure TfrmMain.FormCreate(Sender: TObject);
 const
     TEST_FILE_NAME : String = 'asdftestxyz.txt';
@@ -384,6 +497,7 @@ begin
     vstFiles.OnDragDrop := dummy.VSTDragDrop;
     LoadSystemIcons(imlFileTree);
     Caption := Caption + ' [Version ' + VERSION + ' built ' + BUILD_DATE + ']';
+    LoadSettings(SETTINGS_PATH,Settings);
 end;
 
 procedure TfrmMain.grbLogDblClick(Sender: TObject);
@@ -543,15 +657,6 @@ end;
 // --- Buttons -----------------------------------------------------------------
 
 procedure TfrmMain.btnCreateClick(Sender: TObject);
-const                      
-    TEMP_PATH : String = 'temp'; // Relative path (from the .exe) to the temporary folder
-    MKSQUASH_PATH : String = 'tools\mksquashfs.exe'; // Path to mkquashfs
-    CHMOD_PATH : String =    'tools\chmod.exe';      // Path to cygwin's chmod
-var
-    Prog, Param : String;
-    PNDFile : TFileStream;
-    Return : Integer;
-    NoPXML : Boolean;
 begin
     // error checking
     if not FileExists(ExtractFilePath(Application.ExeName) + MKSQUASH_PATH) OR
@@ -567,68 +672,10 @@ begin
         MessageDlg('No files added to the PND!',mtError,[mbOK],0);
         Exit;
     end;
-    NoPXML := false;
-    if (edtPXML.Text = '') OR (not FileExists(edtPXML.Text)) then
-    begin
-        Return := MessageDlg('No PXML file was specified or the entered filename ' +
-            'could not be loaded!'#13#10 +
-            'This file is mandatory for the PND to work!',
-            mtWarning,[mbAbort,mbIgnore],0);
-        if Return = mrAbort then
-            Exit;
-        NoPXML := true;
-    end;
     if not sadPND.Execute then
         Exit;
 
-    // temporary data handling
-    Param := ExtractFilePath(Application.ExeName) + TEMP_PATH;
-    LogLine(redLog,'Deleting old temporary files');
-    DeleteFileEx(Param);  // clean-up
-    LogLine(redLog,'Copying new temporary files to folder ' + Param + ' - This may ' +
-                   'take a while.');
-    CopyTreeToFolder(vstFiles,Param);
-
-    // set corrent file flags to work on the Pandora
-    Prog := ExtractFilePath(Application.ExeName) + CHMOD_PATH;
-    Param := '-R 755 "' + ConvertPath(TEMP_PATH) + '/"';
-    LogLine(redLog,'Calling program: ' + Prog + ' ' + Param);
-    if not ExecuteProgram(Prog,Param) then
-    begin
-        MessageDlg('Encountered an error while trying to set file flags' + #13#10 +
-            'Error code: ' + IntToStr(GetLastError),mtError,[mbOK],0);
-        Exit;
-    end;
-
-    // Make the squashFS filesystem from the temporary files
-    Prog := ExtractFilePath(Application.ExeName) + MKSQUASH_PATH;
-    Param := '"' + ConvertPath(TEMP_PATH) + '" "' + ConvertPath(sadPND.FileName) + '" -noappend';
-    LogLine(redLog,'Calling program: ' + Prog + ' ' + Param);
-    if not ExecuteProgram(Prog,Param) then
-    begin
-        MessageDlg('Encountered an error while creating SquashFS archive' + #13#10 +
-            'Error code: ' + IntToStr(GetLastError),mtError,[mbOK],0);
-        Exit;
-    end;
-
-    // append PXML and icon
-    LogLine(redLog,'Appending icon and PXML data (if found).');
-    PNDFile := TFileStream.Create(sadPND.FileName,fmOpenReadWrite);
-    try
-        if not NoPXML then  
-            AppendDataToFileStream(PNDFile,edtPXML.Text)
-        else
-            LogLine(redLog,'Creating PND without PXML data (you should not do this!)',
-                LOG_WARNING_COLOR); 
-        if (edtIcon.Text <> '') AND FileExists(edtIcon.Text) then
-            AppendDataToFileStream(PNDFile,edtIcon.Text)
-        else
-            LogLine(redLog,'No icon found or icon could not be accessed',
-                LOG_WARNING_COLOR);
-    finally
-        PNDFile.Free;
-    end;
-    LogLine(redLog,'PND created successfully: ' + sadPND.FileName,LOG_SUCCESS_COLOR);
+    SavePND(sadPND.FileName,edtPXML.Text,edtIcon.Text);
 end;
 
 procedure TfrmMain.btnFilesClearClick(Sender: TObject);
@@ -666,10 +713,20 @@ begin
     end;
 end;
 
+procedure TfrmMain.btnIconClearClick(Sender: TObject);
+begin
+    edtIcon.Clear;
+end;
+
 procedure TfrmMain.btnIconLoadClick(Sender: TObject);
 begin
     if opdIcon.Execute then
         edtIcon.Text := opdIcon.FileName;
+end;
+
+procedure TfrmMain.btnPXMLClearClick(Sender: TObject);
+begin
+    edtPXML.Clear;
 end;
 
 procedure TfrmMain.btnPXMLLoadClick(Sender: TObject);

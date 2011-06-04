@@ -15,6 +15,7 @@ object frmMain: TfrmMain
   Menu = menMain
   OldCreateOrder = False
   Position = poDesigned
+  OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
@@ -77,8 +78,9 @@ object frmMain: TfrmMain
       Lines.Strings = (
         'Welcome to the PNDTools'
         
-          'To get started just drop some files in the top-most area or load' +
-          ' an existing PND')
+          'To get started just drop some files in the top-most area to crea' +
+          'te a new PND'
+        'or load an existing PND via File -> Open PND...')
       ReadOnly = True
       ScrollBars = ssVertical
       TabOrder = 0
@@ -282,7 +284,7 @@ object frmMain: TfrmMain
       AlignWithMargins = True
       Left = 6
       Top = 15
-      Width = 542
+      Width = 463
       Height = 21
       Margins.Left = 4
       Margins.Top = 0
@@ -293,7 +295,7 @@ object frmMain: TfrmMain
     end
     object btnIconLoad: TButton
       AlignWithMargins = True
-      Left = 552
+      Left = 473
       Top = 15
       Width = 75
       Height = 21
@@ -305,6 +307,21 @@ object frmMain: TfrmMain
       Caption = 'Load icon...'
       TabOrder = 1
       OnClick = btnIconLoadClick
+    end
+    object btnIconClear: TButton
+      AlignWithMargins = True
+      Left = 552
+      Top = 15
+      Width = 75
+      Height = 21
+      Margins.Left = 0
+      Margins.Top = 0
+      Margins.Right = 4
+      Margins.Bottom = 4
+      Align = alRight
+      Caption = 'Clear'
+      TabOrder = 2
+      OnClick = btnIconClearClick
     end
   end
   object grbPXML: TGroupBox
@@ -322,7 +339,7 @@ object frmMain: TfrmMain
     TabOrder = 4
     object btnPXMLLoad: TButton
       AlignWithMargins = True
-      Left = 552
+      Left = 473
       Top = 15
       Width = 75
       Height = 21
@@ -339,7 +356,7 @@ object frmMain: TfrmMain
       AlignWithMargins = True
       Left = 6
       Top = 15
-      Width = 542
+      Width = 463
       Height = 21
       Margins.Left = 4
       Margins.Top = 0
@@ -347,6 +364,21 @@ object frmMain: TfrmMain
       Margins.Bottom = 4
       Align = alClient
       TabOrder = 1
+    end
+    object btnPXMLClear: TButton
+      AlignWithMargins = True
+      Left = 552
+      Top = 15
+      Width = 75
+      Height = 21
+      Margins.Left = 0
+      Margins.Top = 0
+      Margins.Right = 4
+      Margins.Bottom = 4
+      Align = alRight
+      Caption = 'Clear'
+      TabOrder = 2
+      OnClick = btnPXMLClearClick
     end
   end
   object imlFileTree: TImageList
