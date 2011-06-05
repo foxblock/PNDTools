@@ -2,7 +2,7 @@ object frmMain: TfrmMain
   Left = 60
   Top = 42
   Caption = 'PNDTools'
-  ClientHeight = 538
+  ClientHeight = 558
   ClientWidth = 641
   Color = clBtnFace
   Constraints.MinHeight = 500
@@ -12,6 +12,7 @@ object frmMain: TfrmMain
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  KeyPreview = True
   Menu = menMain
   OldCreateOrder = False
   Position = poDesigned
@@ -22,7 +23,7 @@ object frmMain: TfrmMain
   object pnlButtons: TPanel
     AlignWithMargins = True
     Left = 4
-    Top = 501
+    Top = 521
     Width = 633
     Height = 33
     Margins.Left = 4
@@ -31,7 +32,8 @@ object frmMain: TfrmMain
     Margins.Bottom = 4
     Align = alBottom
     BevelOuter = bvNone
-    TabOrder = 0
+    TabOrder = 4
+    ExplicitTop = 501
     object btnCreate: TButton
       AlignWithMargins = True
       Left = 524
@@ -51,7 +53,7 @@ object frmMain: TfrmMain
   object grbLog: TGroupBox
     AlignWithMargins = True
     Left = 4
-    Top = 397
+    Top = 417
     Width = 633
     Height = 100
     Margins.Left = 4
@@ -62,8 +64,9 @@ object frmMain: TfrmMain
     Caption = '   Log (double-click to hide/expand)   '
     Constraints.MaxHeight = 100
     Constraints.MinHeight = 20
-    TabOrder = 1
+    TabOrder = 3
     OnDblClick = grbLogDblClick
+    ExplicitTop = 397
     object redLog: TRichEdit
       AlignWithMargins = True
       Left = 6
@@ -91,20 +94,21 @@ object frmMain: TfrmMain
     Left = 4
     Top = 4
     Width = 633
-    Height = 297
+    Height = 317
     Margins.Left = 4
     Margins.Top = 4
     Margins.Right = 4
     Margins.Bottom = 4
     Align = alClient
     Caption = '   Files (drag&&drop stuff here)   '
-    TabOrder = 2
+    TabOrder = 0
+    ExplicitHeight = 297
     object vstFiles: TVirtualStringTree
       AlignWithMargins = True
       Left = 6
       Top = 15
       Width = 621
-      Height = 226
+      Height = 246
       Margins.Left = 4
       Margins.Top = 0
       Margins.Right = 4
@@ -139,6 +143,7 @@ object frmMain: TfrmMain
       OnMouseUp = vstFilesMouseUp
       OnNodeMoving = vstFilesNodeMoving
       OnStructureChange = vstFilesStructureChange
+      ExplicitHeight = 226
       Columns = <
         item
           Position = 0
@@ -159,12 +164,13 @@ object frmMain: TfrmMain
     end
     object pnlFilesButtons: TPanel
       Left = 2
-      Top = 262
+      Top = 282
       Width = 629
       Height = 33
       Align = alBottom
       BevelOuter = bvNone
-      TabOrder = 1
+      TabOrder = 2
+      ExplicitTop = 262
       object btnFilesClear: TButton
         AlignWithMargins = True
         Left = 550
@@ -177,7 +183,7 @@ object frmMain: TfrmMain
         Margins.Bottom = 4
         Align = alRight
         Caption = 'Clear'
-        TabOrder = 0
+        TabOrder = 3
         OnClick = btnFilesClearClick
       end
       object btnFilesFolder: TButton
@@ -207,7 +213,7 @@ object frmMain: TfrmMain
         Margins.Bottom = 4
         Align = alRight
         Caption = 'Add file...'
-        TabOrder = 2
+        TabOrder = 0
         OnClick = btnFilesFileClick
       end
       object cbxRecursive: TCheckBox
@@ -224,17 +230,18 @@ object frmMain: TfrmMain
         Caption = 'Recursive'
         Checked = True
         State = cbChecked
-        TabOrder = 3
+        TabOrder = 2
       end
     end
     object pnlFilesInfo: TPanel
       Left = 2
-      Top = 241
+      Top = 261
       Width = 629
       Height = 21
       Align = alBottom
       BevelOuter = bvNone
-      TabOrder = 2
+      TabOrder = 1
+      ExplicitTop = 241
       object lblFilesSizeLbl: TLabel
         AlignWithMargins = True
         Left = 532
@@ -270,7 +277,7 @@ object frmMain: TfrmMain
   object grbIcon: TGroupBox
     AlignWithMargins = True
     Left = 4
-    Top = 305
+    Top = 325
     Width = 633
     Height = 42
     Margins.Left = 4
@@ -279,7 +286,8 @@ object frmMain: TfrmMain
     Margins.Bottom = 4
     Align = alBottom
     Caption = '   Icon   '
-    TabOrder = 3
+    TabOrder = 1
+    ExplicitTop = 305
     object edtIcon: TEdit
       AlignWithMargins = True
       Left = 6
@@ -327,7 +335,7 @@ object frmMain: TfrmMain
   object grbPXML: TGroupBox
     AlignWithMargins = True
     Left = 4
-    Top = 351
+    Top = 371
     Width = 633
     Height = 42
     Margins.Left = 4
@@ -336,7 +344,8 @@ object frmMain: TfrmMain
     Margins.Bottom = 2
     Align = alBottom
     Caption = '   PXML   '
-    TabOrder = 4
+    TabOrder = 2
+    ExplicitTop = 351
     object btnPXMLLoad: TButton
       AlignWithMargins = True
       Left = 473
@@ -349,7 +358,7 @@ object frmMain: TfrmMain
       Margins.Bottom = 4
       Align = alRight
       Caption = 'Load PXML...'
-      TabOrder = 0
+      TabOrder = 1
       OnClick = btnPXMLLoadClick
     end
     object edtPXML: TEdit
@@ -363,7 +372,7 @@ object frmMain: TfrmMain
       Margins.Right = 4
       Margins.Bottom = 4
       Align = alClient
-      TabOrder = 1
+      TabOrder = 0
     end
     object btnPXMLClear: TButton
       AlignWithMargins = True
@@ -435,6 +444,20 @@ object frmMain: TfrmMain
       object menMainFileOpen: TMenuItem
         Caption = 'Open PND...'
         OnClick = menMainFileOpenClick
+      end
+      object N2: TMenuItem
+        Caption = '-'
+      end
+      object menMainFileOptions: TMenuItem
+        Caption = 'Options...'
+        OnClick = menMainFileOptionsClick
+      end
+      object N3: TMenuItem
+        Caption = '-'
+      end
+      object menMainFileExit: TMenuItem
+        Caption = 'Exit'
+        OnClick = menMainFileExitClick
       end
     end
     object menMainHelp: TMenuItem

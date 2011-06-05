@@ -8,12 +8,15 @@ uses
   FormatUtils in 'FormatUtils.pas',
   VSTIcons_win in 'VSTIcons_win.pas',
   ShellStuff_win in 'ShellStuff_win.pas',
-  FileUtils in 'FileUtils.pas';
+  FileUtils in 'FileUtils.pas',
+  OptionsForm in 'OptionsForm.pas' {frmOptions},
+  ControlHideFix in 'ControlHideFix.pas';
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Application.CreateForm(TfrmMain, frmMain);
+  Application.CreateForm(TfrmOptions, frmOptions);
   Application.Run;
 end.

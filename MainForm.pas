@@ -4,12 +4,20 @@ interface
 
 uses
   VirtualTrees,
-  Types, Messages, Classes, Graphics, Controls, Forms, SysUtils,
+  Types, Messages, Classes, Graphics, Controls, Forms, SysUtils, IniFiles,
   Dialogs, StdCtrls, ImgList, ExtCtrls, XPMan, FileCtrl, ComCtrls, Menus;
 
 type
   rSettings = record
     SmartAdd : Boolean;
+    ShowIcons : Boolean;
+    SizeBinary : Boolean;
+    ProgMkSquash : String;
+    ProgUnSquash : String;
+    ProgChmod : String;
+    ParamMkSquash : String;
+    ParamUnSquash : String;
+    ParamChmod : String;
   end;
 
   TfrmMain = class(TForm)
@@ -51,6 +59,12 @@ type
     edtPXML: TEdit;
     btnIconClear: TButton;
     btnPXMLClear: TButton;
+    N2: TMenuItem;
+    menMainFileOptions: TMenuItem;
+    N3: TMenuItem;
+    menMainFileExit: TMenuItem;
+    procedure menMainFileOptionsClick(Sender: TObject);
+    procedure menMainFileExitClick(Sender: TObject);
     procedure btnPXMLClearClick(Sender: TObject);
     procedure btnIconClearClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -114,8 +128,8 @@ type
   end;
 
 const
-    VERSION : String           = '0.1.3';
-    BUILD_DATE : String        = '01.06.2011';
+    VERSION : String           = '0.2.0';
+    BUILD_DATE : String        = '05.06.2011';
     LOG_ERROR_COLOR : TColor   = clRed;
     LOG_WARNING_COLOR : TColor = $0000AAFF;
     LOG_SUCCESS_COLOR : TColor = clGreen;  
@@ -123,6 +137,8 @@ const
     MKSQUASH_PATH : String     = 'tools\mksquashfs.exe'; // Path to mkquashfs
     CHMOD_PATH : String        = 'tools\chmod.exe';      // Path to cygwin's chmod
     SETTINGS_PATH : String     = 'settings.ini';
+    SOURCE_VAR : String        = '%source%';
+    TARGET_VAR : String        = '%target%';
 
 var
     frmMain: TfrmMain;
@@ -140,12 +156,12 @@ implementation
     // DONE: Show total uncompressed size
     // DONE: Clear temp folder on exit and start
     // DONE: Check for write access on start
-    // TODO: Function for proper conversion from Windows to Cygwin POSIX path
+    // DONE: Function for proper conversion from Windows to Cygwin POSIX path
 
 uses
-    VSTUtils, FormatUtils, FileUtils,
+    VSTUtils, FormatUtils, FileUtils, OptionsForm,
     {$Ifdef MSWINDOWS}
-    VSTDragDrop_win, VSTIcons_win, ShellStuff_win;
+    VSTDragDrop_win, VSTIcons_win, ShellStuff_win, ControlHideFix;
     {$Else}
     VSTDragDrop_lin, VSTIcons_lin, ShellStuff_lin;
     {$Endif}
@@ -158,7 +174,7 @@ var
     Destination : String;
 begin
     CopyTreeData(Tree,Tree.GetFirst(),TargetDir,Source,Destination);
-    if CopyFileEx(Source,Destination,false) then
+    if ShellCopyFile(Source,Destination,false) then
         begin
         LogLine(redLog,'Copied all files to temporary directory '#13#10 + TargetDir,
             LOG_SUCCESS_COLOR);
@@ -266,11 +282,10 @@ begin
     Param := IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName) + META_PATH);
     PXML := Param + PXML_PATH;
     Icon := Param + ICON_PATH;
-    DeleteFileEx(PXML);
-    DeleteFileEx(Icon);
-    Prog := ExtractFilePath(Application.ExeName) + UNSQUASHFS_PATH;
+    ShellDeleteFile(PXML);
+    ShellDeleteFile(Icon);
     Param := ExtractFilePath(Application.ExeName) + TEMP_PATH;
-    DeleteFileEx(Param);
+    ShellDeleteFile(Param);
     CreateDir(Param);
     CreateDir(ExtractFilePath(Application.ExeName) + META_PATH);
 
@@ -283,8 +298,10 @@ begin
     end;
 
     // Unsquash the PND
-    LogLine(redLog,'Extracting PND... this might take a while');
-    Param := '-f -d "' + ConvertPath(TEMP_PATH) + '" "' + ConvertPath(FileName) + '"';
+    LogLine(redLog,'Extracting PND... this might take a while'); 
+    Prog := Settings.ProgUnSquash;
+    Param := StringReplace(Settings.ParamUnSquash,SOURCE_VAR,ConvertPath(FileName),[rfReplaceAll]);
+    Param := StringReplace(Param,TARGET_VAR,ConvertPath(TEMP_PATH),[rfReplaceAll]);
     LogLine(redLog,'Calling program: ' + Prog + ' ' + Param);
     if not ExecuteProgram(Prog,Param) then
     begin
@@ -342,14 +359,14 @@ begin
     // temporary data handling
     Param := ExtractFilePath(Application.ExeName) + TEMP_PATH;
     LogLine(redLog,'Deleting old temporary files');
-    DeleteFileEx(Param);  // clean-up
+    ShellDeleteFile(Param);  // clean-up
     LogLine(redLog,'Copying new temporary files to folder ' + Param + ' - This may ' +
                    'take a while.');
     CopyTreeToFolder(vstFiles,Param);
 
     // set corrent file flags to work on the Pandora
-    Prog := ExtractFilePath(Application.ExeName) + CHMOD_PATH;
-    Param := '-R 755 "' + ConvertPath(TEMP_PATH) + '/"';
+    Prog := Settings.ProgChmod;
+    Param := StringReplace(Settings.ParamChmod,SOURCE_VAR,ConvertPath(TEMP_PATH),[rfReplaceAll]);
     LogLine(redLog,'Calling program: ' + Prog + ' ' + Param);
     if not ExecuteProgram(Prog,Param) then
     begin
@@ -359,8 +376,9 @@ begin
     end;
 
     // Make the squashFS filesystem from the temporary files
-    Prog := ExtractFilePath(Application.ExeName) + MKSQUASH_PATH;
-    Param := '"' + ConvertPath(TEMP_PATH) + '" "' + ConvertPath(FileName) + '" -noappend';
+    Prog := Settings.ProgMkSquash;
+    Param := StringReplace(Settings.ParamMkSquash,SOURCE_VAR,ConvertPath(TEMP_PATH),[rfReplaceAll]);
+    Param := StringReplace(Param,TARGET_VAR,ConvertPath(FileName),[rfReplaceAll]);
     LogLine(redLog,'Calling program: ' + Prog + ' ' + Param);
     if not ExecuteProgram(Prog,Param) then
     begin
@@ -390,16 +408,60 @@ begin
 end;
 
 procedure TfrmMain.LoadSettings(const FileName: string; var S: rSettings);
+var
+    Ini : TIniFile;
 begin
-    S.SmartAdd := true;
+    Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + FileName);
+    try
+        with S do
+        begin
+            SmartAdd := Ini.ReadBool('General','SmartAdd',true);
+            ShowIcons := Ini.ReadBool('General','ShowIcons',true);
+            SizeBinary := Ini.ReadBool('General','SizeBinary',false);
+            ProgMkSquash := Ini.ReadString('Paths','MkSquash',MKSQUASH_PATH);
+            ProgUnSquash := Ini.ReadString('Paths','UnSquash',UNSQUASHFS_PATH);
+            ProgChmod := Ini.ReadString('Paths','Chmod',CHMOD_PATH);
+            ParamMkSquash := Ini.ReadString('Params','MkSquash','"' +
+                SOURCE_VAR + '" "' + TARGET_VAR + '" -noappend');
+            ParamUnSquash := Ini.ReadString('Params','UnSquash','-f -d "' +
+                TARGET_VAR + '" "' + SOURCE_VAR + '"');
+            ParamChmod := Ini.ReadString('Params','Chmod','-R 755 "' +
+                SOURCE_VAR + '"');
+        end;
+    finally
+        Ini.Free;
+    end;
 end;
 
 procedure TfrmMain.SaveSettings(const FileName: string; const S: rSettings);
+var
+    Ini : TIniFile;
 begin
-    //
+    Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + FileName);
+    try
+        with S do
+        begin
+            Ini.WriteBool('General','SmartAdd',SmartAdd);
+            Ini.WriteBool('General','ShowIcons',ShowIcons);
+            Ini.WriteBool('General','SizeBinary',SizeBinary);
+            Ini.WriteString('Paths','MkSquash',ProgMkSquash);
+            Ini.WriteString('Paths','UnSquash',ProgUnSquash);
+            Ini.WriteString('Paths','Chmod',ProgChmod);  
+            Ini.WriteString('Params','MkSquash',ParamMkSquash);
+            Ini.WriteString('Params','UnSquash',ParamUnSquash);
+            Ini.WriteString('Params','Chmod',ParamChmod);
+        end;
+    finally
+        Ini.Free;
+    end;
 end;
 
 // --- Menu --------------------------------------------------------------------
+
+procedure TfrmMain.menMainFileExitClick(Sender: TObject);
+begin
+    Close;
+end;
 
 procedure TfrmMain.menMainFileOpenClick(Sender: TObject);
 begin
@@ -422,6 +484,12 @@ begin
         Exit;
 
     OpenPND(opdPND.FileName);
+end;
+
+procedure TfrmMain.menMainFileOptionsClick(Sender: TObject);
+begin
+    if frmOptions.Execute(Settings) then
+        Settings := frmOptions.Settings;
 end;
 
 procedure TfrmMain.menMainHelpAboutClick(Sender: TObject);
@@ -469,6 +537,7 @@ const
     TEST_FILE_NAME : String = 'asdftestxyz.txt';
 var
     dummy : TDragEvent;
+    jummy : TButtonEvent;
     F : File;
 begin
     // Check for write access by writing dummy file
@@ -476,7 +545,7 @@ begin
         AssignFile(F,TEST_FILE_NAME);
         ReWrite(F);
         CloseFile(F);
-        DeleteFileEx(TEST_FILE_NAME);
+        ShellDeleteFile(TEST_FILE_NAME);
     except
         on E : Exception do
         begin
@@ -495,6 +564,10 @@ begin
 
     vstFiles.NodeDataSize := sizeof(rFileTreeData);
     vstFiles.OnDragDrop := dummy.VSTDragDrop;
+    {$Ifdef MSWINDOWS}  
+    KeyPreview := true;
+    OnKeyDown := jummy.KeyDown;
+    {$Endif}
     LoadSystemIcons(imlFileTree);
     Caption := Caption + ' [Version ' + VERSION + ' built ' + BUILD_DATE + ']';
     LoadSettings(SETTINGS_PATH,Settings);
@@ -579,7 +652,7 @@ begin
         0 : CellText := ExtractFileName(PData.Name);
         1 : begin
             if (PData.Attr and faDirectory = 0) then
-                CellText := SizeToStr(PData.Size)
+                CellText := SizeToStr(PData.Size,Settings.SizeBinary)
             else
                 CellText := '';
             end;
@@ -607,8 +680,22 @@ var
     PData : PFileTreeData;
 begin
     PData := Sender.GetNodeData(Node);
-    PData.ClosedIndex := GetIconIndex(PData.Name,false);
-    PData.OpenIndex := GetIconIndex(PData.Name,true);
+    if Settings.ShowIcons then
+    begin
+        PData.ClosedIndex := GetIconIndex(PData.Name,false);
+        PData.OpenIndex := GetIconIndex(PData.Name,true);
+    end else
+    begin
+        if (PData.Attr and faDirectory = 0) then
+        begin
+            PData.ClosedIndex := 0;
+            PData.OpenIndex := 0;
+        end else
+        begin
+            PData.ClosedIndex := 1;
+            PData.OpenIndex := 1;
+        end;
+    end;
 end;
 
 procedure TfrmMain.vstFilesKeyDown(Sender: TObject; var Key: Word;
@@ -651,7 +738,7 @@ end;
 procedure TfrmMain.vstFilesStructureChange(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Reason: TChangeReason);
 begin
-    lblFilesSize.Caption := SizeToStr(CalculateTotalSize(vstFiles));
+    lblFilesSize.Caption := SizeToStr(CalculateTotalSize(vstFiles),Settings.SizeBinary);
 end;
 
 // --- Buttons -----------------------------------------------------------------
