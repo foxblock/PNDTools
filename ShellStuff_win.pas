@@ -12,13 +12,13 @@ uses Windows;
   Displays the OS copy dialogue
   Returns true on success, false otherwuse, use GetLastError for details in the
   latter case }
-function  CopyFileEx(const ASource, ADest:  String; ARenameCheck: Boolean = false): Boolean;
+function  ShellCopyFile(const ASource, ADest:  String; ARenameCheck: Boolean = false): Boolean;
 
 { Deletes a file, a folder or a list of both (separated by #0)
   Is silent (does not display OS delete dialogue) and does not move to trash
   Returns true on success, false otherwuse, use GetLastError for details in the
   latter case }
-function  DeleteFileEx(FileName : String): Boolean;
+function  ShellDeleteFile(FileName : String): Boolean;
 
 { Executes program FileName in ExeDir and passes parameters Params
   ExeDir defaults to the directory this application is in
@@ -40,7 +40,7 @@ implementation
 
 uses ShellAPI, Forms, SysUtils;
 
-function CopyFileEx(const ASource, ADest: String; ARenameCheck: Boolean = false): Boolean;
+function ShellCopyFile(const ASource, ADest: String; ARenameCheck: Boolean = false): Boolean;
 var
     sh: TSHFileOpStruct;
 begin
@@ -55,7 +55,7 @@ begin
     Result := (ShFileOperation(sh) = 0);
 end;
 
-function DeleteFileEx(FileName : String): Boolean;
+function ShellDeleteFile(FileName : String): Boolean;
 var
     sh: TSHFileOpStruct;
 begin

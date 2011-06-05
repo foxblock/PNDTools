@@ -9,6 +9,8 @@ uses
   VSTIcons_win in 'VSTIcons_win.pas',
   ShellStuff_win in 'ShellStuff_win.pas',
   FileUtils in 'FileUtils.pas',
+  OptionsForm in 'OptionsForm.pas' {frmOptions},
+  ControlHideFix in 'ControlHideFix.pas';
   PXMLForm in 'PXMLForm.pas' {frmPXML};
 
 {$R *.res}
@@ -16,6 +18,7 @@ uses
 begin
   Application.Initialize;
   Application.CreateForm(TfrmMain, frmMain);
+  Application.CreateForm(TfrmOptions, frmOptions);
   Application.CreateForm(TfrmPXML, frmPXML);
   Application.Run;
 end.

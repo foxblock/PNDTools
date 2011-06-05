@@ -69,6 +69,8 @@ type
 
 implementation
 
+uses Dialogs, Controls, MainForm;
+
 function IsFile(Sender : TBaseVirtualTree; Node: PVirtualNode) : Boolean;
 var
   PData : PFileTreeData;
@@ -102,7 +104,50 @@ var
     PData : PFileTreeData;
     Node : PVirtualNode;
 begin
+    Result := nil;
     Directory := IncludeTrailingPathDelimiter(Directory);
+    
+    // Check for "special" files
+    if frmMain.Settings.SmartAdd then
+    begin
+        if SameText(ExtractFileExt(SR.Name),frmMain.PND_EXT) then
+        begin
+            if MessageDlg('You are trying to add a PND file to a PND.' + #13#10 +
+                      'Do you want to open and browse its contents instead?'+ #13#10#13#10 +
+                      'The file in question is: ' + Directory + SR.Name,
+                      mtConfirmation,[mbYes,mbNo],0) = mrYes then
+            begin
+                frmMain.OpenPND(Directory + SR.Name);
+                Exit;
+            end;
+        end
+        else if SameText(SR.Name,frmMain.PXML_PATH) then
+        begin
+            if MessageDlg('To add PXML metadata to a PND it has to be appended, ' +
+                      'not simply added to the PND''s contents.' + #13#10 +
+                      'Therefore it needs to be specified separately.' + #13#10 +
+                      'Do you want to do that?'+ #13#10#13#10 +
+                      'The file in question is: ' + Directory + SR.Name,
+                      mtConfirmation,[mbYes,mbNo],0) = mrYes then
+            begin
+                frmMain.edtPXML.Text := Directory + SR.Name;
+                Exit;
+            end;
+        end
+        else if SameText(SR.Name,frmMain.ICON_PATH) then
+        begin
+            if MessageDlg('It seems like you are trying to add an icon to the PND.' + #13#10 +
+                      'Do you want it to show up as the PND''s icon on the desktop ' +
+                      'or the menu?' + #13#10#13#10 +
+                      'The file in question is: ' + Directory + SR.Name,
+                      mtConfirmation,[mbYes,mbNo],0) = mrYes then
+            begin
+                frmMain.edtIcon.Text := Directory + SR.Name;
+            end;
+        end;
+    end;
+
+    // Check for existance
     Result := CheckForExistance(Sender,Sender.GetFirstChild(Parent),SR.Name);
     if Result <> nil then
         Exit;
