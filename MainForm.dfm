@@ -33,7 +33,6 @@ object frmMain: TfrmMain
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 4
-    ExplicitTop = 501
     object btnCreate: TButton
       AlignWithMargins = True
       Left = 524
@@ -66,7 +65,6 @@ object frmMain: TfrmMain
     Constraints.MinHeight = 20
     TabOrder = 3
     OnDblClick = grbLogDblClick
-    ExplicitTop = 397
     object redLog: TRichEdit
       AlignWithMargins = True
       Left = 6
@@ -102,7 +100,6 @@ object frmMain: TfrmMain
     Align = alClient
     Caption = '   Files (drag&&drop stuff here)   '
     TabOrder = 0
-    ExplicitHeight = 297
     object vstFiles: TVirtualStringTree
       AlignWithMargins = True
       Left = 6
@@ -143,7 +140,6 @@ object frmMain: TfrmMain
       OnMouseUp = vstFilesMouseUp
       OnNodeMoving = vstFilesNodeMoving
       OnStructureChange = vstFilesStructureChange
-      ExplicitHeight = 226
       Columns = <
         item
           Position = 0
@@ -170,7 +166,6 @@ object frmMain: TfrmMain
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 2
-      ExplicitTop = 262
       object btnFilesClear: TButton
         AlignWithMargins = True
         Left = 550
@@ -241,7 +236,6 @@ object frmMain: TfrmMain
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitTop = 241
       object lblFilesSizeLbl: TLabel
         AlignWithMargins = True
         Left = 532
@@ -287,7 +281,6 @@ object frmMain: TfrmMain
     Align = alBottom
     Caption = '   Icon   '
     TabOrder = 1
-    ExplicitTop = 305
     object edtIcon: TEdit
       AlignWithMargins = True
       Left = 6
@@ -345,10 +338,9 @@ object frmMain: TfrmMain
     Align = alBottom
     Caption = '   PXML   '
     TabOrder = 2
-    ExplicitTop = 351
     object btnPXMLLoad: TButton
       AlignWithMargins = True
-      Left = 473
+      Left = 394
       Top = 15
       Width = 75
       Height = 21
@@ -360,13 +352,12 @@ object frmMain: TfrmMain
       Caption = 'Load PXML...'
       TabOrder = 1
       OnClick = btnPXMLLoadClick
-      ExplicitLeft = 552
     end
     object edtPXML: TEdit
       AlignWithMargins = True
       Left = 6
       Top = 15
-      Width = 463
+      Width = 384
       Height = 21
       Margins.Left = 4
       Margins.Top = 0
@@ -374,7 +365,6 @@ object frmMain: TfrmMain
       Margins.Bottom = 4
       Align = alClient
       TabOrder = 0
-      ExplicitWidth = 542
     end
     object btnPXMLClear: TButton
       AlignWithMargins = True
@@ -388,12 +378,14 @@ object frmMain: TfrmMain
       Margins.Bottom = 4
       Align = alRight
       Caption = 'Clear'
-      TabOrder = 2
+      TabOrder = 3
       OnClick = btnPXMLClearClick
+      ExplicitLeft = 554
+      ExplicitTop = 17
     end
     object btnPXMLEdit: TButton
       AlignWithMargins = True
-      Left = 552
+      Left = 473
       Top = 15
       Width = 75
       Height = 21
@@ -405,8 +397,7 @@ object frmMain: TfrmMain
       Caption = 'Edit PXML'
       TabOrder = 2
       OnClick = btnPXMLEditClick
-      ExplicitLeft = 554
-      ExplicitTop = 17
+      ExplicitLeft = 552
     end
   end
   object imlFileTree: TImageList

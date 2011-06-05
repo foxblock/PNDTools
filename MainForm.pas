@@ -62,13 +62,13 @@ type
     N2: TMenuItem;
     menMainFileOptions: TMenuItem;
     N3: TMenuItem;
-    menMainFileExit: TMenuItem;
+    menMainFileExit: TMenuItem;   
+    btnPXMLEdit: TButton;
     procedure menMainFileOptionsClick(Sender: TObject);
     procedure menMainFileExitClick(Sender: TObject);
     procedure btnPXMLClearClick(Sender: TObject);
     procedure btnIconClearClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    btnPXMLEdit: TButton;
     procedure btnPXMLEditClick(Sender: TObject);
     procedure grbLogDblClick(Sender: TObject);
     procedure menMainHelpPNDClick(Sender: TObject);

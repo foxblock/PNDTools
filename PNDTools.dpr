@@ -10,7 +10,7 @@ uses
   ShellStuff_win in 'ShellStuff_win.pas',
   FileUtils in 'FileUtils.pas',
   OptionsForm in 'OptionsForm.pas' {frmOptions},
-  ControlHideFix in 'ControlHideFix.pas';
+  ControlHideFix in 'ControlHideFix.pas',
   PXMLForm in 'PXMLForm.pas' {frmPXML};
 
 {$R *.res}
@@ -19,6 +19,7 @@ begin
   Application.Initialize;
   Application.CreateForm(TfrmMain, frmMain);
   Application.CreateForm(TfrmOptions, frmOptions);
+  Application.CreateForm(TfrmPXML, frmPXML);
   Application.CreateForm(TfrmPXML, frmPXML);
   Application.Run;
 end.
