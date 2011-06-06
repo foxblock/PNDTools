@@ -44,8 +44,6 @@ object frmOptions: TfrmOptions
         'Smart file adding (detects PND, PXML and Icon files and asks for' +
         ' action)'
       TabOrder = 0
-      ExplicitLeft = 2
-      ExplicitWidth = 432
     end
     object cbxIcons: TCheckBox
       AlignWithMargins = True
@@ -60,9 +58,6 @@ object frmOptions: TfrmOptions
       Align = alTop
       Caption = 'Show file icons (slow)'
       TabOrder = 1
-      ExplicitLeft = 48
-      ExplicitTop = 40
-      ExplicitWidth = 97
     end
     object cbxBinary: TCheckBox
       AlignWithMargins = True
@@ -77,9 +72,6 @@ object frmOptions: TfrmOptions
       Align = alTop
       Caption = 'Use binary file size units'
       TabOrder = 2
-      ExplicitLeft = 88
-      ExplicitTop = 56
-      ExplicitWidth = 97
     end
   end
   object grbPaths: TGroupBox
@@ -95,8 +87,6 @@ object frmOptions: TfrmOptions
     Align = alTop
     Caption = '   Paths   '
     TabOrder = 1
-    ExplicitTop = 69
-    ExplicitWidth = 492
     object pnlProgMkSquash: TPanel
       AlignWithMargins = True
       Left = 6
@@ -110,7 +100,6 @@ object frmOptions: TfrmOptions
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitWidth = 424
       object lblProgMkSquash: TLabel
         AlignWithMargins = True
         Left = 0
@@ -137,9 +126,6 @@ object frmOptions: TfrmOptions
         Align = alClient
         TabOrder = 0
         Text = 'edtProgMkSquash'
-        ExplicitLeft = 80
-        ExplicitTop = 16
-        ExplicitWidth = 121
       end
       object btnMkSquash: TButton
         Left = 469
@@ -150,8 +136,6 @@ object frmOptions: TfrmOptions
         Caption = '...'
         TabOrder = 1
         OnClick = btnMkSquashClick
-        ExplicitLeft = 406
-        ExplicitTop = -3
       end
     end
     object pnlProgUnSquash: TPanel
@@ -167,8 +151,6 @@ object frmOptions: TfrmOptions
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitTop = 15
-      ExplicitWidth = 424
       object lblProgUnSquash: TLabel
         AlignWithMargins = True
         Left = 0
@@ -195,7 +177,6 @@ object frmOptions: TfrmOptions
         Align = alClient
         TabOrder = 0
         Text = 'edtMkSquash'
-        ExplicitWidth = 343
       end
       object btnUnSquash: TButton
         Left = 469
@@ -206,7 +187,6 @@ object frmOptions: TfrmOptions
         Caption = '...'
         TabOrder = 1
         OnClick = btnUnSquashClick
-        ExplicitLeft = 403
       end
     end
     object pnlProgChmod: TPanel
@@ -222,9 +202,6 @@ object frmOptions: TfrmOptions
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 2
-      ExplicitLeft = 8
-      ExplicitTop = 60
-      ExplicitWidth = 424
       object lblProgChmod: TLabel
         AlignWithMargins = True
         Left = 0
@@ -251,7 +228,6 @@ object frmOptions: TfrmOptions
         Align = alClient
         TabOrder = 0
         Text = 'edtMkSquash'
-        ExplicitWidth = 343
       end
       object btnChmod: TButton
         Left = 469
@@ -262,7 +238,6 @@ object frmOptions: TfrmOptions
         Caption = '...'
         TabOrder = 1
         OnClick = btnChmodClick
-        ExplicitLeft = 403
       end
     end
   end
@@ -279,7 +254,6 @@ object frmOptions: TfrmOptions
     Align = alTop
     Caption = '   Params   '
     TabOrder = 2
-    ExplicitTop = 161
     object memParams: TMemo
       AlignWithMargins = True
       Left = 6
@@ -295,6 +269,7 @@ object frmOptions: TfrmOptions
       BevelOuter = bvNone
       BorderStyle = bsNone
       Color = clBtnFace
+      Enabled = False
       Lines.Strings = (
         
           'You can customize the parameters with which the above programs a' +
@@ -309,7 +284,6 @@ object frmOptions: TfrmOptions
           ' folder for unSquash)')
       ReadOnly = True
       TabOrder = 0
-      ExplicitWidth = 459
     end
     object pnlParamMkSquash: TPanel
       AlignWithMargins = True
@@ -324,9 +298,6 @@ object frmOptions: TfrmOptions
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitLeft = 4
-      ExplicitTop = 81
-      ExplicitWidth = 480
       object lblParamMkSquash: TLabel
         AlignWithMargins = True
         Left = 0
@@ -338,7 +309,7 @@ object frmOptions: TfrmOptions
         Margins.Bottom = 0
         Align = alLeft
         Caption = 'mkSquash:'
-        ExplicitLeft = 8
+        ExplicitHeight = 13
       end
       object edtParamMkSquash: TEdit
         AlignWithMargins = True
@@ -353,9 +324,6 @@ object frmOptions: TfrmOptions
         Align = alClient
         TabOrder = 0
         Text = 'edtParamMkSquash'
-        ExplicitLeft = 88
-        ExplicitTop = 8
-        ExplicitWidth = 121
       end
     end
     object pnlParamChmod: TPanel
@@ -371,8 +339,6 @@ object frmOptions: TfrmOptions
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 3
-      ExplicitTop = 81
-      ExplicitWidth = 480
       object lblParamChmod: TLabel
         AlignWithMargins = True
         Left = 0
@@ -399,7 +365,6 @@ object frmOptions: TfrmOptions
         Align = alClient
         TabOrder = 0
         Text = 'edtParamMkSquash'
-        ExplicitWidth = 424
       end
     end
     object pnlParamUnSquash: TPanel
@@ -415,8 +380,6 @@ object frmOptions: TfrmOptions
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 2
-      ExplicitTop = 81
-      ExplicitWidth = 480
       object lblParamUnSquash: TLabel
         AlignWithMargins = True
         Left = 0
@@ -443,7 +406,6 @@ object frmOptions: TfrmOptions
         Align = alClient
         TabOrder = 0
         Text = 'edtParamMkSquash'
-        ExplicitWidth = 424
       end
     end
   end
@@ -460,7 +422,6 @@ object frmOptions: TfrmOptions
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 3
-    ExplicitTop = 319
     object btnCancel: TButton
       Left = 427
       Top = 0
@@ -470,7 +431,6 @@ object frmOptions: TfrmOptions
       Caption = 'Cancel'
       TabOrder = 0
       OnClick = btnCancelClick
-      ExplicitLeft = 184
     end
     object btnOK: TButton
       AlignWithMargins = True
@@ -486,7 +446,6 @@ object frmOptions: TfrmOptions
       Caption = 'OK'
       TabOrder = 1
       OnClick = btnOKClick
-      ExplicitLeft = 184
     end
   end
   object opdExeFile: TOpenDialog

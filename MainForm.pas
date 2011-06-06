@@ -63,6 +63,7 @@ type
     menMainFileOptions: TMenuItem;
     N3: TMenuItem;
     menMainFileExit: TMenuItem;
+    procedure FormShow(Sender: TObject);
     procedure menMainFileOptionsClick(Sender: TObject);
     procedure menMainFileExitClick(Sender: TObject);
     procedure btnPXMLClearClick(Sender: TObject);
@@ -113,6 +114,8 @@ type
       no file has been saved }
     procedure ExtractPNDMetaData(Stream : TFileStream; var PXML : String;
         var Icon : String);
+    procedure ReadFormSettings(const Ini : TIniFile; Frm : TForm);
+    procedure WriteFormSettings(Ini : TIniFile; const Frm : TForm);
   public
     Settings : rSettings;   
     const PXML_PATH : String = 'PXML.xml';
@@ -428,6 +431,7 @@ begin
             ParamChmod := Ini.ReadString('Params','Chmod','-R 755 "' +
                 SOURCE_VAR + '"');
         end;
+        ReadFormSettings(Ini,frmMain);
     finally
         Ini.Free;
     end;
@@ -451,9 +455,33 @@ begin
             Ini.WriteString('Params','UnSquash',ParamUnSquash);
             Ini.WriteString('Params','Chmod',ParamChmod);
         end;
+        WriteFormSettings(Ini,frmMain);
     finally
         Ini.Free;
     end;
+end;
+
+procedure TfrmMain.ReadFormSettings(const Ini: TIniFile; Frm: TForm);
+begin
+    with Frm do
+    begin
+        Width := Ini.ReadInteger(Name,'Width',Frm.Constraints.MinWidth);
+        Height := Ini.ReadInteger(Name,'Height',Frm.Constraints.MinHeight);
+        Left := Ini.ReadInteger(Name,'Left',100);
+        Top := Ini.ReadInteger(Name,'Top',100);
+    end;
+end;
+
+procedure TfrmMain.WriteFormSettings(Ini: TIniFile; const Frm: TForm);
+begin
+    with Frm do
+    begin
+        Ini.WriteInteger(Name,'Width',Width);
+        Ini.WriteInteger(Name,'Height',Height);
+        Ini.WriteInteger(Name,'Left',Left);
+        Ini.WriteInteger(Name,'Top',Top);
+    end;
+
 end;
 
 // --- Menu --------------------------------------------------------------------
@@ -488,6 +516,8 @@ end;
 
 procedure TfrmMain.menMainFileOptionsClick(Sender: TObject);
 begin
+    frmOptions.Left := frmMain.Left + (frmMain.Width - frmOptions.Width) div 2;
+    frmOptions.Top := frmMain.Top + (frmMain.Height - frmOptions.Height) div 2;
     if frmOptions.Execute(Settings) then
         Settings := frmOptions.Settings;
 end;
@@ -570,6 +600,10 @@ begin
     {$Endif}
     LoadSystemIcons(imlFileTree);
     Caption := Caption + ' [Version ' + VERSION + ' built ' + BUILD_DATE + ']';
+end;
+
+procedure TfrmMain.FormShow(Sender: TObject);
+begin
     LoadSettings(SETTINGS_PATH,Settings);
 end;
 
