@@ -95,7 +95,7 @@ object frmPXML: TfrmPXML
       Header.Font.Height = -11
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
-      Header.Options = [hoColumnResize, hoDblClickResize, hoDrag, hoVisible]
+      Header.Options = [hoAutoResize, hoColumnResize, hoDrag]
       Header.SortColumn = 0
       Header.Style = hsXPStyle
       LineStyle = lsSolid
@@ -108,12 +108,11 @@ object frmPXML: TfrmPXML
       OnChange = vstPXMLChange
       OnGetText = vstPXMLGetText
       OnInitNode = vstPXMLInitNode
-      OnResize = vstPXMLResize
       Columns = <
         item
           Options = [coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coVisible, coAllowFocus]
           Position = 0
-          Width = 170
+          Width = 146
           WideText = 'Key'
         end>
     end

@@ -31,7 +31,6 @@ type
     lblNoAttr: TLabel;
     memDescription: TMemo;
     sadPXML: TSaveDialog;
-    procedure vstPXMLResize(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure vstPXMLChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure vstPXMLInitNode(Sender: TBaseVirtualTree; ParentNode,
@@ -64,7 +63,6 @@ type
 
 const
   NO_DESCRIPTION_LINE : String = 'no description available for this element';
-  SCROLL_BAR_WIDTH : Integer = 30;
 
 var
   frmPXML: TfrmPXML;
@@ -216,12 +214,6 @@ begin
     PData.DisplayKey := PData.Node.NodeName;
 end;
 
-procedure TfrmPXML.vstPXMLResize(Sender: TObject);
-begin
-    (Sender as TVirtualStringTree).Header.Columns[0].Width :=
-        (Sender as TControl).Width - SCROLL_BAR_WIDTH;
-end;
-
 // --- Buttons -----------------------------------------------------------------
 
 procedure TfrmPXML.btnCancelClick(Sender: TObject);
@@ -276,7 +268,7 @@ begin
     lblKey := TLabel.Create(self);
     with lblKey do
     begin
-        Caption := Node.NodeName;
+        Caption := Node.NodeName + '=';
         Align := alLeft;
         Left := 0;
         Parent := self;
