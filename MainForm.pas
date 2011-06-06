@@ -64,6 +64,7 @@ type
     N3: TMenuItem;
     menMainFileExit: TMenuItem;   
     btnPXMLEdit: TButton;
+    procedure edtPXMLChange(Sender: TObject);
     procedure menMainFileOptionsClick(Sender: TObject);
     procedure menMainFileExitClick(Sender: TObject);
     procedure btnPXMLClearClick(Sender: TObject);
@@ -150,8 +151,7 @@ implementation
 {$R *.dfm}
 
 
-    // TODO: Parse PXML, check whether binaries can be found and warn otherwise
-    // TODO: Graphical browser and editor for the PXML
+    // DONE: Graphical browser and editor for the PXML
     // TODO: Display icon
     // TODO: Ask for overwrite on copy
     // DONE: Open PND
@@ -159,6 +159,7 @@ implementation
     // DONE: Clear temp folder on exit and start
     // DONE: Check for write access on start
     // DONE: Function for proper conversion from Windows to Cygwin POSIX path
+
 
 uses
     VSTUtils, FormatUtils, FileUtils, OptionsForm, PXMLForm,
@@ -190,6 +191,14 @@ begin
                        'The error code was: ' + IntToStr(GetLastError()),
                        LOG_ERROR_COLOR);
         end;
+end;
+
+procedure TfrmMain.edtPXMLChange(Sender: TObject);
+begin
+    if Length(edtPXML.Text) = 0 then
+        btnPXMLEdit.Caption := 'Create PXML'
+    else                                    
+        btnPXMLEdit.Caption := 'Edit PXML'
 end;
 
 procedure TfrmMain.ExtractPNDMetaData(Stream : TFileStream; var PXML : String;
@@ -820,9 +829,27 @@ end;
 
 procedure TfrmMain.btnPXMLEditClick(Sender: TObject);
 begin
-    if (edtPXML.Text <> '') AND FileExists(edtPXML.Text) then
+    if (edtPXML.Text <> '') then
     begin
-        frmPXML.LoadFromFile(edtPXML.Text);
+        if FileExists(edtPXML.Text) then
+        begin
+            frmPXML.LoadFromFile(edtPXML.Text);
+            frmPXML.Show;
+        end else
+        begin
+            if MessageDlg('The specified PXML file does not exist!' + #13#10 +
+                         'Do you want to create a new one from scratch?',
+                         mtWarning,[mbYes,mbNo],0) = mrYes then
+            begin
+                edtPXML.Clear;
+                frmPXML.Clear;
+                frmPXML.Show;
+            end;
+        end;
+    end else
+    begin
+        edtPXML.Clear;
+        frmPXML.Clear;
         frmPXML.Show;
     end;
 end;

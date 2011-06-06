@@ -365,6 +365,7 @@ object frmMain: TfrmMain
       Margins.Bottom = 4
       Align = alClient
       TabOrder = 0
+      OnChange = edtPXMLChange
     end
     object btnPXMLClear: TButton
       AlignWithMargins = True
@@ -380,8 +381,6 @@ object frmMain: TfrmMain
       Caption = 'Clear'
       TabOrder = 3
       OnClick = btnPXMLClearClick
-      ExplicitLeft = 554
-      ExplicitTop = 17
     end
     object btnPXMLEdit: TButton
       AlignWithMargins = True
@@ -394,10 +393,9 @@ object frmMain: TfrmMain
       Margins.Right = 4
       Margins.Bottom = 4
       Align = alRight
-      Caption = 'Edit PXML'
+      Caption = 'Create PXML'
       TabOrder = 2
       OnClick = btnPXMLEditClick
-      ExplicitLeft = 552
     end
   end
   object imlFileTree: TImageList
@@ -415,7 +413,7 @@ object frmMain: TfrmMain
   end
   object opdPXML: TOpenDialog
     DefaultExt = 'xml'
-    Filter = 'PXML-file|PXML.xml|Any file|*'
+    Filter = 'PXML-file|PXML.xml;pxml.xml|Any file|*'
     FilterIndex = 0
     Options = [ofHideReadOnly, ofPathMustExist, ofFileMustExist, ofEnableSizing]
     Title = 'Select PXML file'
