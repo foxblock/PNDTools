@@ -48,7 +48,6 @@ object frmMain: TfrmMain
       Caption = 'Create PND...'
       TabOrder = 0
       OnClick = btnCreateClick
-      ExplicitLeft = 524
     end
   end
   object grbLog: TGroupBox
@@ -87,7 +86,6 @@ object frmMain: TfrmMain
       ReadOnly = True
       ScrollBars = ssVertical
       TabOrder = 0
-      ExplicitWidth = 621
     end
   end
   object grbFiles: TGroupBox
@@ -183,7 +181,6 @@ object frmMain: TfrmMain
         Caption = 'Clear'
         TabOrder = 3
         OnClick = btnFilesClearClick
-        ExplicitLeft = 550
       end
       object btnFilesFolder: TButton
         AlignWithMargins = True
@@ -199,7 +196,6 @@ object frmMain: TfrmMain
         Caption = 'Add folder...'
         TabOrder = 1
         OnClick = btnFilesFolderClick
-        ExplicitLeft = 388
       end
       object btnFilesFile: TButton
         AlignWithMargins = True
@@ -215,7 +211,6 @@ object frmMain: TfrmMain
         Caption = 'Add file...'
         TabOrder = 0
         OnClick = btnFilesFileClick
-        ExplicitLeft = 309
       end
       object cbxRecursive: TCheckBox
         AlignWithMargins = True
@@ -232,7 +227,6 @@ object frmMain: TfrmMain
         Checked = True
         State = cbChecked
         TabOrder = 2
-        ExplicitLeft = 467
       end
     end
     object pnlFilesInfo: TPanel
@@ -301,7 +295,6 @@ object frmMain: TfrmMain
       Margins.Bottom = 4
       Align = alClient
       TabOrder = 0
-      ExplicitWidth = 463
     end
     object btnIconLoad: TButton
       AlignWithMargins = True
@@ -317,7 +310,6 @@ object frmMain: TfrmMain
       Caption = 'Load icon...'
       TabOrder = 1
       OnClick = btnIconLoadClick
-      ExplicitLeft = 473
     end
     object btnIconClear: TButton
       AlignWithMargins = True
@@ -333,7 +325,6 @@ object frmMain: TfrmMain
       Caption = 'Clear'
       TabOrder = 2
       OnClick = btnIconClearClick
-      ExplicitLeft = 552
     end
   end
   object grbPXML: TGroupBox
@@ -351,7 +342,7 @@ object frmMain: TfrmMain
     TabOrder = 2
     object btnPXMLLoad: TButton
       AlignWithMargins = True
-      Left = 394
+      Left = 337
       Top = 15
       Width = 75
       Height = 21
@@ -363,13 +354,12 @@ object frmMain: TfrmMain
       Caption = 'Load PXML...'
       TabOrder = 1
       OnClick = btnPXMLLoadClick
-      ExplicitLeft = 473
     end
     object edtPXML: TEdit
       AlignWithMargins = True
       Left = 6
       Top = 15
-      Width = 384
+      Width = 327
       Height = 21
       Margins.Left = 4
       Margins.Top = 0
@@ -378,7 +368,6 @@ object frmMain: TfrmMain
       Align = alClient
       TabOrder = 0
       OnChange = edtPXMLChange
-      ExplicitWidth = 463
     end
     object btnPXMLClear: TButton
       AlignWithMargins = True
@@ -394,11 +383,10 @@ object frmMain: TfrmMain
       Caption = 'Clear'
       TabOrder = 3
       OnClick = btnPXMLClearClick
-      ExplicitLeft = 552
     end
     object btnPXMLEdit: TButton
       AlignWithMargins = True
-      Left = 473
+      Left = 416
       Top = 15
       Width = 75
       Height = 21

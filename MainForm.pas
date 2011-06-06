@@ -443,6 +443,7 @@ begin
                 SOURCE_VAR + '"');
         end;
         ReadFormSettings(Ini,frmMain);
+        ReadFormSettings(Ini,frmPXML);
     finally
         Ini.Free;
     end;
@@ -467,6 +468,7 @@ begin
             Ini.WriteString('Params','Chmod',ParamChmod);
         end;
         WriteFormSettings(Ini,frmMain);
+        WriteFormSettings(Ini,frmPXML);
     finally
         Ini.Free;
     end;
