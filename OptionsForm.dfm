@@ -4,7 +4,7 @@ object frmOptions: TfrmOptions
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Options'
-  ClientHeight = 364
+  ClientHeight = 384
   ClientWidth = 510
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -79,7 +79,7 @@ object frmOptions: TfrmOptions
     Left = 4
     Top = 82
     Width = 502
-    Height = 88
+    Height = 107
     Margins.Left = 4
     Margins.Top = 4
     Margins.Right = 4
@@ -105,18 +105,19 @@ object frmOptions: TfrmOptions
         Left = 0
         Top = 3
         Width = 52
-        Height = 13
+        Height = 18
         Margins.Left = 0
-        Margins.Right = 0
+        Margins.Right = 11
         Margins.Bottom = 0
         Align = alLeft
         Caption = 'mkSquash:'
+        ExplicitHeight = 13
       end
       object edtProgMkSquash: TEdit
         AlignWithMargins = True
-        Left = 56
+        Left = 67
         Top = 0
-        Width = 409
+        Width = 398
         Height = 21
         Margins.Left = 4
         Margins.Top = 0
@@ -125,6 +126,8 @@ object frmOptions: TfrmOptions
         Align = alClient
         TabOrder = 0
         Text = 'edtProgMkSquash'
+        ExplicitLeft = 56
+        ExplicitWidth = 409
       end
       object btnMkSquash: TButton
         Left = 469
@@ -155,18 +158,19 @@ object frmOptions: TfrmOptions
         Left = 0
         Top = 3
         Width = 51
-        Height = 13
+        Height = 18
         Margins.Left = 0
-        Margins.Right = 1
+        Margins.Right = 12
         Margins.Bottom = 0
         Align = alLeft
         Caption = 'unSquash:'
+        ExplicitHeight = 13
       end
       object edtProgUnSquash: TEdit
         AlignWithMargins = True
-        Left = 56
+        Left = 67
         Top = 0
-        Width = 409
+        Width = 398
         Height = 21
         Margins.Left = 4
         Margins.Top = 0
@@ -175,6 +179,8 @@ object frmOptions: TfrmOptions
         Align = alClient
         TabOrder = 0
         Text = 'edtMkSquash'
+        ExplicitLeft = 56
+        ExplicitWidth = 409
       end
       object btnUnSquash: TButton
         Left = 469
@@ -205,18 +211,19 @@ object frmOptions: TfrmOptions
         Left = 0
         Top = 3
         Width = 35
-        Height = 13
+        Height = 18
         Margins.Left = 0
-        Margins.Right = 17
+        Margins.Right = 28
         Margins.Bottom = 0
         Align = alLeft
         Caption = 'chmod:'
+        ExplicitHeight = 13
       end
       object edtProgChmod: TEdit
         AlignWithMargins = True
-        Left = 56
+        Left = 67
         Top = 0
-        Width = 409
+        Width = 398
         Height = 21
         Margins.Left = 4
         Margins.Top = 0
@@ -225,6 +232,8 @@ object frmOptions: TfrmOptions
         Align = alClient
         TabOrder = 0
         Text = 'edtMkSquash'
+        ExplicitLeft = 56
+        ExplicitWidth = 409
       end
       object btnChmod: TButton
         Left = 469
@@ -237,11 +246,64 @@ object frmOptions: TfrmOptions
         OnClick = btnChmodClick
       end
     end
+    object pnlSchema: TPanel
+      AlignWithMargins = True
+      Left = 6
+      Top = 78
+      Width = 490
+      Height = 21
+      Margins.Left = 4
+      Margins.Top = 0
+      Margins.Right = 4
+      Margins.Bottom = 0
+      Align = alTop
+      BevelOuter = bvNone
+      TabOrder = 3
+      ExplicitLeft = 4
+      ExplicitTop = 86
+      object lblSchema: TLabel
+        AlignWithMargins = True
+        Left = 0
+        Top = 3
+        Width = 63
+        Height = 18
+        Margins.Left = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        Align = alLeft
+        Caption = 'XML Schema:'
+        ExplicitHeight = 13
+      end
+      object edtSchema: TEdit
+        AlignWithMargins = True
+        Left = 67
+        Top = 0
+        Width = 398
+        Height = 21
+        Margins.Left = 4
+        Margins.Top = 0
+        Margins.Right = 4
+        Margins.Bottom = 0
+        Align = alClient
+        TabOrder = 0
+        Text = 'edtMkSquash'
+      end
+      object btnSchema: TButton
+        Left = 469
+        Top = 0
+        Width = 21
+        Height = 21
+        Align = alRight
+        Caption = '...'
+        TabOrder = 1
+        OnClick = btnSchemaClick
+      end
+    end
   end
   object grbParams: TGroupBox
     AlignWithMargins = True
     Left = 4
-    Top = 174
+    Top = 193
     Width = 502
     Height = 158
     Margins.Left = 4
@@ -251,6 +313,7 @@ object frmOptions: TfrmOptions
     Align = alTop
     Caption = '   Params   '
     TabOrder = 2
+    ExplicitTop = 174
     object memParams: TMemo
       AlignWithMargins = True
       Left = 6
@@ -300,12 +363,13 @@ object frmOptions: TfrmOptions
         Left = 0
         Top = 3
         Width = 52
-        Height = 13
+        Height = 18
         Margins.Left = 0
         Margins.Right = 0
         Margins.Bottom = 0
         Align = alLeft
         Caption = 'mkSquash:'
+        ExplicitHeight = 13
       end
       object edtParamMkSquash: TEdit
         AlignWithMargins = True
@@ -340,12 +404,13 @@ object frmOptions: TfrmOptions
         Left = 0
         Top = 3
         Width = 35
-        Height = 13
+        Height = 18
         Margins.Left = 0
         Margins.Right = 17
         Margins.Bottom = 0
         Align = alLeft
         Caption = 'chmod:'
+        ExplicitHeight = 13
       end
       object edtParamChmod: TEdit
         AlignWithMargins = True
@@ -380,12 +445,13 @@ object frmOptions: TfrmOptions
         Left = 0
         Top = 3
         Width = 51
-        Height = 13
+        Height = 18
         Margins.Left = 0
         Margins.Right = 1
         Margins.Bottom = 0
         Align = alLeft
         Caption = 'unSquash:'
+        ExplicitHeight = 13
       end
       object edtParamUnSquash: TEdit
         AlignWithMargins = True
@@ -406,7 +472,7 @@ object frmOptions: TfrmOptions
   object pnlButtons: TPanel
     AlignWithMargins = True
     Left = 4
-    Top = 336
+    Top = 355
     Width = 502
     Height = 25
     Margins.Left = 4
@@ -416,6 +482,7 @@ object frmOptions: TfrmOptions
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 3
+    ExplicitTop = 336
     object btnCancel: TButton
       Left = 427
       Top = 0
@@ -445,7 +512,13 @@ object frmOptions: TfrmOptions
   object opdExeFile: TOpenDialog
     Filter = 'Exe-File (*.exe)|*.exe|Any file|*'
     Options = [ofHideReadOnly, ofPathMustExist, ofFileMustExist, ofEnableSizing]
-    Left = 224
-    Top = 104
+    Left = 456
+    Top = 16
+  end
+  object opdSchema: TOpenDialog
+    Filter = 'XML file (*.xml)|*.xml|Any file|*'
+    Options = [ofHideReadOnly, ofPathMustExist, ofFileMustExist, ofEnableSizing]
+    Left = 424
+    Top = 16
   end
 end

@@ -40,7 +40,6 @@ type
     vstPXML: TVirtualStringTree;
     sptHor: TSplitter;
     redDescription: TRichEdit;
-    procedure Button1Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure vstPXMLChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure vstPXMLInitNode(Sender: TBaseVirtualTree; ParentNode,
@@ -186,7 +185,10 @@ begin
     Doc.Options := [doNodeAutoIndent];
     Doc.LoadFromFile(FileName);
     Schema := TXMLDocument.Create(frmPXML);
-    Schema.LoadFromFile(ExtractFilePath(Application.ExeName) + frmMain.Settings.SchemaFile);
+    if Length(ExtractFileDrive(frmMain.Settings.SchemaFile)) > 0 then // full path
+        Schema.LoadFromFile(frmMain.Settings.SchemaFile)
+    else
+        Schema.LoadFromFile(ExtractFilePath(Application.ExeName) + frmMain.Settings.SchemaFile);
     AddDataToTree(vstPXML,Doc.DocumentElement,nil);
     Result := true;
 end;
@@ -477,11 +479,6 @@ begin
             Close;
         end;
     end;
-end;
-
-procedure TfrmPXML.Button1Click(Sender: TObject);
-begin
-    AddEmptyNode(vstPXML,ntPAuthor);
 end;
 
 procedure TfrmPXML.FormClose(Sender: TObject; var Action: TCloseAction);

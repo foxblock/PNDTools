@@ -35,7 +35,6 @@ object frmPXML: TfrmPXML
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitTop = 379
     object btnCancel: TButton
       AlignWithMargins = True
       Left = 374
@@ -76,7 +75,6 @@ object frmPXML: TfrmPXML
     BevelOuter = bvNone
     Constraints.MinWidth = 200
     TabOrder = 1
-    ExplicitHeight = 379
     object scbValues: TScrollBox
       AlignWithMargins = True
       Left = 4
@@ -94,7 +92,6 @@ object frmPXML: TfrmPXML
       BevelInner = bvNone
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitHeight = 373
       object lblValue: TLabel
         AlignWithMargins = True
         Left = 3
@@ -215,7 +212,6 @@ object frmPXML: TfrmPXML
         ReadOnly = True
         ScrollBars = ssVertical
         TabOrder = 1
-        ExplicitHeight = 100
       end
     end
   end
@@ -233,7 +229,6 @@ object frmPXML: TfrmPXML
     Constraints.MaxWidth = 300
     Constraints.MinWidth = 100
     TabOrder = 0
-    ExplicitHeight = 379
     object vstPXML: TVirtualStringTree
       AlignWithMargins = True
       Left = 4
@@ -265,7 +260,6 @@ object frmPXML: TfrmPXML
       OnChange = vstPXMLChange
       OnGetText = vstPXMLGetText
       OnInitNode = vstPXMLInitNode
-      ExplicitHeight = 373
       Columns = <
         item
           Options = [coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coVisible, coAllowFocus]

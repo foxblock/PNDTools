@@ -170,6 +170,7 @@ implementation
     // DONE: Clear temp folder on exit and start
     // DONE: Check for write access on start
     // DONE: Function for proper conversion from Windows to Cygwin POSIX path
+    // TODO: Pass all external paths to function for WinLin conversion
 
 
 uses

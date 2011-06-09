@@ -44,6 +44,12 @@ type
     btnCancel: TButton;
     btnOK: TButton;
     cbxBinary: TCheckBox;
+    opdSchema: TOpenDialog;
+    pnlSchema: TPanel;
+    lblSchema: TLabel;
+    edtSchema: TEdit;
+    btnSchema: TButton;
+    procedure btnSchemaClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure btnOKClick(Sender: TObject);
@@ -82,6 +88,7 @@ begin
         edtParamMkSquash.Text := ParamMkSquash;
         edtParamUnSquash.Text := ParamUnSquash;
         edtParamChmod.Text := ParamChmod;
+        edtSchema.Text := SchemaFile;
     end;
               
     Successful := false;
@@ -115,6 +122,12 @@ procedure TfrmOptions.btnUnSquashClick(Sender: TObject);
 begin
     if opdExeFile.Execute then
         edtProgUnSquash.Text := opdExeFile.FileName;
+end;       
+
+procedure TfrmOptions.btnSchemaClick(Sender: TObject);
+begin
+    if opdSchema.Execute then
+        edtSchema.Text := opdSchema.FileName;
 end;
 
 procedure TfrmOptions.btnOKClick(Sender: TObject);
@@ -131,11 +144,12 @@ begin
         ParamMkSquash := edtParamMkSquash.Text;
         ParamUnSquash := edtParamUnSquash.Text;
         ParamChmod := edtParamChmod.Text;
+        SchemaFile := edtSchema.Text;
     end;
 
     Successful := true;
     Close;
-end;      
+end;
 
 procedure TfrmOptions.btnCancelClick(Sender: TObject);
 begin
