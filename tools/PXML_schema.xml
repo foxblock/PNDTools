@@ -26,8 +26,8 @@
   <package id="required,string,id" elemdesc="descriptions\package.rtf">
     <author name="required,string" website="optional,string,website" email="optional,string,email" elemdesc="descriptions\author.rtf"/>
     <version major="required,string,version" minor="required,string,version" release="required,string,version" build="required,string,version" type="optional,set,alpha,beta,release" elemdesc="descriptions\version.rtf"/>
-    <titles>
-      <title lang="required,string" elemdesc="descriptions\title.rtf">CONTENT</title>
+    <titles elemdesc="descriptions\titles.rtf">
+      <title lang="required,string" elemdesc="descriptions\titles.rtf">CONTENT</title>
     </titles>
     <descriptions elemdesc="descriptions\descriptions.rtf">
       <description lang="required,string" elemdesc="descriptions\descriptions.rtf">CONTENT</description>

@@ -220,8 +220,11 @@ var
 begin           
     for I := High(CurrentPanels) downto 0 do
     begin
-        CurrentPanels[I].Free;
-        SetLength(CurrentPanels,High(CurrentPanels));
+        try
+            CurrentPanels[I].Free;
+        finally
+            SetLength(CurrentPanels,High(CurrentPanels));
+        end;
     end;
     lblNoValue.Visible := true;
     lblNoAttr.Visible := true;
@@ -338,6 +341,8 @@ begin
         end;
     end;
     List.Free;
+    if Length(CurrentPanels) > 0 then
+        lblNoAttr.Visible := false;
 end;  
 
 function TfrmPXML.FindNode(Tree: TBaseVirtualTree; const S: string;
@@ -499,6 +504,12 @@ begin
     KeyPreview := true;
     OnKeyDown := dummy.KeyDown;
     {$Endif}
+    SetLength(TrueBoolStrs,2);
+    TrueBoolStrs[0] := 'true';
+    TrueBoolStrs[1] := '1';
+    SetLength(FalseBoolStrs,2);
+    FalseBoolStrs[0] := 'false';
+    FalseBoolStrs[1] := '0';
 end;
 
 // --- TItemPanel --------------------------------------------------------------
@@ -571,6 +582,7 @@ end;
 procedure TStringItemPanel.SetTypeData(const Arguments: TStrings);
 var
     temp : String;
+    I : Integer;
 begin
     temp := Arguments.Strings[0];
     if temp = 'version' then
@@ -588,8 +600,16 @@ begin
     else
     begin
         chars := TStringList.Create;
-        chars.AddStrings(arguments);
-        edtValue.OnKeyPress := GenericKeyPress;
+        for I := 0 to Arguments.Count - 1 do
+            if Length(Arguments.Strings[I]) = 1 then // only add single chars
+                chars.Add(Arguments.Strings[I]);
+        if chars.Count > 0 then
+            edtValue.OnKeyPress := GenericKeyPress
+        else
+            begin
+            chars.Free;
+            chars := nil;
+            end;
     end;
 end;
 
@@ -671,12 +691,19 @@ begin
             Top := 3;
             Bottom := 0;
         end;
-        Checked := StrToBoolDef(Attr.Text,false);
+        AllowGrayed := true;
+        try
+            Checked := StrToBool(Attr.Text);
+        except // value faulty or not present
+            State := cbGrayed;
+        end;
     end;
 end;
 
 destructor TBooleanItemPanel.Free;
 begin
+    if cbxValue.State = cbGrayed then
+       Node.AttributeNodes.Delete(Attr.NodeName);
     cbxValue.Free;
     inherited Destroy;
 end;
@@ -695,10 +722,10 @@ end;
 
 procedure TBooleanItemPanel.UpdateData;
 begin
-    Attr.NodeValue := BoolToStr(cbxValue.Checked,false);
+    Attr.NodeValue := BoolToStr(cbxValue.Checked,true);
 end;
 
-// --- TBooleanItemPanel -------------------------------------------------------
+// --- TSetItemPanel -----------------------------------------------------------
 
 constructor TSetItemPanel.Create(NewParent : TWinControl; AttrNode, ParentNode : IXMLNode);
 begin
