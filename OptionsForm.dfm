@@ -105,13 +105,12 @@ object frmOptions: TfrmOptions
         Left = 0
         Top = 3
         Width = 52
-        Height = 18
+        Height = 13
         Margins.Left = 0
         Margins.Right = 0
         Margins.Bottom = 0
         Align = alLeft
         Caption = 'mkSquash:'
-        ExplicitHeight = 13
       end
       object edtProgMkSquash: TEdit
         AlignWithMargins = True
@@ -156,13 +155,12 @@ object frmOptions: TfrmOptions
         Left = 0
         Top = 3
         Width = 51
-        Height = 18
+        Height = 13
         Margins.Left = 0
         Margins.Right = 1
         Margins.Bottom = 0
         Align = alLeft
         Caption = 'unSquash:'
-        ExplicitHeight = 13
       end
       object edtProgUnSquash: TEdit
         AlignWithMargins = True
@@ -207,13 +205,12 @@ object frmOptions: TfrmOptions
         Left = 0
         Top = 3
         Width = 35
-        Height = 18
+        Height = 13
         Margins.Left = 0
         Margins.Right = 17
         Margins.Bottom = 0
         Align = alLeft
         Caption = 'chmod:'
-        ExplicitHeight = 13
       end
       object edtProgChmod: TEdit
         AlignWithMargins = True
@@ -303,13 +300,12 @@ object frmOptions: TfrmOptions
         Left = 0
         Top = 3
         Width = 52
-        Height = 18
+        Height = 13
         Margins.Left = 0
         Margins.Right = 0
         Margins.Bottom = 0
         Align = alLeft
         Caption = 'mkSquash:'
-        ExplicitHeight = 13
       end
       object edtParamMkSquash: TEdit
         AlignWithMargins = True
@@ -344,13 +340,12 @@ object frmOptions: TfrmOptions
         Left = 0
         Top = 3
         Width = 35
-        Height = 18
+        Height = 13
         Margins.Left = 0
         Margins.Right = 17
         Margins.Bottom = 0
         Align = alLeft
         Caption = 'chmod:'
-        ExplicitHeight = 13
       end
       object edtParamChmod: TEdit
         AlignWithMargins = True
@@ -385,13 +380,12 @@ object frmOptions: TfrmOptions
         Left = 0
         Top = 3
         Width = 51
-        Height = 18
+        Height = 13
         Margins.Left = 0
         Margins.Right = 1
         Margins.Bottom = 0
         Align = alLeft
         Caption = 'unSquash:'
-        ExplicitHeight = 13
       end
       object edtParamUnSquash: TEdit
         AlignWithMargins = True

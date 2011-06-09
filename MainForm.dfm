@@ -2,8 +2,8 @@ object frmMain: TfrmMain
   Left = 100
   Top = 100
   Caption = 'PNDTools'
-  ClientHeight = 542
-  ClientWidth = 584
+  ClientHeight = 562
+  ClientWidth = 561
   Color = clBtnFace
   Constraints.MinHeight = 500
   Constraints.MinWidth = 450
@@ -24,8 +24,8 @@ object frmMain: TfrmMain
   object pnlButtons: TPanel
     AlignWithMargins = True
     Left = 4
-    Top = 505
-    Width = 576
+    Top = 525
+    Width = 553
     Height = 33
     Margins.Left = 4
     Margins.Top = 0
@@ -36,7 +36,7 @@ object frmMain: TfrmMain
     TabOrder = 4
     object btnCreate: TButton
       AlignWithMargins = True
-      Left = 467
+      Left = 444
       Top = 4
       Width = 105
       Height = 25
@@ -53,8 +53,8 @@ object frmMain: TfrmMain
   object grbLog: TGroupBox
     AlignWithMargins = True
     Left = 4
-    Top = 401
-    Width = 576
+    Top = 421
+    Width = 553
     Height = 100
     Margins.Left = 4
     Margins.Top = 2
@@ -70,7 +70,7 @@ object frmMain: TfrmMain
       AlignWithMargins = True
       Left = 6
       Top = 15
-      Width = 564
+      Width = 541
       Height = 79
       Margins.Left = 4
       Margins.Top = 0
@@ -92,8 +92,8 @@ object frmMain: TfrmMain
     AlignWithMargins = True
     Left = 4
     Top = 4
-    Width = 576
-    Height = 301
+    Width = 553
+    Height = 321
     Margins.Left = 4
     Margins.Top = 4
     Margins.Right = 4
@@ -105,8 +105,8 @@ object frmMain: TfrmMain
       AlignWithMargins = True
       Left = 6
       Top = 15
-      Width = 564
-      Height = 230
+      Width = 541
+      Height = 250
       Margins.Left = 4
       Margins.Top = 0
       Margins.Right = 4
@@ -161,15 +161,15 @@ object frmMain: TfrmMain
     end
     object pnlFilesButtons: TPanel
       Left = 2
-      Top = 266
-      Width = 572
+      Top = 286
+      Width = 549
       Height = 33
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 2
       object btnFilesClear: TButton
         AlignWithMargins = True
-        Left = 493
+        Left = 470
         Top = 4
         Width = 75
         Height = 25
@@ -184,7 +184,7 @@ object frmMain: TfrmMain
       end
       object btnFilesFolder: TButton
         AlignWithMargins = True
-        Left = 331
+        Left = 308
         Top = 4
         Width = 75
         Height = 25
@@ -199,7 +199,7 @@ object frmMain: TfrmMain
       end
       object btnFilesFile: TButton
         AlignWithMargins = True
-        Left = 252
+        Left = 229
         Top = 4
         Width = 75
         Height = 25
@@ -214,7 +214,7 @@ object frmMain: TfrmMain
       end
       object cbxRecursive: TCheckBox
         AlignWithMargins = True
-        Left = 410
+        Left = 387
         Top = 4
         Width = 79
         Height = 25
@@ -231,15 +231,15 @@ object frmMain: TfrmMain
     end
     object pnlFilesInfo: TPanel
       Left = 2
-      Top = 245
-      Width = 572
+      Top = 265
+      Width = 549
       Height = 21
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 1
       object lblFilesSizeLbl: TLabel
         AlignWithMargins = True
-        Left = 475
+        Left = 452
         Top = 4
         Width = 52
         Height = 13
@@ -255,7 +255,7 @@ object frmMain: TfrmMain
       end
       object lblFilesSize: TLabel
         AlignWithMargins = True
-        Left = 531
+        Left = 508
         Top = 4
         Width = 31
         Height = 13
@@ -273,8 +273,8 @@ object frmMain: TfrmMain
   object grbIcon: TGroupBox
     AlignWithMargins = True
     Left = 4
-    Top = 309
-    Width = 576
+    Top = 329
+    Width = 553
     Height = 42
     Margins.Left = 4
     Margins.Top = 0
@@ -287,7 +287,7 @@ object frmMain: TfrmMain
       AlignWithMargins = True
       Left = 6
       Top = 15
-      Width = 406
+      Width = 383
       Height = 21
       Margins.Left = 4
       Margins.Top = 0
@@ -298,7 +298,7 @@ object frmMain: TfrmMain
     end
     object btnIconLoad: TButton
       AlignWithMargins = True
-      Left = 416
+      Left = 393
       Top = 15
       Width = 75
       Height = 21
@@ -313,7 +313,7 @@ object frmMain: TfrmMain
     end
     object btnIconClear: TButton
       AlignWithMargins = True
-      Left = 495
+      Left = 472
       Top = 15
       Width = 75
       Height = 21
@@ -330,8 +330,8 @@ object frmMain: TfrmMain
   object grbPXML: TGroupBox
     AlignWithMargins = True
     Left = 4
-    Top = 355
-    Width = 576
+    Top = 375
+    Width = 553
     Height = 42
     Margins.Left = 4
     Margins.Top = 0
@@ -342,7 +342,7 @@ object frmMain: TfrmMain
     TabOrder = 2
     object btnPXMLLoad: TButton
       AlignWithMargins = True
-      Left = 337
+      Left = 314
       Top = 15
       Width = 75
       Height = 21
@@ -359,7 +359,7 @@ object frmMain: TfrmMain
       AlignWithMargins = True
       Left = 6
       Top = 15
-      Width = 327
+      Width = 304
       Height = 21
       Margins.Left = 4
       Margins.Top = 0
@@ -371,7 +371,7 @@ object frmMain: TfrmMain
     end
     object btnPXMLClear: TButton
       AlignWithMargins = True
-      Left = 495
+      Left = 472
       Top = 15
       Width = 75
       Height = 21
@@ -386,7 +386,7 @@ object frmMain: TfrmMain
     end
     object btnPXMLEdit: TButton
       AlignWithMargins = True
-      Left = 416
+      Left = 393
       Top = 15
       Width = 75
       Height = 21
@@ -401,8 +401,8 @@ object frmMain: TfrmMain
     end
   end
   object imlFileTree: TImageList
-    Left = 552
-    Top = 64
+    Left = 272
+    Top = 80
   end
   object opdFileAny: TOpenDialog
     FileName = 'H:\Delphi Projekte\PNDTools\PNDTools.bdsproj'
@@ -410,8 +410,8 @@ object frmMain: TfrmMain
     FilterIndex = 0
     Options = [ofHideReadOnly, ofAllowMultiSelect, ofPathMustExist, ofFileMustExist, ofEnableSizing]
     Title = 'Select file(s) to add to the PND'
-    Left = 552
-    Top = 32
+    Left = 272
+    Top = 48
   end
   object opdPXML: TOpenDialog
     DefaultExt = 'xml'
@@ -419,8 +419,8 @@ object frmMain: TfrmMain
     FilterIndex = 0
     Options = [ofHideReadOnly, ofPathMustExist, ofFileMustExist, ofEnableSizing]
     Title = 'Select PXML file'
-    Left = 520
-    Top = 32
+    Left = 240
+    Top = 48
   end
   object opdIcon: TOpenDialog
     Filter = 
@@ -429,26 +429,26 @@ object frmMain: TfrmMain
     FilterIndex = 0
     Options = [ofHideReadOnly, ofPathMustExist, ofFileMustExist, ofEnableSizing]
     Title = 'Select icon for the PND'
-    Left = 488
-    Top = 32
+    Left = 208
+    Top = 48
   end
   object sadPND: TSaveDialog
     Filter = 'PND files (*.pnd)|*.pnd'
     Options = [ofOverwritePrompt, ofHideReadOnly, ofPathMustExist, ofCreatePrompt, ofEnableSizing]
     Title = 'Destination for the PND file'
-    Left = 424
-    Top = 32
+    Left = 144
+    Top = 48
   end
   object opdPND: TOpenDialog
     Filter = 'PND file (*.pnd)|*.pnd|Any file|*'
     Options = [ofHideReadOnly, ofPathMustExist, ofFileMustExist, ofEnableSizing]
     Title = 'Select a PND file to open'
-    Left = 456
-    Top = 32
+    Left = 176
+    Top = 48
   end
   object menMain: TMainMenu
-    Left = 520
-    Top = 96
+    Left = 240
+    Top = 112
     object menMainFile: TMenuItem
       Caption = 'File'
       object menMainFileOpen: TMenuItem
@@ -491,11 +491,15 @@ object frmMain: TfrmMain
   end
   object pomFiles: TPopupMenu
     AutoPopup = False
-    Left = 552
-    Top = 96
+    Left = 272
+    Top = 112
     object pomFilesOpen: TMenuItem
       Caption = 'Open'
       OnClick = pomFilesOpenClick
+    end
+    object pomFilesDelete: TMenuItem
+      Caption = 'Delete'
+      OnClick = pomFilesDeleteClick
     end
   end
 end

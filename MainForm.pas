@@ -1,5 +1,9 @@
 unit MainForm;
 
+{$IFDEF FPC}
+  {$MODE DELPHI}
+{$ENDIF}
+
 interface
 
 uses
@@ -18,6 +22,7 @@ type
     ParamMkSquash : String;
     ParamUnSquash : String;
     ParamChmod : String;
+    SchemaFile : String;
   end;
 
   TfrmMain = class(TForm)
@@ -64,6 +69,8 @@ type
     N3: TMenuItem;
     menMainFileExit: TMenuItem;   
     btnPXMLEdit: TButton;
+    pomFilesDelete: TMenuItem;
+    procedure pomFilesDeleteClick(Sender: TObject);
     procedure edtPXMLChange(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure menMainFileOptionsClick(Sender: TObject);
@@ -134,8 +141,8 @@ type
   end;
 
 const
-    VERSION : String           = '0.2.0';
-    BUILD_DATE : String        = '05.06.2011';
+    VERSION : String           = '0.3.1';
+    BUILD_DATE : String        = '09.06.2011';
     LOG_ERROR_COLOR : TColor   = clRed;
     LOG_WARNING_COLOR : TColor = $0000AAFF;
     LOG_SUCCESS_COLOR : TColor = clGreen;  
@@ -143,6 +150,7 @@ const
     MKSQUASH_PATH : String     = 'tools\mksquashfs.exe'; // Path to mkquashfs
     CHMOD_PATH : String        = 'tools\chmod.exe';      // Path to cygwin's chmod
     SETTINGS_PATH : String     = 'settings.ini';
+    SCHEMA_PATH : String       = 'tools\PXML_schema.xml';
     SOURCE_VAR : String        = '%source%';
     TARGET_VAR : String        = '%target%';
 
@@ -166,7 +174,7 @@ implementation
 
 uses
     VSTUtils, FormatUtils, FileUtils, OptionsForm, PXMLForm,
-    {$Ifdef MSWINDOWS}
+    {$Ifdef Win32}
     VSTDragDrop_win, VSTIcons_win, ShellStuff_win, ControlHideFix;
     {$Else}
     VSTDragDrop_lin, VSTIcons_lin, ShellStuff_lin;
@@ -441,6 +449,7 @@ begin
                 TARGET_VAR + '" "' + SOURCE_VAR + '"');
             ParamChmod := Ini.ReadString('Params','Chmod','-R 755 "' +
                 SOURCE_VAR + '"');
+            SchemaFile := Ini.ReadString('Paths','Schema',SCHEMA_PATH);
         end;
         ReadFormSettings(Ini,frmMain);
         ReadFormSettings(Ini,frmPXML);
@@ -466,6 +475,7 @@ begin
             Ini.WriteString('Params','MkSquash',ParamMkSquash);
             Ini.WriteString('Params','UnSquash',ParamUnSquash);
             Ini.WriteString('Params','Chmod',ParamChmod);
+            Ini.WriteString('Paths','Schema',SchemaFile);
         end;
         WriteFormSettings(Ini,frmMain);
         WriteFormSettings(Ini,frmPXML);
@@ -555,6 +565,11 @@ end;
 
 // --- Popup Menu --------------------------------------------------------------
 
+procedure TfrmMain.pomFilesDeleteClick(Sender: TObject);
+begin
+    vstFiles.DeleteSelectedNodes;
+end;
+
 procedure TfrmMain.pomFilesOpenClick(Sender: TObject);
 var
     Node : PVirtualNode;
@@ -607,7 +622,7 @@ begin
 
     vstFiles.NodeDataSize := sizeof(rFileTreeData);
     vstFiles.OnDragDrop := dummy.VSTDragDrop;
-    {$Ifdef MSWINDOWS}  
+    {$Ifdef Win32}  
     KeyPreview := true;
     OnKeyDown := jummy.KeyDown;
     {$Endif}
@@ -650,7 +665,7 @@ begin
             else
                 Result := 1;
         end else
-        {$Ifdef MSWINDOWS}
+        {$Ifdef Win32}
             Result := CompareText(ExtractFileName(PData1.Name), ExtractFileName(PData2.Name));
         {$Else}
             Result := CompareStr(ExtractFileName(PData1.Name), ExtractFileName(PData2.Name));

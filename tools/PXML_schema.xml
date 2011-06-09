@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- All elements and all attributes are used in this example giving the program a base to copy nodes from
+     
+	 Attribute values are built like this:
+	 [required|optional],type,arguments
+	 arguments are type specific and can be possible values of a set
+	 supported types are:
+	 string - optional argument is a hard-coded filter type or a list of allowed characters
+	 boolean - no argument, becomes a check box
+	 set - argument is a list of allowed values which will be added to a drop-down list
+	 
+	 Supported filter types (for string elements):
+	 version - allows only numeric chars and '+' and '-'
+	 email - allows only one of '@' and does not allow any of ()[]\;:,<>
+	 folder - does not allow '/' and '-'
+	 language - only allows alpha characters and one of '_'
+	 mime - only allows alphanumerical characters as well as '-' and '.' and one of '/'
+	 any list of chars (separated by ,) marks them as allowed only
+	 currently not implemented (allow anything): website, path, dir, id
+	 
+	 The elemdesc attribute is special and defines a file path to a text file containing the description for the element.
+	 The path is relative from the main program executable (PNDTools.exe)
+	 This attribute is option and will not interfere with the actual PXML data
+-->
+<PXML xmlns="http://openpandora.org/namespaces/PXML">
+  <package id="required,string,id" elemdesc="descriptions\package.rtf">
+    <author name="required,string" website="optional,string,website" email="optional,string,email" elemdesc="descriptions\author.rtf"/>
+    <version major="required,string,version" minor="required,string,version" release="required,string,version" build="required,string,version" type="optional,set,alpha,beta,release" elemdesc="descriptions\version.rtf"/>
+    <titles>
+      <title lang="required,string" elemdesc="descriptions\title.rtf">CONTENT</title>
+    </titles>
+    <descriptions elemdesc="descriptions\descriptions.rtf">
+      <description lang="required,string" elemdesc="descriptions\descriptions.rtf">CONTENT</description>
+    </descriptions>
+    <icon src="required,string,path" elemdesc="descriptions\icon.rtf"/>
+  </package>
+  
+  <application id="required,string,id" appdata="optional,string,folder" elemdesc="descriptions\application.rtf">
+    <exec command="required,string,path" arguments="optional,string" startdir="optional,string,dir" standalone="optional,boolean" background="optional,boolean" x11="optional,set,req,stop,ignore" elemdesc="descriptions\exec.rtf"/>
+    <author name="required,string" website="optional,string,website" email="optional,string,email" elemdesc="descriptions\author.rtf"/>
+    <version major="required,string,version" minor="required,string,version" release="required,string,version" build="required,string,version" type="optional,set,alpha,beta,release" elemdesc="descriptions\version.rtf"/>
+	<osversion major="required,string,version" minor="required,string,version" release="required,string,version" build="required,string,version" elemdesc="descriptions\osversion.rtf"/>
+    <titles elemdesc="descriptions\titles.rtf">
+      <title lang="required,string,language" elemdesc="descriptions\titles.rtf">CONTENT</title>
+    </titles>
+    <title lang="required,string,language" elemdesc="descriptions\titles.rtf">CONTENT</title> <!--Extra block for compatibility with OS versions before HF6-->
+    <descriptions elemdesc="descriptions\descriptions.rtf">
+      <description lang="required,string,language" elemdesc="descriptions\descriptions.rtf">CONTENT</description>
+    </descriptions>
+    <description lang="required,string,language" elemdesc="descriptions\descriptions.rtf">CONTENT</description> <!--Extra block for compatibility with OS versions before HF6-->
+    <icon src="required,string,path" elemdesc="descriptions\icon.rtf"/>
+    <licenses elemdesc="descriptions\license.rtf">
+      <license name="required,string" url="optional,string" sourcecodeurl="optional,string" elemdesc="descriptions\license.rtf"/>
+    </licenses>
+    <previewpics elemdesc="descriptions\previewpics.rtf">
+      <pic src="required,string,path" elemdesc="descriptions\previewpics.rtf"/>
+    </previewpics>
+    <info name="required,string" type="required,set,test/html,text/plain" src="required,string,path" elemdesc="descriptions\info.rtf"/>
+    <categories elemdesc="descriptions\category.rtf">
+      <category name="required,string" elemdesc="descriptions\category.rtf">
+        <subcategory name="required,string" elemdesc="descriptions\category.rtf"/>
+      </category>
+    </categories>
+	<associations elemdesc="descriptions\association.rtf">
+	  <association name="required,string" filetype="required,string,mime" exec="required,string" elemdesc="descriptions\association.rtf"/>
+	</associations>
+	<clockspeed frequency="required,string,integer" elemdesc="descriptions\clockspeed.rtf"/>
+  </application>
+</PXML>

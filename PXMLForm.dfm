@@ -2,7 +2,7 @@ object frmPXML: TfrmPXML
   Left = 0
   Top = 0
   Caption = 'PXML'
-  ClientHeight = 412
+  ClientHeight = 435
   ClientWidth = 453
   Color = clBtnFace
   Constraints.MinHeight = 300
@@ -20,20 +20,22 @@ object frmPXML: TfrmPXML
   object sptHor: TSplitter
     Left = 158
     Top = 0
-    Height = 379
+    Height = 402
+    AutoSnap = False
     ResizeStyle = rsUpdate
-    ExplicitLeft = 319
-    ExplicitTop = 8
-    ExplicitHeight = 434
+    ExplicitLeft = 160
+    ExplicitTop = -4
+    ExplicitHeight = 377
   end
   object pnlButtons: TPanel
     Left = 0
-    Top = 379
+    Top = 402
     Width = 453
     Height = 33
     Align = alBottom
     BevelOuter = bvNone
-    TabOrder = 0
+    TabOrder = 2
+    ExplicitTop = 379
     object btnCancel: TButton
       AlignWithMargins = True
       Left = 374
@@ -46,7 +48,7 @@ object frmPXML: TfrmPXML
       Margins.Bottom = 4
       Align = alRight
       Caption = 'Cancel'
-      TabOrder = 0
+      TabOrder = 1
       OnClick = btnCancelClick
     end
     object btnOK: TButton
@@ -61,76 +63,26 @@ object frmPXML: TfrmPXML
       Margins.Bottom = 4
       Align = alRight
       Caption = 'OK'
-      TabOrder = 1
-      OnClick = btnOKClick
-    end
-  end
-  object pnlTree: TPanel
-    Left = 0
-    Top = 0
-    Width = 158
-    Height = 379
-    Margins.Left = 4
-    Margins.Top = 4
-    Margins.Right = 4
-    Margins.Bottom = 2
-    Align = alLeft
-    BevelOuter = bvNone
-    TabOrder = 1
-    object vstPXML: TVirtualStringTree
-      AlignWithMargins = True
-      Left = 4
-      Top = 4
-      Width = 150
-      Height = 373
-      Margins.Left = 4
-      Margins.Top = 4
-      Margins.Right = 4
-      Margins.Bottom = 2
-      Align = alClient
-      Header.AutoSizeIndex = 0
-      Header.DefaultHeight = 17
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      Header.Options = [hoAutoResize, hoColumnResize, hoDrag]
-      Header.SortColumn = 0
-      Header.Style = hsXPStyle
-      LineStyle = lsSolid
-      ParentShowHint = False
-      ShowHint = False
       TabOrder = 0
-      TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScroll, toAutoScrollOnExpand, toAutoTristateTracking, toAutoDeleteMovedNodes]
-      TreeOptions.PaintOptions = [toShowButtons, toShowDropmark, toShowHorzGridLines, toShowRoot, toShowTreeLines, toShowVertGridLines, toThemeAware, toFullVertGridLines]
-      TreeOptions.SelectionOptions = [toFullRowSelect]
-      OnChange = vstPXMLChange
-      OnGetText = vstPXMLGetText
-      OnInitNode = vstPXMLInitNode
-      Columns = <
-        item
-          Options = [coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coVisible, coAllowFocus]
-          Position = 0
-          Width = 146
-          WideText = 'Key'
-        end>
+      OnClick = btnOKClick
     end
   end
   object pnlData: TPanel
     Left = 161
     Top = 0
     Width = 292
-    Height = 379
+    Height = 402
     Align = alClient
     BevelOuter = bvNone
-    TabOrder = 2
+    Constraints.MinWidth = 200
+    TabOrder = 1
+    ExplicitHeight = 379
     object scbValues: TScrollBox
       AlignWithMargins = True
       Left = 4
       Top = 4
       Width = 284
-      Height = 373
+      Height = 396
       Margins.Left = 4
       Margins.Top = 4
       Margins.Right = 4
@@ -142,6 +94,7 @@ object frmPXML: TfrmPXML
       BevelInner = bvNone
       BevelOuter = bvNone
       TabOrder = 0
+      ExplicitHeight = 373
       object lblValue: TLabel
         AlignWithMargins = True
         Left = 3
@@ -246,21 +199,80 @@ object frmPXML: TfrmPXML
           TabOrder = 0
         end
       end
-      object memDescription: TMemo
-        AlignWithMargins = True
-        Left = 3
-        Top = 143
-        Width = 274
-        Height = 100
-        Align = alTop
+      object redDescription: TRichEdit
+        Left = 0
+        Top = 140
+        Width = 280
+        Height = 252
+        Align = alClient
+        BevelInner = bvNone
+        BevelOuter = bvNone
         BorderStyle = bsNone
         Color = clBtnFace
+        Constraints.MinHeight = 100
         Lines.Strings = (
           'no description available for this element')
         ReadOnly = True
         ScrollBars = ssVertical
         TabOrder = 1
+        ExplicitHeight = 100
       end
+    end
+  end
+  object pnlTree: TPanel
+    Left = 0
+    Top = 0
+    Width = 158
+    Height = 402
+    Margins.Left = 4
+    Margins.Top = 4
+    Margins.Right = 4
+    Margins.Bottom = 2
+    Align = alLeft
+    BevelOuter = bvNone
+    Constraints.MaxWidth = 300
+    Constraints.MinWidth = 100
+    TabOrder = 0
+    ExplicitHeight = 379
+    object vstPXML: TVirtualStringTree
+      AlignWithMargins = True
+      Left = 4
+      Top = 4
+      Width = 150
+      Height = 396
+      Margins.Left = 4
+      Margins.Top = 4
+      Margins.Right = 4
+      Margins.Bottom = 2
+      Align = alClient
+      Header.AutoSizeIndex = 0
+      Header.DefaultHeight = 17
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Header.Options = [hoAutoResize, hoColumnResize, hoDrag]
+      Header.SortColumn = 0
+      Header.Style = hsXPStyle
+      LineStyle = lsSolid
+      ParentShowHint = False
+      ShowHint = False
+      TabOrder = 0
+      TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScroll, toAutoScrollOnExpand, toAutoTristateTracking, toAutoDeleteMovedNodes]
+      TreeOptions.PaintOptions = [toShowButtons, toShowDropmark, toShowHorzGridLines, toShowRoot, toShowTreeLines, toShowVertGridLines, toThemeAware, toFullVertGridLines]
+      TreeOptions.SelectionOptions = [toFullRowSelect]
+      OnChange = vstPXMLChange
+      OnGetText = vstPXMLGetText
+      OnInitNode = vstPXMLInitNode
+      ExplicitHeight = 373
+      Columns = <
+        item
+          Options = [coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coVisible, coAllowFocus]
+          Position = 0
+          Width = 146
+          WideText = 'Key'
+        end>
     end
   end
   object sadPXML: TSaveDialog

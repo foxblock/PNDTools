@@ -7,6 +7,10 @@
 
 unit VSTUtils;
 
+{$IFDEF FPC}
+  {$MODE DELPHI}
+{$ENDIF}
+
 interface
        
 uses
@@ -210,7 +214,7 @@ begin
                 TargetDir + ExtractFileName(PData.Name),Source,Target);
         end else
         begin
-            {$Ifdef MSWINDOWS}
+            {$Ifdef Win32}
             if NOT AnsiSameText(PData.Name,TargetDir + ExtractFileName(PData.Name)) then
             {$Else}
             if NOT AnsiSameStr(PData.Name,TargetDir + ExtractFileName(PData.Name)) then
@@ -233,7 +237,7 @@ begin
     while (Node <> nil) do
     begin
         PData := Tree.GetNodeData(Node);
-        {$Ifdef MSWINDOWS}
+        {$Ifdef Win32}
         if AnsiSameText(ExtractFileName(PData.Name),Value) then
         {$Else}
         if AnsiSameStr(ExtractFileName(PData.Name),Value) then

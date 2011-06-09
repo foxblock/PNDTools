@@ -1,5 +1,9 @@
 unit FileUtils;
 
+{$IFDEF FPC}
+  {$MODE DELPHI}
+{$ENDIF}
+
 interface
 
 uses Classes, SysUtils;

@@ -1,5 +1,9 @@
 unit OptionsForm;
 
+{$IFDEF FPC}
+  {$MODE DELPHI}
+{$ENDIF}
+
 interface
 
 uses
@@ -59,7 +63,7 @@ var
 
 implementation
 
-{$Ifdef MSWINDOWS}
+{$Ifdef Win32}
 uses ControlHideFix;
 {$Endif}
 
@@ -89,7 +93,7 @@ procedure TfrmOptions.FormCreate(Sender: TObject);
 var
     dummy : TButtonEvent;
 begin
-    {$Ifdef MSWINDOWS}
+    {$Ifdef Win32}
     KeyPreview := true;
     OnKeyDown := dummy.KeyDown;
     {$Endif}
