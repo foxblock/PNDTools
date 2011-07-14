@@ -11,12 +11,13 @@
 	 
 	 Supported filter types (for string elements):
 	 version - allows only numeric chars and '+' and '-'
-	 email - allows only one of '@' and does not allow any of ()[]\;:,<>
-	 folder - does not allow '/' and '-'
+	 email - allows only one of '@' and does not allow any of ()[]\;:,<>|
+	 folder - does not allow ' ' and any of -/\:?*<>|"
 	 language - only allows alpha characters and one of '_'
 	 mime - only allows alphanumerical characters as well as '-' and '.' and one of '/'
+	 id - allows alphanumerical chars as well as .-!_+
 	 any list of chars (separated by ,) marks them as allowed only
-	 currently not implemented (allow anything): website, path, dir, id
+	 currently not implemented (allow anything): website, path, dir
 	 
 	 The elemdesc attribute is special and defines a file path to a text file containing the description for the element.
 	 The path is relative from the main program executable (PNDTools.exe)
@@ -27,10 +28,10 @@
     <author name="required,string" website="optional,string,website" email="optional,string,email" elemdesc="descriptions\author.rtf"/>
     <version major="required,string,version" minor="required,string,version" release="required,string,version" build="required,string,version" type="optional,set,alpha,beta,release" elemdesc="descriptions\version.rtf"/>
     <titles elemdesc="descriptions\titles.rtf">
-      <title lang="required,string" elemdesc="descriptions\titles.rtf">CONTENT</title>
+      <title lang="required,string,language" elemdesc="descriptions\titles.rtf">CONTENT</title>
     </titles>
     <descriptions elemdesc="descriptions\descriptions.rtf">
-      <description lang="required,string" elemdesc="descriptions\descriptions.rtf">CONTENT</description>
+      <description lang="required,string,language" elemdesc="descriptions\descriptions.rtf">CONTENT</description>
     </descriptions>
     <icon src="required,string,path" elemdesc="descriptions\icon.rtf"/>
   </package>

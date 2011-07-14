@@ -141,8 +141,8 @@ type
   end;
 
 const
-    VERSION : String           = '0.3.2';
-    BUILD_DATE : String        = '09.06.2011';
+    VERSION : String           = '0.3.3';
+    BUILD_DATE : String        = '08.07.2011';
     LOG_ERROR_COLOR : TColor   = clRed;
     LOG_WARNING_COLOR : TColor = $0000AAFF;
     LOG_SUCCESS_COLOR : TColor = clGreen;  
@@ -171,6 +171,7 @@ implementation
     // DONE: Check for write access on start
     // DONE: Function for proper conversion from Windows to Cygwin POSIX path
     // TODO: Pass all external paths to function for WinLin conversion
+    // TODO: Add option for extraction behaviour (user path, program path, ask)
 
 
 uses
@@ -445,7 +446,7 @@ begin
             ProgUnSquash := Ini.ReadString('Paths','UnSquash',UNSQUASHFS_PATH);
             ProgChmod := Ini.ReadString('Paths','Chmod',CHMOD_PATH);
             ParamMkSquash := Ini.ReadString('Params','MkSquash','"' +
-                SOURCE_VAR + '" "' + TARGET_VAR + '" -noappend');
+                SOURCE_VAR + '" "' + TARGET_VAR + '" -nopad -no-recovery -noappend');
             ParamUnSquash := Ini.ReadString('Params','UnSquash','-f -d "' +
                 TARGET_VAR + '" "' + SOURCE_VAR + '"');
             ParamChmod := Ini.ReadString('Params','Chmod','-R 755 "' +

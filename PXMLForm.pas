@@ -17,10 +17,13 @@ type
   end;
   PXMLTreeData = ^rXMLTreeData;
 
-  TNodeType = (ntPackage, ntApplication, ntPAuthor, ntPVersion, ntPTitle,
-               ntPDescription, ntPIcon, ntExec, ntAuthor, ntVersion, ntOSversion,
-               ntTitle, ntDescription, ntIcon, ntLicense, ntPreviewPic, ntInfo,
-               ntCategory, ntAssociation, ntClockspeed);
+  TNodeType = (ntPackage, ntApplication, ntPAuthor, ntPVersion, ntPTitleContainer,
+               ntPTitle, ntPDescriptionContainer, ntPDescription, ntPIcon, ntExec,
+               ntAuthor, ntVersion, ntOSversion, ntTitleContainer, ntTitle,
+               ntDescriptionContainer, ntDescription, ntIcon, ntLicenseContainer,
+               ntLicense, ntPreviewPicContainer, ntPreviewPic, ntInfo,
+               ntCategoryContainer, ntCategory, ntSubCategory, ntAssociation,
+               ntAssociationContainer, ntClockspeed);
 
   TfrmPXML = class(TForm)
     pnlButtons: TPanel;
@@ -40,6 +43,9 @@ type
     vstPXML: TVirtualStringTree;
     sptHor: TSplitter;
     redDescription: TRichEdit;
+    cbxElement: TComboBox;
+    btnAdd: TButton;
+    procedure btnAddClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure vstPXMLChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure vstPXMLInitNode(Sender: TBaseVirtualTree; ParentNode,
@@ -55,13 +61,17 @@ type
     procedure UpdateXMLData;
     procedure ResetPanels;
     procedure AddPanels(Data : PXMLTreeData);
-    function FindNode(Tree : TBaseVirtualTree; const S : String;
+    function  FindNode(Tree : TBaseVirtualTree; const S : String;
       Base : PVirtualNode) : PVirtualNode; overload;
-    function FindNode(const S : String; Node : IXMLNode) : IXMLNode; overload;
+    function  FindNode(const S : String; Node : IXMLNode) : IXMLNode; overload;
   public
     procedure Clear;
     function  LoadFromFile(const FileName : String) : Boolean;
-    function AddEmptyNode(Tree : TBaseVirtualTree; const NodeType : TNodeType) : PVirtualNode;
+    function  AddEmptyNode(Tree : TBaseVirtualTree; const ElementName : String;
+      const ParentRootElementName : String) : PVirtualNode;
+    function  GetElementName(const NodeType : TNodeType; var Parent : String) : String;
+    // returns an element name for displaying to the user (including parent and stuff)
+    function  GetElementNiceName(const NodeType : TNodeType) : String;
   end;
 
   EUnknownPanelType = class (Exception);
@@ -95,7 +105,7 @@ type
     procedure LanguageKeyPress(Sender: TObject; var Key: Char);  
     procedure MimeKeyPress(Sender: TObject; var Key: Char);
     procedure IntegerKeyPress(Sender: TObject; var Key: Char);
-    //procedure IDKeyPress(Sender: TObject; var Key: Char);
+    procedure IDKeyPress(Sender: TObject; var Key: Char);
     procedure DisregardKey(var Key: Char);
   end;
 
@@ -136,7 +146,7 @@ var
 
 implementation
 
-uses {$Ifdef Win32}ControlHideFix,{$Endif} MainForm, FormatUtils;
+uses {$Ifdef Win32}ControlHideFix,{$Endif} MainForm, FormatUtils, Math;
 
 {$R *.dfm}
 
@@ -144,8 +154,16 @@ uses {$Ifdef Win32}ControlHideFix,{$Endif} MainForm, FormatUtils;
     // TODO: Validate PXML (using scheme) - check for files (binary, icons, pics)
     // TODO: Functionality to add and remove elements
     // DONE: Parse external file for descriptions
-    // TODO: Validate strings using regex or something like that
+    // DONE: Validate strings using regex or something like that
     // DONE: Custom ItemPanel classes for special fields (dropDown, etc.)
+    // TODO: Add info about multiple elements of the same kind to scheme and loading functionality here
+    // TODO: Context-sensitive context menu for adding elements
+    // TODO: Wizard for PXML creation (creating a quick-and-dirty PXML)
+    // TODO: Fill element dropDown (preferrebly from schema file)
+    // TODO: Panel type for paths (tricky to do as relative from PND)
+    // TODO: Panel for category and sub-category
+    // TODO: Select added element
+    // TODO: Get correct application element by selection in browser
 
 
 // --- Functions ---------------------------------------------------------------
@@ -217,7 +235,7 @@ end;
 procedure TfrmPXML.ResetPanels;
 var
     I : Integer;
-begin           
+begin
     for I := High(CurrentPanels) downto 0 do
     begin
         try
@@ -234,6 +252,9 @@ begin
 end;
 
 procedure TfrmPXML.AddPanels(Data: PXMLTreeData);
+
+// TODO: Search for nodes in parent nodes only, not document node
+
 var
     temp : String;
     I : Integer;
@@ -259,9 +280,10 @@ begin
     SchemaNode := FindNode(Data.Node.NodeName,Schema.DocumentElement);
 
     // not found
-    // TODO: Spit out error here
+    // TODO: Spit out error here (not as popup though as that might generate 1000 on a bad file)
     if SchemaNode = nil then
     begin
+        // display all found attributes (as default string panels)
         for I := 0 to Data.Node.AttributeNodes.Count - 1 do
         begin
             lblNoAttr.Visible := false;
@@ -272,6 +294,7 @@ begin
         Exit;
     end;
 
+    // schema node was found
     List := TStringList.Create;
     for I := 0 to SchemaNode.AttributeNodes.Count - 1 do
     begin
@@ -280,7 +303,7 @@ begin
 
         if (SchAttrNode.NodeName <> DESCRIPTION_ATTRIBUTE) then // any regular attribute
         begin
-            // check whether already present
+            // check whether already present (either load or clone from scheme)
             AttrNode := Data.Node.AttributeNodes.FindNode(SchAttrNode.NodeName);
             if AttrNode = nil then
             begin
@@ -390,44 +413,126 @@ begin
     end;
 end;
 
-function TfrmPXML.AddEmptyNode(Tree : TBaseVirtualTree; const NodeType : TNodeType) : PVirtualNode;
+function TfrmPXML.AddEmptyNode(Tree : TBaseVirtualTree; const ElementName : String;
+    const ParentRootElementName : String) : PVirtualNode;
+
+function CreateNode(Tree : TBaseVirtualTree; const CopyNode : IXMLNode;
+    const ParentTreeNode : PVirtualNode) : PVirtualNode;
 var
-    Tag : WideString;
-    Node : PVirtualNode;
-    PData : PXMLTreeData;
-    Parent, XNode : IXMLNode;
+    PData, PData2 : PXMLTreeData;
+    temp : IXMLNode;
+    I : Integer;
+begin
+    Result := Tree.AddChild(ParentTreeNode);
+    PData := Tree.GetNodeData(Result);
+    PData.Node := CopyNode.CloneNode(false);
+    if ParentTreeNode = nil then
+    begin
+        Doc.DocumentElement.ChildNodes.Add(PData.Node);
+    end else
+    begin
+        PData2 := Tree.GetNodeData(ParentTreeNode);
+        PData2.Node.ChildNodes.Add(PData.Node);
+    end;
+    // strip schema data attributes from node
+    for I := 0 to PData.Node.AttributeNodes.Count - 1 do
+    begin
+        if PData.Node.AttributeNodes[I].NodeName = DESCRIPTION_ATTRIBUTE then
+            temp := PData.Node.AttributeNodes[I];
+        PData.Node.AttributeNodes[I].Text := '';
+    end;
+    PData.Node.AttributeNodes.Remove(temp);
+    // add value node (which did not get copied) - if present in archetype
+    for I := 0 to CopyNode.ChildNodes.Count - 1 do
+    begin
+        if CopyNode.ChildNodes[I].NodeType = ntText then
+        begin
+            temp := CopyNode.ChildNodes[I].CloneNode(true);
+            temp.NodeValue := 'TEXT HERE';
+            PData.Node.ChildNodes.Add(temp);
+        end;
+    end;
+    
+end;
+
+var
+    ParentNode, RootParentNode : PVirtualNode;
+    XNode, XRootParentNode : IXMLNode;
+begin
+    // get package or application element  
+    XRootParentNode := FindNode(ParentRootElementName,Schema.DocumentElement);
+    if Length(ParentRootElementName) > 0 then
+    begin
+        RootParentNode := FindNode(Tree,ParentRootElementName,nil);
+        if RootParentNode = nil then
+            RootParentNode := CreateNode(Tree,XRootParentNode,nil);
+    end
+    else
+        RootParentNode := Tree.RootNode;
+
+    // check whether node already exists
+    Result := FindNode(Tree,ElementName,RootParentNode);
+    if Result <> nil then
+        Exit;
+
+    // get archetype node from scheme
+    XNode := FindNode(ElementName,XRootParentNode);
+    if XNode = nil then
+    begin
+        // TODO: Spit out error here
+        Exit;
+    end;
+
+    // check whether parents exist in tree and create them
+    if (XNode.ParentNode <> XRootParentNode) AND (XNode.ParentNode <> Schema.DocumentElement) then
+        ParentNode := AddEmptyNode(Tree,XNode.ParentNode.NodeName,ParentRootElementName)
+    else
+        ParentNode := RootParentNode;
+
+    // create the actual node (finally!)
+    Result := CreateNode(Tree,XNode,ParentNode);
+end;
+
+function TfrmPXML.GetElementName(const NodeType: TNodeType; var Parent : String) : String;
 begin
     case NodeType of
-        ntPackage: Tag := 'package';
-        ntApplication: Tag := 'application';
-        ntPAuthor: Tag := 'author';
-        ntPVersion: ;
-        ntPTitle: ;
-        ntPDescription: ;
-        ntPIcon: ;
-        ntExec: ;
-        ntAuthor: ;
-        ntVersion: ;
-        ntOSversion: ;
-        ntTitle: ;
-        ntDescription: ;
-        ntIcon: ;
-        ntLicense: ;
-        ntPreviewPic: ;
-        ntInfo: ;
-        ntCategory: ;
-        ntAssociation: ;
-        ntClockspeed: ;
+        ntPackage: begin Result := 'package'; Parent := ''; end;
+        ntApplication: begin Result := 'application'; Parent := ''; end;
+        ntPAuthor: begin Result := 'author'; Parent := 'package'; end;
+        ntPVersion: begin Result := 'version'; Parent := 'package'; end;
+        ntPTitleContainer: begin Result := 'titles'; Parent := 'package'; end;
+        ntPTitle: begin Result := 'title'; Parent := 'package'; end;
+        ntPDescriptionContainer: begin Result := 'descriptions'; Parent := 'package'; end;
+        ntPDescription: begin Result := 'description'; Parent := 'package'; end;
+        ntPIcon: begin Result := 'icon'; Parent := 'package'; end;
+        ntExec: begin Result := 'exec'; Parent := 'application'; end;
+        ntAuthor: begin Result := 'author'; Parent := 'application'; end;
+        ntVersion: begin Result := 'version'; Parent := 'application'; end;
+        ntOSversion: begin Result := 'osversion'; Parent := 'application'; end;
+        ntTitleContainer: begin Result := 'titles'; Parent := 'application'; end;
+        ntTitle: begin Result := 'title'; Parent := 'application'; end;
+        ntDescriptionContainer: begin Result := 'descriptions'; Parent := 'application'; end;
+        ntDescription: begin Result := 'description'; Parent := 'application'; end;
+        ntIcon: begin Result := 'icon'; Parent := 'application'; end;
+        ntLicenseContainer: begin Result := 'licenses'; Parent := 'application'; end;
+        ntLicense: begin Result := 'license'; Parent := 'application'; end;
+        ntPreviewPicContainer: begin Result := 'previewpics'; Parent := 'application'; end;
+        ntPreviewPic: begin Result := 'previewpic'; Parent := 'application'; end;
+        ntInfo: begin Result := 'info'; Parent := 'application'; end;
+        ntCategoryContainer: begin Result := 'categories'; Parent := 'application'; end;
+        ntCategory: begin Result := 'category'; Parent := 'application'; end;
+        ntSubCategory: begin Result := 'subcategory'; Parent := 'application'; end;
+        ntAssociationContainer: begin Result := 'associations'; Parent := 'application'; end;
+        ntAssociation: begin Result := 'association'; Parent := 'application'; end;
+        ntClockspeed: begin Result := 'clockspeed'; Parent := 'application'; end;
+    else
+        Result := '';
     end;
-    Node := Tree.AddChild(Tree.GetFirstSelected());
-    PData := Tree.GetNodeData(Tree.GetFirstSelected());
-    Parent := PData.Node;
-    XNode := FindNode(Tag,Schema.DocumentElement).CloneNode(true);
-    XNode.NodeValue := 'test';
-    Parent.ChildNodes.Add(XNode);
-    PData := Tree.GetNodeData(Node);
-    PData.Node := XNode;
-    Result := Node;
+end;   
+
+function TfrmPXML.GetElementNiceName(const NodeType: TNodeType) : String;
+begin
+    //
 end;
 
 // --- Tree --------------------------------------------------------------------
@@ -461,6 +566,11 @@ begin
 end;
 
 // --- Buttons -----------------------------------------------------------------
+
+procedure TfrmPXML.btnAddClick(Sender: TObject);
+begin
+    AddEmptyNode(vstPXML,'title','application');
+end;
 
 procedure TfrmPXML.btnCancelClick(Sender: TObject);
 begin
@@ -597,6 +707,8 @@ begin
         edtValue.OnKeyPress := MimeKeyPress
     else if temp = 'integer' then
         edtValue.OnKeyPress := IntegerKeyPress
+    else if temp = 'id' then
+        edtValue.OnKeyPress := IDKeyPress
     else
     begin
         chars := TStringList.Create;
@@ -633,34 +745,40 @@ end;
 
 procedure TStringItemPanel.EmailKeyPress(Sender: TObject; var Key: Char);
 begin
-    if (Key in ['(',')','[',']','\',';',':',',','<','>']) OR // non-allowed chars
+    if (Key in ['(',')','[',']','\',';',':',',','<','>','|']) OR // non-allowed chars
        ((Key = '@') AND (Pos('@',(Sender as TCustomEdit).Text) <> 0)) then // only one @
         DisregardKey(Key);
 end;
 
 procedure TStringItemPanel.FolderKeyPress(Sender: TObject; var Key: Char);
 begin
-    if (Key = '/') OR (Key = '-') then
+    if (Key in [' ','-','/','\',':','?','*','<','>','|','"']) then
         DisregardKey(Key);
 end;
 
 procedure TStringItemPanel.LanguageKeyPress(Sender: TObject; var Key: Char);
 begin
-    if not (Key in ['a'..'z','A'..'Z']) OR
+    if not (Key in ['a'..'z','A'..'Z',#8]) OR
        ((Key = '_') AND (Pos('_',(Sender as TCustomEdit).Text) <> 0)) then
        DisregardKey(Key);
 end;
 
 procedure TStringItemPanel.MimeKeyPress(Sender: TObject; var Key: Char);
 begin
-    if not (Key in ['a'..'z','A'..'Z','0'..'9','-','.']) OR
+    if not (Key in ['a'..'z','A'..'Z','0'..'9','-','.',#8]) OR
        ((Key = '/') AND (Pos('/',(Sender as TCustomEdit).Text) <> 0)) then 
        DisregardKey(Key);    
 end;
 
 procedure TStringItemPanel.IntegerKeyPress(Sender: TObject; var Key: Char);
 begin
-    if not(Key in ['0'..'9']) then
+    if not(Key in ['0'..'9',#8]) then
+        DisregardKey(Key);
+end;
+
+procedure TStringItemPanel.IDKeyPress(Sender: TObject; var Key: Char);
+begin
+    if not (Key in['a'..'z','A'..'Z','0'..'9','.','_','!','-','+',#8]) then
         DisregardKey(Key);
 end;
 
@@ -782,6 +900,6 @@ end;
 procedure TSetItemPanel.UpdateData;
 begin
     Attr.NodeValue := cobValue.Text;
-end;
+end;  
 
 end.
