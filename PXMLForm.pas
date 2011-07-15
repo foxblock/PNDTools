@@ -8,22 +8,20 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, VirtualTrees, ExtCtrls, XMLDoc, XMLIntf, ComCtrls;
+  Dialogs, StdCtrls, VirtualTrees, ExtCtrls, XMLDoc, XMLIntf, ComCtrls, Menus;
 
 type
   rXMLTreeData = record
-      Node : IXMLNode;
-      DisplayKey : String;
+    Node : IXMLNode;
+    DisplayKey : String;
   end;
   PXMLTreeData = ^rXMLTreeData;
 
-  TNodeType = (ntPackage, ntApplication, ntPAuthor, ntPVersion, ntPTitleContainer,
-               ntPTitle, ntPDescriptionContainer, ntPDescription, ntPIcon, ntExec,
-               ntAuthor, ntVersion, ntOSversion, ntTitleContainer, ntTitle,
-               ntDescriptionContainer, ntDescription, ntIcon, ntLicenseContainer,
-               ntLicense, ntPreviewPicContainer, ntPreviewPic, ntInfo,
-               ntCategoryContainer, ntCategory, ntSubCategory, ntAssociation,
-               ntAssociationContainer, ntClockspeed);
+  rPXMLElement = record
+    Tag : String;
+    Root : String;
+    Display : String;
+  end;
 
   TfrmPXML = class(TForm)
     pnlButtons: TPanel;
@@ -43,8 +41,13 @@ type
     vstPXML: TVirtualStringTree;
     sptHor: TSplitter;
     redDescription: TRichEdit;
-    cbxElement: TComboBox;
+    cobElement: TComboBox;
     btnAdd: TButton;
+    pomPXML: TPopupMenu;
+    pomPXMLDelete: TMenuItem;
+    procedure pomPXMLDeleteClick(Sender: TObject);
+    procedure vstPXMLMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
     procedure btnAddClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure vstPXMLChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
@@ -69,9 +72,7 @@ type
     function  LoadFromFile(const FileName : String) : Boolean;
     function  AddEmptyNode(Tree : TBaseVirtualTree; const ElementName : String;
       const ParentRootElementName : String) : PVirtualNode;
-    function  GetElementName(const NodeType : TNodeType; var Parent : String) : String;
-    // returns an element name for displaying to the user (including parent and stuff)
-    function  GetElementNiceName(const NodeType : TNodeType) : String;
+    procedure GetElementNames(Node : IXMLNode; RootElementName : String);
   end;
 
   EUnknownPanelType = class (Exception);
@@ -136,12 +137,14 @@ const
   DELIMITER_STR : String         = ',';
   OPTIONAL_COLOR : TColor        = clGrayText;
   REQUIRED_COLOR : TColor        = clWindowText;
+  ROOT_ELEMENT_NAMES : array [0..1] of String = ('package','application');
 
 var
   frmPXML: TfrmPXML;
   Doc : TXMLDocument;
   Schema : TXMLDocument;
   CurrentPanels : Array of TItemPanel;
+  PXMLElements : Array of rPXMLElement;
   CurrentNode : PVirtualNode;
 
 implementation
@@ -152,7 +155,7 @@ uses {$Ifdef Win32}ControlHideFix,{$Endif} MainForm, FormatUtils, Math;
 
     // DONE: Parse scheme file or some custom file to check for elements without text attribute
     // TODO: Validate PXML (using scheme) - check for files (binary, icons, pics)
-    // TODO: Functionality to add and remove elements
+    // DONE: Functionality to add and remove elements
     // DONE: Parse external file for descriptions
     // DONE: Validate strings using regex or something like that
     // DONE: Custom ItemPanel classes for special fields (dropDown, etc.)
@@ -161,8 +164,8 @@ uses {$Ifdef Win32}ControlHideFix,{$Endif} MainForm, FormatUtils, Math;
     // TODO: Wizard for PXML creation (creating a quick-and-dirty PXML)
     // TODO: Fill element dropDown (preferrebly from schema file)
     // TODO: Panel type for paths (tricky to do as relative from PND)
-    // TODO: Panel for category and sub-category
-    // TODO: Select added element
+    // TODO: Panel type for category and sub-category
+    // DONE: Select added element
     // TODO: Get correct application element by selection in browser
 
 
@@ -193,6 +196,8 @@ begin
     Schema := nil;
     CurrentNode := nil;
     vstPXML.Clear;
+    cobElement.Clear;
+    Finalize(PXMLElements);
     ResetPanels;
 end;
 
@@ -207,8 +212,23 @@ begin
         Schema.LoadFromFile(frmMain.Settings.SchemaFile)
     else
         Schema.LoadFromFile(ExtractFilePath(Application.ExeName) + frmMain.Settings.SchemaFile);
+    GetElementNames(Schema.DocumentElement,'');
     AddDataToTree(vstPXML,Doc.DocumentElement,nil);
+    vstPXML.FullExpand();
     Result := true;
+end;
+
+procedure TfrmPXML.pomPXMLDeleteClick(Sender: TObject);
+var
+    Node : PVirtualNode;
+    PData : PXMLTreeData;
+begin
+    ResetPanels;
+    CurrentNode := nil;
+    Node := vstPXML.GetFirstSelected();
+    PData := vstPXML.GetNodeData(Node);
+    PData.Node.ParentNode.ChildNodes.Remove(PData.Node);
+    vstPXML.DeleteSelectedNodes;
 end;
 
 procedure TfrmPXML.UpdateXMLData;
@@ -252,9 +272,6 @@ begin
 end;
 
 procedure TfrmPXML.AddPanels(Data: PXMLTreeData);
-
-// TODO: Search for nodes in parent nodes only, not document node
-
 var
     temp : String;
     I : Integer;
@@ -275,7 +292,8 @@ begin
             // suppress error
         end;
     end;
-
+                         
+    // TODO: Search for nodes in parent nodes only, not document node
     // get the equivalent of the selected node from the schema file
     SchemaNode := FindNode(Data.Node.NodeName,Schema.DocumentElement);
 
@@ -493,46 +511,29 @@ begin
     Result := CreateNode(Tree,XNode,ParentNode);
 end;
 
-function TfrmPXML.GetElementName(const NodeType: TNodeType; var Parent : String) : String;
+procedure TfrmPXML.GetElementNames(Node : IXMLNode; RootElementName : String);
+var I : Integer;
 begin
-    case NodeType of
-        ntPackage: begin Result := 'package'; Parent := ''; end;
-        ntApplication: begin Result := 'application'; Parent := ''; end;
-        ntPAuthor: begin Result := 'author'; Parent := 'package'; end;
-        ntPVersion: begin Result := 'version'; Parent := 'package'; end;
-        ntPTitleContainer: begin Result := 'titles'; Parent := 'package'; end;
-        ntPTitle: begin Result := 'title'; Parent := 'package'; end;
-        ntPDescriptionContainer: begin Result := 'descriptions'; Parent := 'package'; end;
-        ntPDescription: begin Result := 'description'; Parent := 'package'; end;
-        ntPIcon: begin Result := 'icon'; Parent := 'package'; end;
-        ntExec: begin Result := 'exec'; Parent := 'application'; end;
-        ntAuthor: begin Result := 'author'; Parent := 'application'; end;
-        ntVersion: begin Result := 'version'; Parent := 'application'; end;
-        ntOSversion: begin Result := 'osversion'; Parent := 'application'; end;
-        ntTitleContainer: begin Result := 'titles'; Parent := 'application'; end;
-        ntTitle: begin Result := 'title'; Parent := 'application'; end;
-        ntDescriptionContainer: begin Result := 'descriptions'; Parent := 'application'; end;
-        ntDescription: begin Result := 'description'; Parent := 'application'; end;
-        ntIcon: begin Result := 'icon'; Parent := 'application'; end;
-        ntLicenseContainer: begin Result := 'licenses'; Parent := 'application'; end;
-        ntLicense: begin Result := 'license'; Parent := 'application'; end;
-        ntPreviewPicContainer: begin Result := 'previewpics'; Parent := 'application'; end;
-        ntPreviewPic: begin Result := 'previewpic'; Parent := 'application'; end;
-        ntInfo: begin Result := 'info'; Parent := 'application'; end;
-        ntCategoryContainer: begin Result := 'categories'; Parent := 'application'; end;
-        ntCategory: begin Result := 'category'; Parent := 'application'; end;
-        ntSubCategory: begin Result := 'subcategory'; Parent := 'application'; end;
-        ntAssociationContainer: begin Result := 'associations'; Parent := 'application'; end;
-        ntAssociation: begin Result := 'association'; Parent := 'application'; end;
-        ntClockspeed: begin Result := 'clockspeed'; Parent := 'application'; end;
-    else
-        Result := '';
-    end;
-end;   
+    for I := 0 to High(ROOT_ELEMENT_NAMES) do
+        if Node.NodeName = ROOT_ELEMENT_NAMES[I] then
+            RootElementName := Node.NodeName;
 
-function TfrmPXML.GetElementNiceName(const NodeType: TNodeType) : String;
-begin
-    //
+    for I := 0 to Node.ChildNodes.Count - 1 do
+    begin
+        if not (Node.ChildNodes[I].NodeType in [ntText,ntComment]) then
+        begin
+            SetLength(PXMLElements,Length(PXMLElements)+1);
+            PXMLElements[High(PXMLElements)].Tag := Node.ChildNodes[I].NodeName;
+            PXMLElements[High(PXMLElements)].Root := RootElementName;
+            if Length(RootElementName) > 0 then
+                PXMLElements[High(PXMLElements)].Display := Node.ChildNodes[I].NodeName +
+                    ' (' + RootElementName + ')'
+            else
+                PXMLElements[High(PXMLElements)].Display := Node.ChildNodes[I].NodeName;
+            cobElement.Items.Add(PXMLElements[High(PXMLElements)].Display);
+            GetElementNames(Node.ChildNodes[I],RootElementName);
+        end;
+    end;
 end;
 
 // --- Tree --------------------------------------------------------------------
@@ -565,11 +566,33 @@ begin
     PData.DisplayKey := PData.Node.NodeName;
 end;
 
+procedure TfrmPXML.vstPXMLMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+var
+    Node : PVirtualNode;
+begin
+    if Button = mbRight then
+    begin
+        Node := (Sender as TBaseVirtualTree).GetNodeAt(X,Y);
+        if Node <> nil then
+        begin
+            (Sender as TBaseVirtualTree).ClearSelection;
+            (Sender as TBaseVirtualTree).Selected[Node] := true;
+            pomPXML.Popup(Mouse.CursorPos.X,Mouse.CursorPos.Y);
+        end;
+    end;
+end;
+
 // --- Buttons -----------------------------------------------------------------
 
 procedure TfrmPXML.btnAddClick(Sender: TObject);
+var I : Integer;
+    Node : PVirtualNode;
 begin
-    AddEmptyNode(vstPXML,'title','application');
+    I := cobElement.ItemIndex;
+    Node := AddEmptyNode(vstPXML,PXMLElements[I].Tag,PXMLElements[I].Root);
+    vstPXML.ClearSelection;
+    vstPXML.Selected[Node] := true;
 end;
 
 procedure TfrmPXML.btnCancelClick(Sender: TObject);
@@ -596,10 +619,12 @@ begin
     end;
 end;
 
+// --- Form --------------------------------------------------------------------
+
 procedure TfrmPXML.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
     ResetPanels;
-    vstPXML.ClearSelection;
+    Clear;
 end;
 
 procedure TfrmPXML.FormCreate(Sender: TObject);  

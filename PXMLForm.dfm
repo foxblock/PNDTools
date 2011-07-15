@@ -35,7 +35,6 @@ object frmPXML: TfrmPXML
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitWidth = 453
     object btnCancel: TButton
       AlignWithMargins = True
       Left = 325
@@ -50,7 +49,6 @@ object frmPXML: TfrmPXML
       Caption = 'Cancel'
       TabOrder = 1
       OnClick = btnCancelClick
-      ExplicitLeft = 374
     end
     object btnOK: TButton
       AlignWithMargins = True
@@ -66,9 +64,8 @@ object frmPXML: TfrmPXML
       Caption = 'OK'
       TabOrder = 0
       OnClick = btnOKClick
-      ExplicitLeft = 295
     end
-    object cbxElement: TComboBox
+    object cobElement: TComboBox
       AlignWithMargins = True
       Left = 4
       Top = 6
@@ -108,7 +105,6 @@ object frmPXML: TfrmPXML
     BevelOuter = bvNone
     Constraints.MinWidth = 200
     TabOrder = 1
-    ExplicitWidth = 292
     object scbValues: TScrollBox
       AlignWithMargins = True
       Left = 4
@@ -126,7 +122,6 @@ object frmPXML: TfrmPXML
       BevelInner = bvNone
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitWidth = 284
       object lblValue: TLabel
         AlignWithMargins = True
         Left = 3
@@ -222,7 +217,6 @@ object frmPXML: TfrmPXML
         BevelOuter = bvNone
         TabOrder = 0
         Visible = False
-        ExplicitWidth = 274
         object edtValue: TEdit
           Left = 0
           Top = 0
@@ -230,7 +224,6 @@ object frmPXML: TfrmPXML
           Height = 21
           Align = alClient
           TabOrder = 0
-          ExplicitWidth = 274
         end
       end
       object redDescription: TRichEdit
@@ -249,7 +242,6 @@ object frmPXML: TfrmPXML
         ReadOnly = True
         ScrollBars = ssVertical
         TabOrder = 1
-        ExplicitWidth = 280
       end
     end
   end
@@ -298,6 +290,7 @@ object frmPXML: TfrmPXML
       OnChange = vstPXMLChange
       OnGetText = vstPXMLGetText
       OnInitNode = vstPXMLInitNode
+      OnMouseUp = vstPXMLMouseUp
       Columns = <
         item
           Options = [coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coVisible, coAllowFocus]
@@ -312,5 +305,13 @@ object frmPXML: TfrmPXML
     Options = [ofOverwritePrompt, ofHideReadOnly, ofPathMustExist, ofCreatePrompt, ofEnableSizing]
     Left = 120
     Top = 24
+  end
+  object pomPXML: TPopupMenu
+    Left = 120
+    Top = 56
+    object pomPXMLDelete: TMenuItem
+      Caption = 'Delete'
+      OnClick = pomPXMLDeleteClick
+    end
   end
 end

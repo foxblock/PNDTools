@@ -2,7 +2,7 @@ object frmMain: TfrmMain
   Left = 100
   Top = 100
   Caption = 'PNDTools'
-  ClientHeight = 562
+  ClientHeight = 582
   ClientWidth = 561
   Color = clBtnFace
   Constraints.MinHeight = 500
@@ -24,7 +24,7 @@ object frmMain: TfrmMain
   object pnlButtons: TPanel
     AlignWithMargins = True
     Left = 4
-    Top = 525
+    Top = 545
     Width = 553
     Height = 33
     Margins.Left = 4
@@ -53,7 +53,7 @@ object frmMain: TfrmMain
   object grbLog: TGroupBox
     AlignWithMargins = True
     Left = 4
-    Top = 421
+    Top = 441
     Width = 553
     Height = 100
     Margins.Left = 4
@@ -93,7 +93,7 @@ object frmMain: TfrmMain
     Left = 4
     Top = 4
     Width = 553
-    Height = 321
+    Height = 341
     Margins.Left = 4
     Margins.Top = 4
     Margins.Right = 4
@@ -106,7 +106,7 @@ object frmMain: TfrmMain
       Left = 6
       Top = 15
       Width = 541
-      Height = 250
+      Height = 270
       Margins.Left = 4
       Margins.Top = 0
       Margins.Right = 4
@@ -161,7 +161,7 @@ object frmMain: TfrmMain
     end
     object pnlFilesButtons: TPanel
       Left = 2
-      Top = 286
+      Top = 306
       Width = 549
       Height = 33
       Align = alBottom
@@ -231,7 +231,7 @@ object frmMain: TfrmMain
     end
     object pnlFilesInfo: TPanel
       Left = 2
-      Top = 265
+      Top = 285
       Width = 549
       Height = 21
       Align = alBottom
@@ -273,7 +273,7 @@ object frmMain: TfrmMain
   object grbIcon: TGroupBox
     AlignWithMargins = True
     Left = 4
-    Top = 329
+    Top = 349
     Width = 553
     Height = 42
     Margins.Left = 4
@@ -330,7 +330,7 @@ object frmMain: TfrmMain
   object grbPXML: TGroupBox
     AlignWithMargins = True
     Left = 4
-    Top = 375
+    Top = 395
     Width = 553
     Height = 42
     Margins.Left = 4
