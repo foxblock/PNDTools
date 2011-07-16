@@ -21,10 +21,9 @@ uses SysUtils, StrUtils, Math;
 
 function SizeToStr(const Size : Int64; const Binary : Boolean = false) : String;
 const
-    Overhang : Real = 0.10;
-    MaxFactor : Byte = 5;
-    SymbolsDec : Array [1..5] of String = ('Byte','kB','MB','GB','TB');
-    SymbolsBin : Array [1..5] of String = ('Byte','KiB','MiB','GiB','TiB');
+    OVERHANG : Real = 0.10;
+    SYMBOLSDEC : Array [1..5] of String = ('Byte','kB','MB','GB','TB');
+    SYMBOLSBIN : Array [1..5] of String = ('Byte','KiB','MiB','GiB','TiB');
 var
     Factor : Integer;
     Count : Integer;
@@ -37,7 +36,7 @@ begin
     Count := 1;
     Temp := Size;
 
-    while (Temp > Factor * (1 - Overhang)) AND (Count <= MaxFactor) do
+    while (Temp > Factor * (1 - OVERHANG)) AND (Count <= High(SYMBOLSDEC)) do
     begin
         Temp := Temp / Factor;
         Inc(Count);
@@ -48,9 +47,9 @@ begin
     else
         Result := Format('%.2f',[Temp]);
     if Binary then
-        Result := Result + ' ' + SymbolsBin[Count]
+        Result := Result + ' ' + SYMBOLSBIN[Count]
     else
-        Result := Result + ' ' + SymbolsDec[Count];
+        Result := Result + ' ' + SYMBOLSDEC[Count];
 end;
 
 procedure Tokenize(const S : String; const Delimiter : String; var List : TStrings);
