@@ -133,11 +133,12 @@ type
 
 const
   NO_DESCRIPTION_LINE : String   = 'no description available for this element';
-  DESCRIPTION_ATTRIBUTE : String = 'elemdesc';
+  DATA_MISSING_STR : String      = '--INSERT DATA HERE-';
   DELIMITER_STR : String         = ',';
   OPTIONAL_COLOR : TColor        = clGrayText;
-  REQUIRED_COLOR : TColor        = clWindowText;
-  ROOT_ELEMENT_NAMES : array [0..1] of String = ('package','application');
+  REQUIRED_COLOR : TColor        = clWindowText;    
+  SCHEMA_ATTRIBUTES : Array [0..2] of String = ('elemdesc','min','max');
+  ROOT_ELEMENT_NAMES : Array [0..1] of String = ('package','application');
 
 var
   frmPXML: TfrmPXML;
@@ -162,11 +163,12 @@ uses {$Ifdef Win32}ControlHideFix,{$Endif} MainForm, FormatUtils, Math;
     // TODO: Add info about multiple elements of the same kind to scheme and loading functionality here
     // TODO: Context-sensitive context menu for adding elements
     // TODO: Wizard for PXML creation (creating a quick-and-dirty PXML)
-    // TODO: Fill element dropDown (preferrebly from schema file)
+    // DONE: Fill element dropDown (preferrebly from schema file)
     // TODO: Panel type for paths (tricky to do as relative from PND)
     // TODO: Panel type for category and sub-category
     // DONE: Select added element
     // TODO: Get correct application element by selection in browser
+    // TODO: Make contents of the element drop-down context sensitive after selected element
 
 
 // --- Functions ---------------------------------------------------------------
@@ -247,7 +249,7 @@ begin
     if PData.Node.IsTextElement then
     begin
         if Length(edtValue.Text) = 0 then
-            edtValue.Text := 'data missing';
+            edtValue.Text := DATA_MISSING_STR;
         PData.Node.NodeValue := edtValue.Text;
     end;
 end;
@@ -274,9 +276,10 @@ end;
 procedure TfrmPXML.AddPanels(Data: PXMLTreeData);
 var
     temp : String;
-    I : Integer;
+    I,K : Integer;
     SchemaNode, AttrNode, SchAttrNode : IXMLNode;
     List : TStrings;
+    Found : Boolean;
 begin
     if Data = nil then
         Exit;
@@ -319,7 +322,26 @@ begin
         List.Clear;
         SchAttrNode := SchemaNode.AttributeNodes.Get(I);
 
-        if (SchAttrNode.NodeName <> DESCRIPTION_ATTRIBUTE) then // any regular attribute
+        Found := false;
+        for K := 0 to High(SCHEMA_ATTRIBUTES) do  // check for special schema attributes
+        begin
+            if SchAttrNode.NodeName = SCHEMA_ATTRIBUTES[K] then
+            begin
+                if K = 0 then // elemdesc
+                begin
+                    temp := ExtractFilePath(Application.ExeName) + SchAttrNode.Text;
+                    if FileExists(temp) then
+                    begin
+                        redDescription.Clear;
+                        redDescription.Lines.LoadFromFile(temp);
+                    end;
+                end;  
+                Found := true;
+                Break;
+            end;
+        end;
+
+        if not Found then // any regular attribute
         begin
             // check whether already present (either load or clone from scheme)
             AttrNode := Data.Node.AttributeNodes.FindNode(SchAttrNode.NodeName);
@@ -370,14 +392,6 @@ begin
                     CurrentPanels[High(CurrentPanels)].Free; 
                     SetLength(CurrentPanels,High(CurrentPanels));
                 end;
-            end;
-        end else
-        begin
-            temp := ExtractFilePath(Application.ExeName) + SchAttrNode.Text;
-            if FileExists(temp) then
-            begin
-                redDescription.Clear;  
-                redDescription.Lines.LoadFromFile(temp);
             end;
         end;
     end;
@@ -439,7 +453,7 @@ function CreateNode(Tree : TBaseVirtualTree; const CopyNode : IXMLNode;
 var
     PData, PData2 : PXMLTreeData;
     temp : IXMLNode;
-    I : Integer;
+    I,K : Integer;
 begin
     Result := Tree.AddChild(ParentTreeNode);
     PData := Tree.GetNodeData(Result);
@@ -453,20 +467,28 @@ begin
         PData2.Node.ChildNodes.Add(PData.Node);
     end;
     // strip schema data attributes from node
-    for I := 0 to PData.Node.AttributeNodes.Count - 1 do
-    begin
-        if PData.Node.AttributeNodes[I].NodeName = DESCRIPTION_ATTRIBUTE then
-            temp := PData.Node.AttributeNodes[I];
+    I := 0;
+    while I < PData.Node.AttributeNodes.Count do
+    begin    
         PData.Node.AttributeNodes[I].Text := '';
+        for K := 0 to High(SCHEMA_ATTRIBUTES) do
+        begin
+            if PData.Node.AttributeNodes[I].NodeName = SCHEMA_ATTRIBUTES[K] then
+            begin
+                PData.Node.AttributeNodes.Delete(I);
+                Dec(I);
+                Break;
+            end;
+        end;
+        Inc(I);
     end;
-    PData.Node.AttributeNodes.Remove(temp);
     // add value node (which did not get copied) - if present in archetype
     for I := 0 to CopyNode.ChildNodes.Count - 1 do
     begin
         if CopyNode.ChildNodes[I].NodeType = ntText then
         begin
             temp := CopyNode.ChildNodes[I].CloneNode(true);
-            temp.NodeValue := 'TEXT HERE';
+            temp.NodeValue := '';
             PData.Node.ChildNodes.Add(temp);
         end;
     end;
@@ -477,8 +499,11 @@ var
     ParentNode, RootParentNode : PVirtualNode;
     XNode, XRootParentNode : IXMLNode;
 begin
-    // get package or application element  
-    XRootParentNode := FindNode(ParentRootElementName,Schema.DocumentElement);
+    // get package or application element
+    if Length(ParentRootElementName) > 0 then     
+        XRootParentNode := FindNode(ParentRootElementName,Schema.DocumentElement)
+    else
+        XRootParentNode := Schema.DocumentElement;
     if Length(ParentRootElementName) > 0 then
     begin
         RootParentNode := FindNode(Tree,ParentRootElementName,nil);
@@ -486,7 +511,7 @@ begin
             RootParentNode := CreateNode(Tree,XRootParentNode,nil);
     end
     else
-        RootParentNode := Tree.RootNode;
+        RootParentNode := nil;
 
     // check whether node already exists
     Result := FindNode(Tree,ElementName,RootParentNode);

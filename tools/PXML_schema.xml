@@ -20,11 +20,12 @@
 	 currently not implemented (allow anything): website, path, dir
 	 
 	 The elemdesc attribute is special and defines a file path to a text file containing the description for the element.
+         The min attribute specifies the minimum number of occurences of an element, the max attribute the maximum number (default is 1 and 1), max="0" means unlimited occurences
 	 The path is relative from the main program executable (PNDTools.exe)
-	 This attribute is option and will not interfere with the actual PXML data
+	 This attribute is optional and will not interfere with the actual PXML data
 -->
 <PXML xmlns="http://openpandora.org/namespaces/PXML">
-  <package id="required,string,id" elemdesc="descriptions\package.rtf">
+  <package id="required,string,id" elemdesc="descriptions\package.rtf" min="1" max="1">
     <author name="required,string" website="optional,string,website" email="optional,string,email" elemdesc="descriptions\author.rtf"/>
     <version major="required,string,version" minor="required,string,version" release="required,string,version" build="required,string,version" type="optional,set,alpha,beta,release" elemdesc="descriptions\version.rtf"/>
     <titles elemdesc="descriptions\titles.rtf">
@@ -36,11 +37,11 @@
     <icon src="required,string,path" elemdesc="descriptions\icon.rtf"/>
   </package>
   
-  <application id="required,string,id" appdata="optional,string,folder" elemdesc="descriptions\application.rtf">
+  <application id="required,string,id" appdata="optional,string,folder" elemdesc="descriptions\application.rtf" min="1" max="0">
     <exec command="required,string,path" arguments="optional,string" startdir="optional,string,dir" standalone="optional,boolean" background="optional,boolean" x11="optional,set,req,stop,ignore" elemdesc="descriptions\exec.rtf"/>
     <author name="required,string" website="optional,string,website" email="optional,string,email" elemdesc="descriptions\author.rtf"/>
     <version major="required,string,version" minor="required,string,version" release="required,string,version" build="required,string,version" type="optional,set,alpha,beta,release" elemdesc="descriptions\version.rtf"/>
-	<osversion major="required,string,version" minor="required,string,version" release="required,string,version" build="required,string,version" elemdesc="descriptions\osversion.rtf"/>
+    <osversion major="required,string,version" minor="required,string,version" release="required,string,version" build="required,string,version" elemdesc="descriptions\osversion.rtf"/>
     <titles elemdesc="descriptions\titles.rtf">
       <title lang="required,string,language" elemdesc="descriptions\titles.rtf">CONTENT</title>
     </titles>
@@ -62,9 +63,9 @@
         <subcategory name="required,string" elemdesc="descriptions\category.rtf"/>
       </category>
     </categories>
-	<associations elemdesc="descriptions\association.rtf">
-	  <association name="required,string" filetype="required,string,mime" exec="required,string" elemdesc="descriptions\association.rtf"/>
-	</associations>
-	<clockspeed frequency="required,string,integer" elemdesc="descriptions\clockspeed.rtf"/>
+    <associations elemdesc="descriptions\association.rtf">
+      <association name="required,string" filetype="required,string,mime" exec="required,string" elemdesc="descriptions\association.rtf"/>
+    </associations>
+    <clockspeed frequency="required,string,integer" elemdesc="descriptions\clockspeed.rtf"/>
   </application>
 </PXML>
