@@ -67,6 +67,8 @@ type
     function  FindNode(Tree : TBaseVirtualTree; const S : String;
       Base : PVirtualNode) : PVirtualNode; overload;
     function  FindNode(const S : String; Node : IXMLNode) : IXMLNode; overload;
+    function  CountNodes(Tree : TBaseVirtualTree; const S : String;
+      Base : PVirtualNode) : Integer;
   public
     procedure Clear;
     function  LoadFromFile(const FileName : String) : Boolean;
@@ -139,6 +141,7 @@ const
   REQUIRED_COLOR : TColor        = clWindowText;    
   SCHEMA_ATTRIBUTES : Array [0..2] of String = ('elemdesc','min','max');
   ROOT_ELEMENT_NAMES : Array [0..1] of String = ('package','application');
+  MAX_DEFAULT_VALUE : Integer    = 1;
 
 var
   frmPXML: TfrmPXML;
@@ -160,7 +163,7 @@ uses {$Ifdef Win32}ControlHideFix,{$Endif} MainForm, FormatUtils, Math;
     // DONE: Parse external file for descriptions
     // DONE: Validate strings using regex or something like that
     // DONE: Custom ItemPanel classes for special fields (dropDown, etc.)
-    // TODO: Add info about multiple elements of the same kind to scheme and loading functionality here
+    // DONE: Add info about multiple elements of the same kind to scheme and loading functionality here
     // TODO: Context-sensitive context menu for adding elements
     // TODO: Wizard for PXML creation (creating a quick-and-dirty PXML)
     // DONE: Fill element dropDown (preferrebly from schema file)
@@ -295,10 +298,15 @@ begin
             // suppress error
         end;
     end;
-                         
-    // TODO: Search for nodes in parent nodes only, not document node
+
+    // get root parent node of selected node (application or package, childs of PXML node)
+    SchemaNode := Data.Node;
+    while SchemaNode.ParentNode.NodeName <> Schema.DocumentElement.NodeName do
+    begin
+        SchemaNode := SchemaNode.ParentNode;
+    end;        
     // get the equivalent of the selected node from the schema file
-    SchemaNode := FindNode(Data.Node.NodeName,Schema.DocumentElement);
+    SchemaNode := FindNode(Data.Node.NodeName,FindNode(SchemaNode.NodeName,Schema.DocumentElement));
 
     // not found
     // TODO: Spit out error here (not as popup though as that might generate 1000 on a bad file)
@@ -354,7 +362,8 @@ begin
             // now attribute is guaranteed to be present
             Tokenize(SchAttrNode.Text,DELIMITER_STR,List);
 
-            // check for errors - add default panel
+            // check for errors - add default panel   
+            SetLength(CurrentPanels,Length(CurrentPanels)+1);
             if List.Count < 2 then
             begin
                 CurrentPanels[High(CurrentPanels)] := TStringItemPanel.Create(scbValues,AttrNode,Data.Node);
@@ -362,7 +371,6 @@ begin
             end;
 
             // add panel for it
-            SetLength(CurrentPanels,Length(CurrentPanels)+1);
             try
                 // create panel by type
                 temp := List.Strings[1];
@@ -445,6 +453,27 @@ begin
     end;
 end;
 
+function TfrmPXML.CountNodes(Tree : TBaseVirtualTree; const S : String;
+    Base : PVirtualNode) : Integer;
+var
+    Node : PVirtualNode;
+    PData : PXMLTreeData;
+begin
+    Result := 0;
+    Node := Base;
+    if Node = nil then
+        Node := Tree.GetFirst();
+    while Node <> nil do
+    begin
+        PData := Tree.GetNodeData(Node);
+        if SameText(PData.DisplayKey,S) then
+        begin
+            Inc(Result);
+        end;
+        Node := Tree.GetNext(Node);
+    end;
+end;
+
 function TfrmPXML.AddEmptyNode(Tree : TBaseVirtualTree; const ElementName : String;
     const ParentRootElementName : String) : PVirtualNode;
 
@@ -498,7 +527,10 @@ end;
 var
     ParentNode, RootParentNode : PVirtualNode;
     XNode, XRootParentNode : IXMLNode;
+    I : Integer;
 begin
+    Result := nil;
+
     // get package or application element
     if Length(ParentRootElementName) > 0 then     
         XRootParentNode := FindNode(ParentRootElementName,Schema.DocumentElement)
@@ -512,18 +544,36 @@ begin
     end
     else
         RootParentNode := nil;
-
-    // check whether node already exists
-    Result := FindNode(Tree,ElementName,RootParentNode);
-    if Result <> nil then
-        Exit;
-
+        
     // get archetype node from scheme
     XNode := FindNode(ElementName,XRootParentNode);
     if XNode = nil then
     begin
         // TODO: Spit out error here
         Exit;
+    end;
+
+    // check whether node already exists or may exist multiple times
+    Result := FindNode(Tree,ElementName,RootParentNode);
+    if Result <> nil then
+    begin
+        for I := 0 to XNode.AttributeNodes.Count - 1 do
+        begin
+            if XNode.AttributeNodes[I].NodeName = SCHEMA_ATTRIBUTES[2] then // max
+            begin
+                if (CountNodes(Tree,ElementName,RootParentNode) >= XNode.AttributeNodes[I].NodeValue) AND
+                   (XNode.AttributeNodes[I].NodeValue > 0) then
+                    Exit
+                else // it's okay, we did not hit the limit yet
+                begin
+                    Result := nil;
+                    Break;
+                end;
+            end;
+        end;
+        // max attribute not found
+        if (Result <> nil) AND (CountNodes(Tree,ElementName,RootParentNode) >= MAX_DEFAULT_VALUE) then
+            Exit;
     end;
 
     // check whether parents exist in tree and create them
