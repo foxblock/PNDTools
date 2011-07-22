@@ -17,9 +17,12 @@ type
   end;
   PXMLTreeData = ^rXMLTreeData;
 
+  PPXMLElement = ^rPXMLElement;
   rPXMLElement = record
     Tag : String;
-    Root : String;
+    Parent : PPXMLElement;
+    XNode : IXMLNode;
+    Root : PPXMLElement;
     Display : String;
   end;
 
@@ -66,15 +69,16 @@ type
     procedure AddPanels(Data : PXMLTreeData);
     function  FindNode(Tree : TBaseVirtualTree; const S : String;
       Base : PVirtualNode) : PVirtualNode; overload;
+    function  FindSelectedNode(Tree: TBaseVirtualTree; const S: String) : PVirtualNode;
     function  FindNode(const S : String; Node : IXMLNode) : IXMLNode; overload;
     function  CountNodes(Tree : TBaseVirtualTree; const S : String;
       Base : PVirtualNode) : Integer;
   public
     procedure Clear;
     function  LoadFromFile(const FileName : String) : Boolean;
-    function  AddEmptyNode(Tree : TBaseVirtualTree; const ElementName : String;
-      const ParentRootElementName : String) : PVirtualNode;
-    procedure GetElementNames(Node : IXMLNode; RootElementName : String);
+    function  AddEmptyNode(Tree : TBaseVirtualTree; Element : PPXMLElement) : PVirtualNode;
+    procedure GetElementNames(Node : IXMLNode; ParentElement : PPXMLElement;
+      RootElement : PPXMLElement);
   end;
 
   EUnknownPanelType = class (Exception);
@@ -140,15 +144,16 @@ const
   OPTIONAL_COLOR : TColor        = clGrayText;
   REQUIRED_COLOR : TColor        = clWindowText;    
   SCHEMA_ATTRIBUTES : Array [0..2] of String = ('elemdesc','min','max');
-  ROOT_ELEMENT_NAMES : Array [0..1] of String = ('package','application');
+  ROOT_ELEMENT_NAMES : Array [0..2] of String = ('package','application','category');
   MAX_DEFAULT_VALUE : Integer    = 1;
+  MIN_DEFAULT_VALUE : Integer    = 1;
 
 var
   frmPXML: TfrmPXML;
   Doc : TXMLDocument;
   Schema : TXMLDocument;
   CurrentPanels : Array of TItemPanel;
-  PXMLElements : Array of rPXMLElement;
+  PXMLElements : Array of PPXMLElement;
   CurrentNode : PVirtualNode;
 
 implementation
@@ -170,7 +175,7 @@ uses {$Ifdef Win32}ControlHideFix,{$Endif} MainForm, FormatUtils, Math;
     // TODO: Panel type for paths (tricky to do as relative from PND)
     // TODO: Panel type for category and sub-category
     // DONE: Select added element
-    // TODO: Get correct application element by selection in browser
+    // DONE: Get correct application element by selection in browser
     // TODO: Make contents of the element drop-down context sensitive after selected element
 
 
@@ -194,6 +199,7 @@ begin
 end;
 
 procedure TfrmPXML.Clear;
+var I : Integer;
 begin
     Doc.Free;
     Schema.Free;
@@ -202,6 +208,8 @@ begin
     CurrentNode := nil;
     vstPXML.Clear;
     cobElement.Clear;
+    for I := 0 to High(PXMLElements) do
+        Dispose(PXMLElements[I]);
     Finalize(PXMLElements);
     ResetPanels;
 end;
@@ -217,7 +225,7 @@ begin
         Schema.LoadFromFile(frmMain.Settings.SchemaFile)
     else
         Schema.LoadFromFile(ExtractFilePath(Application.ExeName) + frmMain.Settings.SchemaFile);
-    GetElementNames(Schema.DocumentElement,'');
+    GetElementNames(Schema.DocumentElement,nil,nil);
     AddDataToTree(vstPXML,Doc.DocumentElement,nil);
     vstPXML.FullExpand();
     Result := true;
@@ -408,15 +416,13 @@ begin
         lblNoAttr.Visible := false;
 end;  
 
-function TfrmPXML.FindNode(Tree: TBaseVirtualTree; const S: string;
+function TfrmPXML.FindNode(Tree: TBaseVirtualTree; const S: String;
     Base: PVirtualNode) : PVirtualNode;
 var
     Node : PVirtualNode;
     PData : PXMLTreeData;
 begin
     Node := Base;
-    if Node = nil then
-        Node := Tree.GetFirst();
     while Node <> nil do
     begin
         PData := Tree.GetNodeData(Node);
@@ -425,9 +431,31 @@ begin
             Result := Node;
             Exit;
         end;
-        Node := Tree.GetNext(Node);
+        Result := FindNode(Tree,S,Tree.GetFirstChild(Node));
+        if Result <> nil then
+            Exit;
+        Node := Tree.GetNextSibling(Node);
     end;
     Result := nil;
+end;
+
+function TfrmPXML.FindSelectedNode(Tree: TBaseVirtualTree; const S: String) : PVirtualNode;
+var
+    Node : PVirtualNode;
+    PData : PXMLTreeData;
+begin
+    Result := nil;
+    Node := Tree.GetFirstSelected();
+    while Node <> nil do
+    begin
+        PData := Tree.GetNodeData(Node);
+        if (PData <> nil) AND SameText(PData.DisplayKey,S) then
+        begin
+            Result := Node;
+            Exit;
+        end;
+        Node := Node.Parent;
+    end;
 end;
 
 function TfrmPXML.FindNode(const S: string; Node: IXMLNode) : IXMLNode;
@@ -461,21 +489,17 @@ var
 begin
     Result := 0;
     Node := Base;
-    if Node = nil then
-        Node := Tree.GetFirst();
     while Node <> nil do
     begin
         PData := Tree.GetNodeData(Node);
         if SameText(PData.DisplayKey,S) then
-        begin
             Inc(Result);
-        end;
-        Node := Tree.GetNext(Node);
+        Inc(Result,CountNodes(Tree,S,Tree.GetFirstChild(Node)));
+        Node := Tree.GetNextSibling(Node);
     end;
 end;
 
-function TfrmPXML.AddEmptyNode(Tree : TBaseVirtualTree; const ElementName : String;
-    const ParentRootElementName : String) : PVirtualNode;
+function TfrmPXML.AddEmptyNode(Tree : TBaseVirtualTree; Element : PPXMLElement) : PVirtualNode;
 
 function CreateNode(Tree : TBaseVirtualTree; const CopyNode : IXMLNode;
     const ParentTreeNode : PVirtualNode) : PVirtualNode;
@@ -532,36 +556,40 @@ begin
     Result := nil;
 
     // get package or application element
-    if Length(ParentRootElementName) > 0 then     
-        XRootParentNode := FindNode(ParentRootElementName,Schema.DocumentElement)
-    else
-        XRootParentNode := Schema.DocumentElement;
-    if Length(ParentRootElementName) > 0 then
+    if Element.Root <> nil then
     begin
-        RootParentNode := FindNode(Tree,ParentRootElementName,nil);
+        XRootParentNode := Element.Root.XNode;
+        RootParentNode := FindSelectedNode(Tree,Element.Root.Tag);
         if RootParentNode = nil then
-            RootParentNode := CreateNode(Tree,XRootParentNode,nil);
-    end
-    else
+        begin
+            RootParentNode := FindNode(Tree,Element.Root.Tag,Tree.GetFirst());
+            if RootParentNode = nil then
+                RootParentNode := AddEmptyNode(Tree,Element.Root);
+        end;
+    end else
+    begin
+        XRootParentNode := Schema.DocumentElement; 
         RootParentNode := nil;
+    end;
         
     // get archetype node from scheme
-    XNode := FindNode(ElementName,XRootParentNode);
-    if XNode = nil then
-    begin
-        // TODO: Spit out error here
-        Exit;
-    end;
+    XNode := Element.XNode;
+
+    // check whether parents exist in tree and create them
+    if (XNode.ParentNode <> XRootParentNode) AND (XNode.ParentNode <> Schema.DocumentElement) then
+        ParentNode := AddEmptyNode(Tree,Element.Parent)
+    else
+        ParentNode := RootParentNode;
 
     // check whether node already exists or may exist multiple times
-    Result := FindNode(Tree,ElementName,RootParentNode);
+    Result := FindNode(Tree,Element.Tag,Tree.GetFirstChild(ParentNode));
     if Result <> nil then
     begin
         for I := 0 to XNode.AttributeNodes.Count - 1 do
         begin
             if XNode.AttributeNodes[I].NodeName = SCHEMA_ATTRIBUTES[2] then // max
             begin
-                if (CountNodes(Tree,ElementName,RootParentNode) >= XNode.AttributeNodes[I].NodeValue) AND
+                if (CountNodes(Tree,Element.Tag,Tree.GetFirstChild(ParentNode)) >= XNode.AttributeNodes[I].NodeValue) AND
                    (XNode.AttributeNodes[I].NodeValue > 0) then
                     Exit
                 else // it's okay, we did not hit the limit yet
@@ -572,41 +600,47 @@ begin
             end;
         end;
         // max attribute not found
-        if (Result <> nil) AND (CountNodes(Tree,ElementName,RootParentNode) >= MAX_DEFAULT_VALUE) then
+        if (Result <> nil) AND (CountNodes(Tree,Element.Tag,Tree.GetFirstChild(ParentNode)) >= MAX_DEFAULT_VALUE) then
             Exit;
     end;
-
-    // check whether parents exist in tree and create them
-    if (XNode.ParentNode <> XRootParentNode) AND (XNode.ParentNode <> Schema.DocumentElement) then
-        ParentNode := AddEmptyNode(Tree,XNode.ParentNode.NodeName,ParentRootElementName)
-    else
-        ParentNode := RootParentNode;
 
     // create the actual node (finally!)
     Result := CreateNode(Tree,XNode,ParentNode);
 end;
 
-procedure TfrmPXML.GetElementNames(Node : IXMLNode; RootElementName : String);
-var I : Integer;
+procedure TfrmPXML.GetElementNames(Node : IXMLNode; ParentElement : PPXMLElement;
+    RootElement : PPXMLElement);
+var I,K : Integer;
+    temp : PPXMLElement;
+    IsRoot : Boolean;
 begin
-    for I := 0 to High(ROOT_ELEMENT_NAMES) do
-        if Node.NodeName = ROOT_ELEMENT_NAMES[I] then
-            RootElementName := Node.NodeName;
-
     for I := 0 to Node.ChildNodes.Count - 1 do
     begin
         if not (Node.ChildNodes[I].NodeType in [ntText,ntComment]) then
         begin
-            SetLength(PXMLElements,Length(PXMLElements)+1);
-            PXMLElements[High(PXMLElements)].Tag := Node.ChildNodes[I].NodeName;
-            PXMLElements[High(PXMLElements)].Root := RootElementName;
-            if Length(RootElementName) > 0 then
-                PXMLElements[High(PXMLElements)].Display := Node.ChildNodes[I].NodeName +
-                    ' (' + RootElementName + ')'
+            New(temp);
+            temp.Tag := Node.ChildNodes[I].NodeName;
+            temp.Root := RootElement;
+            temp.Parent := ParentElement;
+            temp.XNode := Node.ChildNodes[I];
+            if RootElement <> nil then
+                temp.Display := Node.ChildNodes[I].NodeName + ' (' + RootElement.Tag + ')'
             else
-                PXMLElements[High(PXMLElements)].Display := Node.ChildNodes[I].NodeName;
-            cobElement.Items.Add(PXMLElements[High(PXMLElements)].Display);
-            GetElementNames(Node.ChildNodes[I],RootElementName);
+                temp.Display := Node.ChildNodes[I].NodeName;
+
+            SetLength(PXMLElements,Length(PXMLElements)+1);
+            PXMLElements[High(PXMLElements)] := temp;
+            cobElement.Items.AddObject(temp.Display,TObject(temp));
+
+            IsRoot := false;
+            for K := 0 to High(ROOT_ELEMENT_NAMES) do
+                if temp.Tag = ROOT_ELEMENT_NAMES[K] then
+                        IsRoot := true;
+
+            if IsRoot then
+                GetElementNames(Node.ChildNodes[I],temp,temp)
+            else
+                GetElementNames(Node.ChildNodes[I],temp,RootElement)
         end;
     end;
 end;
@@ -665,7 +699,7 @@ var I : Integer;
     Node : PVirtualNode;
 begin
     I := cobElement.ItemIndex;
-    Node := AddEmptyNode(vstPXML,PXMLElements[I].Tag,PXMLElements[I].Root);
+    Node := AddEmptyNode(vstPXML,PPXMLElement(cobElement.Items.Objects[I]));
     vstPXML.ClearSelection;
     vstPXML.Selected[Node] := true;
 end;

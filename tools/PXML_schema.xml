@@ -25,47 +25,47 @@
 	 This attribute is optional and will not interfere with the actual PXML data
 -->
 <PXML xmlns="http://openpandora.org/namespaces/PXML">
-  <package id="required,string,id" elemdesc="descriptions\package.rtf" min="1" max="1">
+  <package id="required,string,id" elemdesc="descriptions\package.rtf">
     <author name="required,string" website="optional,string,website" email="optional,string,email" elemdesc="descriptions\author.rtf"/>
     <version major="required,string,version" minor="required,string,version" release="required,string,version" build="required,string,version" type="optional,set,alpha,beta,release" elemdesc="descriptions\version.rtf"/>
     <titles elemdesc="descriptions\titles.rtf">
-      <title lang="required,string,language" elemdesc="descriptions\titles.rtf">CONTENT</title>
+      <title lang="required,string,language" elemdesc="descriptions\titles.rtf" min="1" max="0">CONTENT</title>
     </titles>
-    <descriptions elemdesc="descriptions\descriptions.rtf">
-      <description lang="required,string,language" elemdesc="descriptions\descriptions.rtf">CONTENT</description>
+    <descriptions elemdesc="descriptions\descriptions.rtf" min="0">
+      <description lang="required,string,language" elemdesc="descriptions\descriptions.rtf" max="0">CONTENT</description>
     </descriptions>
     <icon src="required,string,path" elemdesc="descriptions\icon.rtf"/>
   </package>
   
-  <application id="required,string,id" appdata="optional,string,folder" elemdesc="descriptions\application.rtf" min="1" max="0">
+  <application id="required,string,id" appdata="optional,string,folder" elemdesc="descriptions\application.rtf" max="0">
     <exec command="required,string,path" arguments="optional,string" startdir="optional,string,dir" standalone="optional,boolean" background="optional,boolean" x11="optional,set,req,stop,ignore" elemdesc="descriptions\exec.rtf"/>
     <author name="required,string" website="optional,string,website" email="optional,string,email" elemdesc="descriptions\author.rtf"/>
     <version major="required,string,version" minor="required,string,version" release="required,string,version" build="required,string,version" type="optional,set,alpha,beta,release" elemdesc="descriptions\version.rtf"/>
-    <osversion major="required,string,version" minor="required,string,version" release="required,string,version" build="required,string,version" elemdesc="descriptions\osversion.rtf"/>
+    <osversion major="required,string,version" minor="required,string,version" release="required,string,version" build="required,string,version" elemdesc="descriptions\osversion.rtf" min="0"/>
     <titles elemdesc="descriptions\titles.rtf">
-      <title lang="required,string,language" elemdesc="descriptions\titles.rtf">CONTENT</title>
+      <title lang="required,string,language" elemdesc="descriptions\titles.rtf" max="0">CONTENT</title>
     </titles>
     <title lang="required,string,language" elemdesc="descriptions\titles.rtf">CONTENT</title> <!--Extra block for compatibility with OS versions before HF6-->
-    <descriptions elemdesc="descriptions\descriptions.rtf">
-      <description lang="required,string,language" elemdesc="descriptions\descriptions.rtf">CONTENT</description>
+    <descriptions elemdesc="descriptions\descriptions.rtf" min="0">
+      <description lang="required,string,language" elemdesc="descriptions\descriptions.rtf" max="0">CONTENT</description>
     </descriptions>
     <description lang="required,string,language" elemdesc="descriptions\descriptions.rtf">CONTENT</description> <!--Extra block for compatibility with OS versions before HF6-->
     <icon src="required,string,path" elemdesc="descriptions\icon.rtf"/>
-    <licenses elemdesc="descriptions\license.rtf">
-      <license name="required,string" url="optional,string" sourcecodeurl="optional,string" elemdesc="descriptions\license.rtf"/>
+    <licenses elemdesc="descriptions\license.rtf" min="0">
+      <license name="required,string" url="optional,string" sourcecodeurl="optional,string" elemdesc="descriptions\license.rtf" max="0"/>
     </licenses>
-    <previewpics elemdesc="descriptions\previewpics.rtf">
-      <pic src="required,string,path" elemdesc="descriptions\previewpics.rtf"/>
-    </previewpics>
-    <info name="required,string" type="required,set,test/html,text/plain" src="required,string,path" elemdesc="descriptions\info.rtf"/>
+    <previewpics elemdesc="descriptions\previewpics.rtf" min="0">
+      <pic src="required,string,path" elemdesc="descriptions\previewpics.rtf" max="0"/>
+    </previewpics> 
+    <info name="required,string" type="required,set,test/html,text/plain" src="required,string,path" elemdesc="descriptions\info.rtf" min="0"/>
     <categories elemdesc="descriptions\category.rtf">
-      <category name="required,string" elemdesc="descriptions\category.rtf">
+      <category name="required,string" elemdesc="descriptions\category.rtf" max="0">
         <subcategory name="required,string" elemdesc="descriptions\category.rtf"/>
       </category>
     </categories>
-    <associations elemdesc="descriptions\association.rtf">
-      <association name="required,string" filetype="required,string,mime" exec="required,string" elemdesc="descriptions\association.rtf"/>
+    <associations elemdesc="descriptions\association.rtf" min="0">
+      <association name="required,string" filetype="required,string,mime" exec="required,string" elemdesc="descriptions\association.rtf" max="0"/>
     </associations>
-    <clockspeed frequency="required,string,integer" elemdesc="descriptions\clockspeed.rtf"/>
+    <clockspeed frequency="required,string,integer" elemdesc="descriptions\clockspeed.rtf" min="0"/>
   </application>
 </PXML>
