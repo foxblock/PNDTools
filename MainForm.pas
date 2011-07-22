@@ -887,7 +887,6 @@ begin
         if FileExists(edtPXML.Text) then
         begin
             frmPXML.LoadFromFile(edtPXML.Text);
-            frmPXML.Show;
         end else
         begin
             if MessageDlg('The specified PXML file does not exist!' + #13#10 +
@@ -895,15 +894,12 @@ begin
                          mtWarning,[mbYes,mbNo],0) = mrYes then
             begin
                 edtPXML.Clear;
-                frmPXML.Clear;
-                frmPXML.Show;
+                edtPXML.Text := frmPXML.CreateNew;
             end;
         end;
     end else
     begin
-        edtPXML.Clear;
-        frmPXML.Clear;
-        frmPXML.Show;
+        edtPXML.Text := frmPXML.CreateNew;
     end;
 end;
 

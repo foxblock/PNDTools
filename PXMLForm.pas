@@ -76,6 +76,7 @@ type
   public
     procedure Clear;
     function  LoadFromFile(const FileName : String) : Boolean;
+    function  CreateNew : String;
     function  AddEmptyNode(Tree : TBaseVirtualTree; Element : PPXMLElement) : PVirtualNode;
     procedure GetElementNames(Node : IXMLNode; ParentElement : PPXMLElement;
       RootElement : PPXMLElement);
@@ -147,6 +148,7 @@ const
   ROOT_ELEMENT_NAMES : Array [0..2] of String = ('package','application','category');
   MAX_DEFAULT_VALUE : Integer    = 1;
   MIN_DEFAULT_VALUE : Integer    = 1;
+  NEW_DEFAULT_FILE : String      = 'tools\PXML_default.xml';
 
 var
   frmPXML: TfrmPXML;
@@ -155,6 +157,8 @@ var
   CurrentPanels : Array of TItemPanel;
   PXMLElements : Array of PPXMLElement;
   CurrentNode : PVirtualNode;
+  IsExistingFile : Boolean;
+  Successful : Boolean;
 
 implementation
 
@@ -228,7 +232,31 @@ begin
     GetElementNames(Schema.DocumentElement,nil,nil);
     AddDataToTree(vstPXML,Doc.DocumentElement,nil);
     vstPXML.FullExpand();
-    Result := true;
+    IsExistingFile := true;
+    ShowModal;
+    Result := Successful;
+end;
+
+function TfrmPXML.CreateNew : String;
+begin
+    Clear;
+    Doc := TXMLDocument.Create(frmPXML);
+    Doc.Options := [doNodeAutoIndent];
+    Doc.LoadFromFile(ExtractFilePath(Application.ExeName) + NEW_DEFAULT_FILE);
+    Schema := TXMLDocument.Create(frmPXML);
+    if Length(ExtractFileDrive(frmMain.Settings.SchemaFile)) > 0 then // full path
+        Schema.LoadFromFile(frmMain.Settings.SchemaFile)
+    else
+        Schema.LoadFromFile(ExtractFilePath(Application.ExeName) + frmMain.Settings.SchemaFile);   
+    GetElementNames(Schema.DocumentElement,nil,nil);  
+    AddDataToTree(vstPXML,Doc.DocumentElement,nil);
+    vstPXML.FullExpand();
+    IsExistingFile := false;
+    ShowModal;
+    if Successful then
+        Result := sadPXML.FileName
+    else
+        Result := '';
 end;
 
 procedure TfrmPXML.pomPXMLDeleteClick(Sender: TObject);
@@ -705,7 +733,8 @@ begin
 end;
 
 procedure TfrmPXML.btnCancelClick(Sender: TObject);
-begin
+begin 
+    Successful := false;
     Close;
 end;
 
@@ -713,7 +742,8 @@ procedure TfrmPXML.btnOKClick(Sender: TObject);
 begin
     ResetPanels;
     UpdateXMLData;
-    if Assigned(Doc) then
+    Successful := true;
+    if IsExistingFile then
     begin
         Doc.SaveToFile(Doc.FileName); 
         Close;
@@ -721,7 +751,6 @@ begin
     begin
         if sadPXML.Execute then
         begin
-            Doc := TXMLDocument.Create(frmPXML);
             Doc.SaveToFile(sadPXML.FileName);
             Close;
         end;
