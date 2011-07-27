@@ -739,9 +739,9 @@ begin
 end;
 
 procedure TfrmPXML.btnOKClick(Sender: TObject);
-begin
-    ResetPanels;
+begin        
     UpdateXMLData;
+    ResetPanels;
     Successful := true;
     if IsExistingFile then
     begin
@@ -921,14 +921,14 @@ end;
 
 procedure TStringItemPanel.LanguageKeyPress(Sender: TObject; var Key: Char);
 begin
-    if not (Key in ['a'..'z','A'..'Z',#8]) OR
+    if not (Key in ['a'..'z','A'..'Z','_',#8]) OR
        ((Key = '_') AND (Pos('_',(Sender as TCustomEdit).Text) <> 0)) then
        DisregardKey(Key);
 end;
 
 procedure TStringItemPanel.MimeKeyPress(Sender: TObject; var Key: Char);
 begin
-    if not (Key in ['a'..'z','A'..'Z','0'..'9','-','.',#8]) OR
+    if not (Key in ['a'..'z','A'..'Z','0'..'9','-','.','/',#8]) OR
        ((Key = '/') AND (Pos('/',(Sender as TCustomEdit).Text) <> 0)) then 
        DisregardKey(Key);    
 end;

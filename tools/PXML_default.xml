@@ -1,4 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PXML xmlns="http://openpandora.org/namespaces/PXML">
+	<package id="package.id.here">
+		<author name="Name of package author/maintainer (you if this is a port)" />
+		<version major="1" minor="0" release="0" build="0"/>
+		<titles>
+			<title lang="en_US">Package title</title>
+		</titles>
+		<descriptions>
+			<description lang="en_US">Package description (short and simple)</description>
+		</descriptions>
+	</package>
+
+	<application id="application.id.here">
+		<exec command="path_to_executable"/>
+		<author name="Name of application author (not you if this is a port)" />
+		<version major="1" minor="1" release="0" build="5"/>
+		<titles>
+			<title lang="en_US">Title of the application</title>
+		</titles>
+		<title lang="en_US">Title of the application (for pre HF6 compatibility)</title> 
+		<descriptions>
+			<description lang="en_US">Short description of the application</description>
+		</descriptions>
+		<description lang="en_US">Short description of the application (for pre HF6 compatibility)</description>
+		<licenses>
+			<license name="License name"/>
+		</licenses>
+		<categories>
+			<category name="Main category (check the freedesktop list)">
+				<subcategory name="Sub category matching the used main category"/>
+			</category>
+		</categories>
+	</application>
 
 </PXML>
