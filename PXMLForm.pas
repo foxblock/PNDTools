@@ -8,7 +8,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, VirtualTrees, ExtCtrls, XMLDoc, XMLIntf, ComCtrls, Menus;
+  Dialogs, StdCtrls, VirtualTrees, ExtCtrls, XMLDoc, XMLIntf, ComCtrls, Menus,
+  ButtonGroup;
 
 type
   rXMLTreeData = record
@@ -24,6 +25,11 @@ type
     XNode : IXMLNode;
     Root : PPXMLElement;
     Display : String;
+  end;
+
+  TXMLGrpButtonItem = class(TGrpButtonItem)
+  public
+    Data : PPXMLElement;
   end;
 
   TfrmPXML = class(TForm)
@@ -44,14 +50,21 @@ type
     vstPXML: TVirtualStringTree;
     sptHor: TSplitter;
     redDescription: TRichEdit;
-    cobElement: TComboBox;
-    btnAdd: TButton;
     pomPXML: TPopupMenu;
     pomPXMLDelete: TMenuItem;
+    pnlElements: TPanel;
+    bugElements: TButtonGroup;
+    sptVert: TSplitter;
+    pnlFilter: TPanel;
+    lblFilter: TLabel;
+    rabSelection: TRadioButton;
+    rabPackage: TRadioButton;
+    rabApplication: TRadioButton;
+    procedure rabSelectionClick(Sender: TObject);
+    procedure bugElementsButtonClicked(Sender: TObject; Index: Integer);
     procedure pomPXMLDeleteClick(Sender: TObject);
     procedure vstPXMLMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
-    procedure btnAddClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure vstPXMLChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure vstPXMLInitNode(Sender: TBaseVirtualTree; ParentNode,
@@ -62,25 +75,42 @@ type
     procedure btnOKClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
   private
+    // Recursively adds XML Data to the VirtualTree starting with the passed node
     procedure AddDataToTree(Tree : TBaseVirtualTree; Data : IXMLNode;
       Node : PVirtualNode);
+    // Updates the XML Data in Doc with the values in the current attribute panels
     procedure UpdateXMLData;
+    // Clears the currently displayed attribute panels
     procedure ResetPanels;
+    // Adds attribute panels for the passed node (reads schema for missing attributes)
+    // and adds those, too
     procedure AddPanels(Data : PXMLTreeData);
+    // Search for a node by caption (element name), returns NULL on failure
     function  FindNode(Tree : TBaseVirtualTree; const S : String;
       Base : PVirtualNode) : PVirtualNode; overload;
-    function  FindSelectedNode(Tree: TBaseVirtualTree; const S: String) : PVirtualNode;
     function  FindNode(const S : String; Node : IXMLNode) : IXMLNode; overload;
+    // Find a selected node with the passed caption, returns either the selected
+    // node, a parent of the selected node (if applicable) or NULL
+    function  FindSelectedNode(Tree: TBaseVirtualTree; const S: String) : PVirtualNode;
+    // Counts occurences of nodes with the passed caption in child nodes of Base
     function  CountNodes(Tree : TBaseVirtualTree; const S : String;
       Base : PVirtualNode) : Integer;
+    procedure ShowElementButtons;
   public
+    // Clears the whole Form, dispatches all Objects
     procedure Clear;
+    // Load a XML file to the Form
     function  LoadFromFile(const FileName : String) : Boolean;
-    function  CreateNew : String;
+    // Create a new XML file (loads the default file)
+    function  CreateNewFile : String;
+    // Adds a new XML node to the doc and tree
     function  AddEmptyNode(Tree : TBaseVirtualTree; Element : PPXMLElement) : PVirtualNode;
+    // Generates a list of PPXMLElements from the schema file
     procedure GetElementNames(Node : IXMLNode; ParentElement : PPXMLElement;
       RootElement : PPXMLElement);
   end;
+
+// --- Panels ------------------------------------------------------------------
 
   EUnknownPanelType = class (Exception);
 
@@ -106,6 +136,7 @@ type
     procedure SetTypeData(const Arguments : TStrings); override;
     procedure UpdateData; override;
   private
+    // OnKeyPress functions limiting the input for various hard coded types
     procedure GenericKeyPress(Sender: TObject; var Key: Char);
     procedure VersionKeyPress(Sender: TObject; var Key: Char);
     procedure EmailKeyPress(Sender: TObject; var Key: Char);
@@ -211,7 +242,7 @@ begin
     Schema := nil;
     CurrentNode := nil;
     vstPXML.Clear;
-    cobElement.Clear;
+    bugElements.Items.Clear;
     for I := 0 to High(PXMLElements) do
         Dispose(PXMLElements[I]);
     Finalize(PXMLElements);
@@ -231,13 +262,14 @@ begin
         Schema.LoadFromFile(ExtractFilePath(Application.ExeName) + frmMain.Settings.SchemaFile);
     GetElementNames(Schema.DocumentElement,nil,nil);
     AddDataToTree(vstPXML,Doc.DocumentElement,nil);
-    vstPXML.FullExpand();
+    vstPXML.FullExpand();  
+    ShowElementButtons;
     IsExistingFile := true;
     ShowModal;
     Result := Successful;
 end;
 
-function TfrmPXML.CreateNew : String;
+function TfrmPXML.CreateNewFile : String;
 begin
     Clear;
     Doc := TXMLDocument.Create(frmPXML);
@@ -251,25 +283,13 @@ begin
     GetElementNames(Schema.DocumentElement,nil,nil);  
     AddDataToTree(vstPXML,Doc.DocumentElement,nil);
     vstPXML.FullExpand();
+    ShowElementButtons;
     IsExistingFile := false;
     ShowModal;
     if Successful then
         Result := sadPXML.FileName
     else
         Result := '';
-end;
-
-procedure TfrmPXML.pomPXMLDeleteClick(Sender: TObject);
-var
-    Node : PVirtualNode;
-    PData : PXMLTreeData;
-begin
-    ResetPanels;
-    CurrentNode := nil;
-    Node := vstPXML.GetFirstSelected();
-    PData := vstPXML.GetNodeData(Node);
-    PData.Node.ParentNode.ChildNodes.Remove(PData.Node);
-    vstPXML.DeleteSelectedNodes;
 end;
 
 procedure TfrmPXML.UpdateXMLData;
@@ -529,6 +549,8 @@ end;
 
 function TfrmPXML.AddEmptyNode(Tree : TBaseVirtualTree; Element : PPXMLElement) : PVirtualNode;
 
+// Copies a node from the schema to the active XML Doc, stripping all schema
+// attributes and data (essentially creating a blank node)
 function CreateNode(Tree : TBaseVirtualTree; const CopyNode : IXMLNode;
     const ParentTreeNode : PVirtualNode) : PVirtualNode;
 var
@@ -641,6 +663,7 @@ procedure TfrmPXML.GetElementNames(Node : IXMLNode; ParentElement : PPXMLElement
 var I,K : Integer;
     temp : PPXMLElement;
     IsRoot : Boolean;
+    tempBtn : TXMLGrpButtonItem;
 begin
     for I := 0 to Node.ChildNodes.Count - 1 do
     begin
@@ -658,7 +681,6 @@ begin
 
             SetLength(PXMLElements,Length(PXMLElements)+1);
             PXMLElements[High(PXMLElements)] := temp;
-            cobElement.Items.AddObject(temp.Display,TObject(temp));
 
             IsRoot := false;
             for K := 0 to High(ROOT_ELEMENT_NAMES) do
@@ -673,6 +695,60 @@ begin
     end;
 end;
 
+procedure TfrmPXML.ShowElementButtons;
+var I : Integer;
+    temp : TXMLGrpButtonItem;
+    S : String;
+    PData : PXMLTreeData;
+    Node : PVirtualNode;
+begin         
+    bugElements.Items.Clear;
+    // determine what buttons to show
+    // TODO: Either add PXMLElement data to PXMLTreeData or create getRootElement
+    // function for the following code
+    if rabSelection.Checked then
+    begin
+        Node := vstPXML.GetFirstSelected();
+        if Node = nil then
+            Node := vstPXML.GetFirst();
+        if Node = nil then
+            Exit;
+        PData := vstPXML.GetNodeData(Node);
+        // check whether element can have child elements
+        for I := 0 to High(PXMLElements) do
+            if (PXMLElements[I].Parent <> nil) AND
+               (PXMLElements[I].Parent.Tag = PData.DisplayKey) then
+            begin
+               S := PData.DisplayKey;
+               Break;
+            end;
+        // else use parent element
+        if Length(S) = 0 then
+        begin
+            Node := Node.Parent;
+            PData := vstPXML.GetNodeData(Node);
+            S := PData.DisplayKey;
+        end;
+        S := PData.DisplayKey;
+    end else
+    if rabPackage.Checked then
+        S := 'package'
+    else
+    if rabApplication.Checked then
+        S := 'application';
+
+    for I := 0 to High(PXMLElements) do
+    begin
+        if (Length(S) = 0) OR (PXMLElements[I].Parent = nil) OR
+           (PXMLElements[I].Parent.Tag = S) then
+        begin
+            temp := TXMLGrpButtonItem.Create(bugElements.Items);
+            temp.Caption := PXMLElements[I].Tag;
+            temp.Data := PXMLElements[I];
+        end;
+    end;
+end;
+
 // --- Tree --------------------------------------------------------------------
 
 procedure TfrmPXML.vstPXMLChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
@@ -681,6 +757,8 @@ begin
     ResetPanels;
     CurrentNode := Sender.GetFirstSelected();
     AddPanels(Sender.GetNodeData(CurrentNode));
+    if rabSelection.Checked then
+        ShowElementButtons;
 end;
 
 procedure TfrmPXML.vstPXMLGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
@@ -722,16 +800,6 @@ end;
 
 // --- Buttons -----------------------------------------------------------------
 
-procedure TfrmPXML.btnAddClick(Sender: TObject);
-var I : Integer;
-    Node : PVirtualNode;
-begin
-    I := cobElement.ItemIndex;
-    Node := AddEmptyNode(vstPXML,PPXMLElement(cobElement.Items.Objects[I]));
-    vstPXML.ClearSelection;
-    vstPXML.Selected[Node] := true;
-end;
-
 procedure TfrmPXML.btnCancelClick(Sender: TObject);
 begin 
     Successful := false;
@@ -755,6 +823,33 @@ begin
             Close;
         end;
     end;
+end;
+
+procedure TfrmPXML.bugElementsButtonClicked(Sender: TObject; Index: Integer);
+var temp : PPXMLElement;
+begin
+    temp := (bugElements.Items[Index] as TXMLGrpButtonItem).Data;
+    vstPXML.Selected[AddEmptyNode(vstPXML,temp)] := true;
+end;
+
+// --- Context Menu ------------------------------------------------------------
+
+procedure TfrmPXML.pomPXMLDeleteClick(Sender: TObject);
+var
+    Node : PVirtualNode;
+    PData : PXMLTreeData;
+begin
+    ResetPanels;
+    CurrentNode := nil;
+    Node := vstPXML.GetFirstSelected();
+    PData := vstPXML.GetNodeData(Node);
+    PData.Node.ParentNode.ChildNodes.Remove(PData.Node);
+    vstPXML.DeleteSelectedNodes;
+end;
+
+procedure TfrmPXML.rabSelectionClick(Sender: TObject);
+begin
+    ShowElementButtons;
 end;
 
 // --- Form --------------------------------------------------------------------

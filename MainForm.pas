@@ -894,12 +894,12 @@ begin
                          mtWarning,[mbYes,mbNo],0) = mrYes then
             begin
                 edtPXML.Clear;
-                edtPXML.Text := frmPXML.CreateNew;
+                edtPXML.Text := frmPXML.CreateNewFile;
             end;
         end;
     end else
     begin
-        edtPXML.Text := frmPXML.CreateNew;
+        edtPXML.Text := frmPXML.CreateNewFile;
     end;
 end;
 
