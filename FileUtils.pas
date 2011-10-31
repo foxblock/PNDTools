@@ -24,7 +24,7 @@ procedure AppendDataToFileStream(Stream : TFileStream; const FileName : String;
   You can pass an optional OutputStream in which all data from StartPos to the
   final end of the String to find will be written (only when Backwards is false)
   Uses a "rolling" buffer to eliminate the problem of the string to be split into two
-  Because of that only the first 512 bytes of Data or used for comparison }
+  Because of that only the first 512 bytes of Data are used for comparison }
 function FindStringDataInStream(const Data : String; Stream : TFileStream;
     const StartPos : Int64 = 0; const Backwards : Boolean = false;
     OutputStream : TFileStream = nil) : Int64;
@@ -36,8 +36,8 @@ uses Math, Forms;
 procedure AppendDataToFileStream(Stream : TFileStream; const FileName : String;
     const DontSeek : Boolean = false);
 var
-    Buffer : Array [Word] of Byte;
-    NumRead, NumWrite : Word;
+    Buffer : Array [Word] of Byte; //64KB
+    NumRead, NumWrite : Integer;
     Other : TFileStream;
 begin
     if NOT DontSeek then
@@ -126,7 +126,7 @@ begin
                     OutputStream.Write(Buffer,SizeOf(Buffer) div 2);
                 end
             else
-                OutputStream.Write(Buffer,Result + Size + NumRead - Stream.Position);
+                OutputStream.Write(Buffer,Result + Size + NumRead - Stream.Position);  // I + Size
         end;
         // position found -> exit
         if Result <> -1 then

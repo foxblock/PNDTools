@@ -12,12 +12,8 @@ uses
   ButtonGroup;
 
 type
-  rXMLTreeData = record
-    Node : IXMLNode;
-    DisplayKey : String;
-  end;
-  PXMLTreeData = ^rXMLTreeData;
-
+  { DataType for caching the schema file in an array for faster access to needed
+    data (faster than searching the XML file every time) }
   PPXMLElement = ^rPXMLElement;
   rPXMLElement = record
     Tag : String;
@@ -26,6 +22,13 @@ type
     Root : PPXMLElement;
     Display : String;
   end;
+
+  rXMLTreeData = record
+    Node : IXMLNode;
+    DisplayKey : String;
+    SchemaLink : PPXMLElement;
+  end;
+  PXMLTreeData = ^rXMLTreeData;
 
   TXMLGrpButtonItem = class(TGrpButtonItem)
   public
@@ -60,6 +63,10 @@ type
     rabSelection: TRadioButton;
     rabPackage: TRadioButton;
     rabApplication: TRadioButton;
+    pnlValueText: TPanel;
+    memValue: TMemo;
+    procedure vstPXMLKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
     procedure rabSelectionClick(Sender: TObject);
     procedure bugElementsButtonClicked(Sender: TObject; Index: Integer);
     procedure pomPXMLDeleteClick(Sender: TObject);
@@ -95,6 +102,7 @@ type
     // Counts occurences of nodes with the passed caption in child nodes of Base
     function  CountNodes(Tree : TBaseVirtualTree; const S : String;
       Base : PVirtualNode) : Integer;
+    // Show applicable element buttons for the current situation
     procedure ShowElementButtons;
   public
     // Clears the whole Form, dispatches all Objects
@@ -130,7 +138,7 @@ type
     edtValue: TEdit;
     chars: TStringList;
   public
-    constructor Create(NewParent : TWinControl; AttrNode, ParentNode : IXMLNode);
+    constructor Create(NewParent : TWinControl; AttrNode, ParentNode : IXMLNode); override;
     destructor Free; override;
     procedure SetOptional(const Optional : Boolean); override;
     procedure SetTypeData(const Arguments : TStrings); override;
@@ -152,7 +160,7 @@ type
     lblKey: TLabel;
     cobValue: TComboBox;  
   public
-    constructor Create(NewParent : TWinControl; AttrNode, ParentNode : IXMLNode);
+    constructor Create(NewParent : TWinControl; AttrNode, ParentNode : IXMLNode); override;
     destructor Free; override;
     procedure SetOptional(const Optional : Boolean); override;
     procedure SetTypeData(const Arguments : TStrings); override;
@@ -162,11 +170,22 @@ type
   TBooleanItemPanel = class (TItemPanel)
     cbxValue: TCheckBox;
   public
-    constructor Create(NewParent : TWinControl; AttrNode, ParentNode : IXMLNode);
+    constructor Create(NewParent : TWinControl; AttrNode, ParentNode : IXMLNode); override;
     destructor Free; override;
     procedure SetOptional(const Optional : Boolean); override;
     procedure SetTypeData(const Arguments : TStrings); override;
     procedure UpdateData; override;
+  end;
+
+  TCategoryItemPanel = class (TSetItemPanel)
+  public
+    constructor Create(NewParent : TWinControl; AttrNode, ParentNode : IXMLNode); override;
+    function  GetCategory() : String;
+  end;
+
+  TSubcategoryItemPanel = class (TSetItemPanel)
+  public
+    constructor Create(NewParent : TWinControl; AttrNode, ParentNode : IXMLNode; Category : String);
   end;
 
 const
@@ -177,9 +196,11 @@ const
   REQUIRED_COLOR : TColor        = clWindowText;    
   SCHEMA_ATTRIBUTES : Array [0..2] of String = ('elemdesc','min','max');
   ROOT_ELEMENT_NAMES : Array [0..2] of String = ('package','application','category');
+  FULL_TEXT_ELEMENT : String     = 'description'; // hard-coded until better implemented in schema
   MAX_DEFAULT_VALUE : Integer    = 1;
   MIN_DEFAULT_VALUE : Integer    = 1;
   NEW_DEFAULT_FILE : String      = 'tools\PXML_default.xml';
+  CATEGORIES_FILE : String       = 'tools\Categories.txt';
 
 var
   frmPXML: TfrmPXML;
@@ -208,10 +229,10 @@ uses {$Ifdef Win32}ControlHideFix,{$Endif} MainForm, FormatUtils, Math;
     // TODO: Wizard for PXML creation (creating a quick-and-dirty PXML)
     // DONE: Fill element dropDown (preferrebly from schema file)
     // TODO: Panel type for paths (tricky to do as relative from PND)
-    // TODO: Panel type for category and sub-category
+    // DONE: Panel type for category and sub-category
     // DONE: Select added element
     // DONE: Get correct application element by selection in browser
-    // TODO: Make contents of the element drop-down context sensitive after selected element
+    // DONE: Hotkey for deleting elements from the list
 
 
 // --- Functions ---------------------------------------------------------------
@@ -241,7 +262,9 @@ begin
     Doc := nil;
     Schema := nil;
     CurrentNode := nil;
-    vstPXML.Clear;
+    vstPXML.Clear;       
+    for I := 0 to bugElements.Items.Count - 1 do
+        bugElements.Items[0].Free;
     bugElements.Items.Clear;
     for I := 0 to High(PXMLElements) do
         Dispose(PXMLElements[I]);
@@ -307,9 +330,17 @@ begin
     PData := vstPXML.GetNodeData(CurrentNode);
     if PData.Node.IsTextElement then
     begin
-        if Length(edtValue.Text) = 0 then
-            edtValue.Text := DATA_MISSING_STR;
-        PData.Node.NodeValue := edtValue.Text;
+        if pnlValue.Visible then
+        begin
+            if Length(edtValue.Text) = 0 then
+                edtValue.Text := DATA_MISSING_STR;
+            PData.Node.NodeValue := edtValue.Text;
+        end else
+        begin
+            if memValue.Lines.Count = 0 then
+                memValue.Lines.Add(DATA_MISSING_STR);
+            PData.Node.NodeValue := memValue.Lines.Text;
+        end;
     end;
 end;
 
@@ -328,6 +359,7 @@ begin
     lblNoValue.Visible := true;
     lblNoAttr.Visible := true;
     pnlValue.Visible := false;
+    pnlValueText.Visible := false;
     redDescription.Clear;
     redDescription.Lines.Add(NO_DESCRIPTION_LINE);
 end;
@@ -339,6 +371,7 @@ var
     SchemaNode, AttrNode, SchAttrNode : IXMLNode;
     List : TStrings;
     Found : Boolean;
+    PData : PXMLTreeData;
 begin
     if Data = nil then
         Exit;
@@ -347,8 +380,15 @@ begin
         try
             // fails on nodes without data
             temp := Data.Node.Text;
-            edtValue.Text := temp;
-            pnlValue.Visible := true;
+            if Data.Node.NodeName = FULL_TEXT_ELEMENT then
+            begin
+                memValue.Lines.Text := temp;
+                pnlValueText.Visible := true;
+            end else
+            begin
+                edtValue.Text := temp;
+                pnlValue.Visible := true;
+            end; 
             lblNoValue.Visible := false;
         except
             // suppress error
@@ -365,9 +405,10 @@ begin
     SchemaNode := FindNode(Data.Node.NodeName,FindNode(SchemaNode.NodeName,Schema.DocumentElement));
 
     // not found
-    // TODO: Spit out error here (not as popup though as that might generate 1000 on a bad file)
     if SchemaNode = nil then
     begin
+        frmMain.LogLine('Node not found in schema file (caused either by an ' +
+                        'outdated schema or invalid PXML file)',LOG_WARNING_COLOR);
         // display all found attributes (as default string panels)
         for I := 0 to Data.Node.AttributeNodes.Count - 1 do
         begin
@@ -420,6 +461,7 @@ begin
 
             // check for errors - add default panel   
             SetLength(CurrentPanels,Length(CurrentPanels)+1);
+            CurrentPanels[High(CurrentPanels)] := nil;
             if List.Count < 2 then
             begin
                 CurrentPanels[High(CurrentPanels)] := TStringItemPanel.Create(scbValues,AttrNode,Data.Node);
@@ -435,7 +477,31 @@ begin
                 else if temp = 'set' then
                     CurrentPanels[High(CurrentPanels)] := TSetItemPanel.Create(scbValues,AttrNode,Data.Node)
                 else if temp = 'boolean' then
-                    CurrentPanels[High(CurrentPanels)] := TBooleanItemPanel.Create(scbValues,AttrNode,Data.Node) 
+                    CurrentPanels[High(CurrentPanels)] := TBooleanItemPanel.Create(scbValues,AttrNode,Data.Node)
+                else if temp = 'category' then
+                    CurrentPanels[High(CurrentPanels)] := TCategoryItemPanel.Create(scbValues,AttrNode,Data.Node)
+                else if temp = 'subcategory' then
+                begin
+                    PData := vstPXML.GetNodeData(vstPXML.GetFirstSelected().Parent);
+                    for K := 0 to PData.Node.AttributeNodes.Count - 1 do
+                    begin
+                        if PData.Node.AttributeNodes.Get(K).NodeName = 'name' then
+                        begin
+                            try
+                                temp := PData.Node.AttributeNodes.Get(K).NodeValue;
+                            except
+                                temp := '';
+                            end;
+                            CurrentPanels[High(CurrentPanels)] := TSubcategoryItemPanel.Create(scbValues,AttrNode,Data.Node,temp);
+                            Break;
+                        end;
+                    end;
+                    if CurrentPanels[High(CurrentPanels)] = nil then
+                    begin
+                        CurrentPanels[High(CurrentPanels)] := TStringItemPanel.Create(scbValues,AttrNode,Data.Node);
+                        Continue;
+                    end;
+                end
                 else
                     raise EUnknownPanelType.Create('Unknown attribute type "' + temp + '"');
                 // set optional flag
@@ -551,7 +617,7 @@ function TfrmPXML.AddEmptyNode(Tree : TBaseVirtualTree; Element : PPXMLElement) 
 
 // Copies a node from the schema to the active XML Doc, stripping all schema
 // attributes and data (essentially creating a blank node)
-function CreateNode(Tree : TBaseVirtualTree; const CopyNode : IXMLNode;
+function CreateNode(Tree : TBaseVirtualTree; const CopyData : PPXMLElement;
     const ParentTreeNode : PVirtualNode) : PVirtualNode;
 var
     PData, PData2 : PXMLTreeData;
@@ -560,7 +626,8 @@ var
 begin
     Result := Tree.AddChild(ParentTreeNode);
     PData := Tree.GetNodeData(Result);
-    PData.Node := CopyNode.CloneNode(false);
+    PData.Node := CopyData.XNode.CloneNode(false);
+    PData.SchemaLink := CopyData;
     if ParentTreeNode = nil then
     begin
         Doc.DocumentElement.ChildNodes.Add(PData.Node);
@@ -586,11 +653,11 @@ begin
         Inc(I);
     end;
     // add value node (which did not get copied) - if present in archetype
-    for I := 0 to CopyNode.ChildNodes.Count - 1 do
+    for I := 0 to CopyData.XNode.ChildNodes.Count - 1 do
     begin
-        if CopyNode.ChildNodes[I].NodeType = ntText then
+        if CopyData.XNode.ChildNodes[I].NodeType = ntText then
         begin
-            temp := CopyNode.ChildNodes[I].CloneNode(true);
+            temp := CopyData.XNode.ChildNodes[I].CloneNode(true);
             temp.NodeValue := '';
             PData.Node.ChildNodes.Add(temp);
         end;
@@ -625,7 +692,7 @@ begin
     // get archetype node from scheme
     XNode := Element.XNode;
 
-    // check whether parents exist in tree and create them
+    // check whether parents exist in tree and create it
     if (XNode.ParentNode <> XRootParentNode) AND (XNode.ParentNode <> Schema.DocumentElement) then
         ParentNode := AddEmptyNode(Tree,Element.Parent)
     else
@@ -655,7 +722,7 @@ begin
     end;
 
     // create the actual node (finally!)
-    Result := CreateNode(Tree,XNode,ParentNode);
+    Result := CreateNode(Tree,Element,ParentNode);
 end;
 
 procedure TfrmPXML.GetElementNames(Node : IXMLNode; ParentElement : PPXMLElement;
@@ -701,26 +768,27 @@ var I : Integer;
     S : String;
     PData : PXMLTreeData;
     Node : PVirtualNode;
-begin         
+begin
+    for I := 0 to bugElements.Items.Count - 1 do
+        bugElements.Items[0].Free;
     bugElements.Items.Clear;
     // determine what buttons to show
-    // TODO: Either add PXMLElement data to PXMLTreeData or create getRootElement
-    // function for the following code
+    S := '';
     if rabSelection.Checked then
     begin
         Node := vstPXML.GetFirstSelected();
         if Node = nil then
             Node := vstPXML.GetFirst();
-        if Node = nil then
+        if Node = nil then // this should never happen (and probably won't)
             Exit;
         PData := vstPXML.GetNodeData(Node);
-        // check whether element can have child elements
+        // check whether element can have child elements (aka there are elements with this as parent)
         for I := 0 to High(PXMLElements) do
             if (PXMLElements[I].Parent <> nil) AND
                (PXMLElements[I].Parent.Tag = PData.DisplayKey) then
             begin
-               S := PData.DisplayKey;
-               Break;
+                S := PData.DisplayKey;
+                Break;
             end;
         // else use parent element
         if Length(S) = 0 then
@@ -729,7 +797,6 @@ begin
             PData := vstPXML.GetNodeData(Node);
             S := PData.DisplayKey;
         end;
-        S := PData.DisplayKey;
     end else
     if rabPackage.Checked then
         S := 'package'
@@ -739,8 +806,8 @@ begin
 
     for I := 0 to High(PXMLElements) do
     begin
-        if (Length(S) = 0) OR (PXMLElements[I].Parent = nil) OR
-           (PXMLElements[I].Parent.Tag = S) then
+        if ((Length(S) = 0) OR (PXMLElements[I].Parent = nil) OR
+           (PXMLElements[I].Parent.Tag = S)) then
         begin
             temp := TXMLGrpButtonItem.Create(bugElements.Items);
             temp.Caption := PXMLElements[I].Tag;
@@ -776,9 +843,26 @@ procedure TfrmPXML.vstPXMLInitNode(Sender: TBaseVirtualTree; ParentNode,
   Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
 var
     PData : PXMLTreeData;
+    XNode : IXMLNode;
+    I : Integer;
 begin
     PData := Sender.GetNodeData(Node);
     PData.DisplayKey := PData.Node.NodeName;
+    XNode := PData.Node;
+    while XNode.ParentNode <> Doc.DocumentElement do
+        XNode := XNode.ParentNode;
+    for I := 0 to High(PXMLElements) do
+        if (PXMLElements[I].Tag = PData.DisplayKey) AND
+           ((PXMLElements[I].Root = nil) OR (PXMLElements[I].Root.Tag = XNode.NodeName)) then
+           PData.SchemaLink := PXMLElements[I];
+
+end;
+
+procedure TfrmPXML.vstPXMLKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    if ((vstPXML.Focused) AND (Key = 46) AND (vstPXML.GetFirstSelected() <> nil)) then
+        pomPXMLDeleteClick(Sender);  
 end;
 
 procedure TfrmPXML.vstPXMLMouseUp(Sender: TObject; Button: TMouseButton;
@@ -1158,6 +1242,63 @@ end;
 procedure TSetItemPanel.UpdateData;
 begin
     Attr.NodeValue := cobValue.Text;
-end;  
+end;
+
+// --- TCategoryItemPanel ------------------------------------------------------
+
+constructor TCategoryItemPanel.Create(NewParent: TWinControl; AttrNode: IXMLNode;
+    ParentNode: IXMLNode);
+var F : TextFile;
+    S : String;
+begin
+    inherited Create(NewParent,AttrNode,ParentNode);
+    try
+        AssignFile(F,ExtractFilePath(Application.ExeName) + CATEGORIES_FILE);
+        Reset(F);
+        while not EOF(F) do
+        begin
+            ReadLn(F,S);
+            cobValue.Items.Add(S);
+            ReadLn(F,S);
+        end;
+    finally
+        CloseFile(F);
+    end;
+end;
+
+function TCategoryItemPanel.GetCategory : String;
+begin
+    Result := cobValue.Text;
+end;
+
+// --- TSubcategoryItemPanel ---------------------------------------------------
+
+constructor TSubcategoryItemPanel.Create(NewParent : TWinControl;
+    AttrNode, ParentNode : IXMLNode; Category : String);
+var F : TextFile;
+    S : String;
+    L : TStrings;
+begin    
+    inherited Create(NewParent,AttrNode,ParentNode);
+    try
+        AssignFile(F,ExtractFilePath(Application.ExeName) + CATEGORIES_FILE);
+        Reset(F);
+        while not EOF(F) do
+        begin
+            ReadLn(F,S);
+            if S = Category then
+            begin             
+                ReadLn(F,S);
+                L := TStringList.Create;
+                L.Delimiter := '|';
+                L.DelimitedText := S;
+                cobValue.Items.AddStrings(L);
+                Break;
+            end;
+        end;
+    finally
+        CloseFile(F);
+    end;
+end;
 
 end.

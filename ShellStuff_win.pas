@@ -73,11 +73,19 @@ function  ExecuteProgram(const FileName : String; const Params : String;
 var
     ShExecInfo : SHELLEXECUTEINFO;
     ExitCode : Cardinal;
+    OSInfo : OSVERSIONINFO;
 begin
+    // Get Windows version to switch between 'runas' and 'open' verb
+    GetVersionEx(OSInfo);
+
     ShExecInfo.Wnd          := Application.Handle;
     ShExecInfo.fMask        := SEE_MASK_NOCLOSEPROCESS;
     ShExecInfo.cbSize       := SizeOf(SHELLEXECUTEINFOW);
-    ShExecInfo.lpVerb       := PChar(Verb);
+    if (Verb = 'runas') AND ((OSInfo.dwMajorVersion < 6) // XP and older
+        OR (ExtractFileExt(FileName) <> 'exe')) then // only use 'runas' on .exe (won't work for .bat)
+        ShExecInfo.lpVerb   := PChar('open')
+    else
+        ShExecInfo.lpVerb   := PChar(Verb);
     ShExecInfo.lpFile       := PChar(FileName);
     ShExecInfo.lpParameters := PChar(Params);
     if ExecDir = '' then

@@ -131,8 +131,7 @@ type
     const PXML_PATH : String = 'PXML.xml';
     const ICON_PATH : String = 'icon.png';
     const PND_EXT : String = '.pnd';
-    procedure LogLine(Component: TRichEdit; const TextToAdd : String;
-      const Color: TColor = clBlack);
+    procedure LogLine(const TextToAdd : String; const Color: TColor = clBlack);
     procedure OpenPND(const FileName : String);
     procedure SavePND(const FileName : String; const PXML : String;
       const Icon : String);
@@ -141,8 +140,8 @@ type
   end;
 
 const
-    VERSION : String           = '0.3.6';
-    BUILD_DATE : String        = '28.07.2011';
+    VERSION : String           = '0.3.8';
+    BUILD_DATE : String        = '31.10.2011';
     LOG_ERROR_COLOR : TColor   = clRed;
     LOG_WARNING_COLOR : TColor = $0000AAFF;
     LOG_SUCCESS_COLOR : TColor = clGreen;  
@@ -192,26 +191,18 @@ begin
     CopyTreeData(Tree,Tree.GetFirst(),TargetDir,Source,Destination);
     if ShellCopyFile(Source,Destination,false) then
         begin
-        LogLine(redLog,'Copied all files to temporary directory '#13#10 + TargetDir,
+        LogLine('Copied all files to temporary directory '#13#10 + TargetDir,
             LOG_SUCCESS_COLOR);
         end
     else
         begin 
-        LogLine(redLog,'An error occurred when copying the files to the temporary ' +
-                       'folder ' + #13#10 + TargetDir + #13#10 +
-                       'Check whether you have right access to it and no file is ' +
-                       'currently in use by another application.' + #13#10 +
-                       'The error code was: ' + IntToStr(GetLastError()),
-                       LOG_ERROR_COLOR);
+        LogLine('An error occurred when copying the files to the temporary ' +
+                'folder ' + #13#10 + TargetDir + #13#10 +
+                'Check whether you have right access to it and no file is ' +
+                'currently in use by another application.' + #13#10 +
+                'The error code was: ' + IntToStr(GetLastError()),
+                LOG_ERROR_COLOR);
         end;
-end;
-
-procedure TfrmMain.edtPXMLChange(Sender: TObject);
-begin
-    if Length(edtPXML.Text) = 0 then
-        btnPXMLEdit.Caption := 'Create PXML'
-    else                                    
-        btnPXMLEdit.Caption := 'Edit PXML'
 end;
 
 procedure TfrmMain.ExtractPNDMetaData(Stream : TFileStream; var PXML : String;
@@ -223,28 +214,28 @@ const
 var
     OutputStream : TFileStream;
     Pos : Int64; 
-    NumRead, NumWrite : Word;
+    NumRead, NumWrite : Integer;
     Buffer : Array [Word] of Byte;
 begin
     // find PXML data
-    LogLine(redLog,'Looking for PXML data...');
+    LogLine('Looking for PXML data...');
     Pos := FindStringDataInStream(Header,Stream,0,true);
     if Pos = -1 then
     begin
         Pos := FindStringDataInStream(FallbackHeader,Stream,0,true);
         if Pos = -1 then
         begin
-            LogLine(redLog,'No PXML data found!',LOG_ERROR_COLOR);
+            LogLine('No PXML data found!',LOG_ERROR_COLOR);
             PXML := '';
             Icon := '';
             Exit;
         end else
-            LogLine(redLog,'PXML file missing proper xml header, you should fix ' +
-                           'that, check the PXML specification for details',
-                LOG_WARNING_COLOR);
+            LogLine('PXML file missing proper xml header, you should fix ' +
+                    'that, check the PXML specification for details',
+                    LOG_WARNING_COLOR);
     end;
     // write PXML data to a file
-    LogLine(redLog,'PXML data found, writing to file ' + PXML);
+    LogLine('PXML data found, writing to file ' + PXML);
     OutputStream := TFileStream.Create(PXML,fmCreate);
     try
         Pos := FindStringDataInStream(Footer,Stream,Pos,false,OutputStream);
@@ -252,12 +243,12 @@ begin
         OutputStream.Free;
     end;
 
-    // search for PNG header and extract PND data
+    // search for PNG header and extract PNG data
     // TODO: Search for other image types, too
     Pos := FindStringDataInStream(Chr(137) + 'PNG',Stream,Pos);
     if Pos <> -1 then
     begin
-        LogLine(redLog,'Icon data found, writing to file ' + Icon);
+        LogLine('Icon data found, writing to file ' + Icon);
         OutputStream := TFileStream.Create(Icon,fmCreate);
         try
             Stream.Seek(Pos,soFromBeginning);
@@ -270,23 +261,22 @@ begin
         end;
     end else
     begin
-        LogLine(redLog,'No icon data found in PND',LOG_WARNING_COLOR);
+        LogLine('No icon data found in PND',LOG_WARNING_COLOR);
         Icon := '';
     end;
 
-    LogLine(redLog,'PND metadata successfully extracted',LOG_SUCCESS_COLOR);
+    LogLine('PND metadata successfully extracted',LOG_SUCCESS_COLOR);
 end;
 
-procedure TfrmMain.LogLine(Component: TRichEdit; const TextToAdd : String;
-    const Color: TColor = clBlack);
+procedure TfrmMain.LogLine(const TextToAdd : String; const Color: TColor = clBlack);
 var
     Count : Integer;
 begin
-    Count := Length(Component.Text);
-    Component.Lines.Add(TextToAdd);
-    Component.SelStart := count;
-    Component.SelLength := Length(Component.Text) - Component.SelStart;
-    Component.SelAttributes.Color := Color;
+    Count := Length(redLog.Text);
+    redLog.Lines.Add(TextToAdd);
+    redLog.SelStart := count;
+    redLog.SelLength := Length(redLog.Text) - redLog.SelStart;
+    redLog.SelAttributes.Color := Color;
 end;
 
 procedure TfrmMain.OpenPND(const FileName: string);   
@@ -302,7 +292,7 @@ begin
     vstFiles.Clear;
     edtPXML.Clear;
     edtIcon.Clear;
-    LogLine(redLog,'Deleting old temporary files');
+    LogLine('Deleting old temporary files');
     Param := IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName) + META_PATH);
     PXML := Param + PXML_PATH;
     Icon := Param + ICON_PATH;
@@ -322,11 +312,11 @@ begin
     end;
 
     // Unsquash the PND
-    LogLine(redLog,'Extracting PND... this might take a while'); 
+    LogLine('Extracting PND... this might take a while'); 
     Prog := Settings.ProgUnSquash;
     Param := StringReplace(Settings.ParamUnSquash,SOURCE_VAR,ConvertPath(FileName),[rfReplaceAll]);
     Param := StringReplace(Param,TARGET_VAR,ConvertPath(TEMP_PATH),[rfReplaceAll]);
-    LogLine(redLog,'Calling program: ' + Prog + ' ' + Param);
+    LogLine('Calling program: ' + Prog + ' ' + Param);
     if not ExecuteProgram(Prog,Param) then
     begin
         MessageDlg('Encountered an error while extracting PND' + #13#10 +
@@ -334,7 +324,7 @@ begin
         Exit;
     end;
 
-    LogLine(redLog,'Adding files to tree, this might take a while...');
+    LogLine('Adding files to tree, this might take a while...');
 
     // add files to tree
     vstFiles.BeginUpdate;
@@ -351,10 +341,10 @@ begin
     edtPXML.Text := PXML;
     edtIcon.Text := Icon;
     if vstFiles.GetFirst = nil then
-        LogLine(redLog,'No files have been added, this most likely is due to an ' +
-                       'error while extracting the PND',LOG_ERROR_COLOR)
+        LogLine('No files have been added, this most likely is due to an ' +
+                'error while extracting the PND',LOG_ERROR_COLOR)
     else
-        LogLine(redLog,'PND successfully extracted to ' +
+        LogLine('PND successfully extracted to ' +
             ExtractFilePath(Application.ExeName) + TEMP_PATH,LOG_SUCCESS_COLOR);
 end;
 
@@ -382,16 +372,16 @@ begin
     
     // temporary data handling
     Param := ExtractFilePath(Application.ExeName) + TEMP_PATH;
-    LogLine(redLog,'Deleting old temporary files');
+    LogLine('Deleting old temporary files');
     ShellDeleteFile(Param);  // clean-up
-    LogLine(redLog,'Copying new temporary files to folder ' + Param + ' - This may ' +
-                   'take a while.');
+    LogLine('Copying new temporary files to folder ' + Param + ' - This may ' +
+            'take a while.');
     CopyTreeToFolder(vstFiles,Param);
 
     // set corrent file flags to work on the Pandora
     Prog := Settings.ProgChmod;
     Param := StringReplace(Settings.ParamChmod,SOURCE_VAR,ConvertPath(TEMP_PATH),[rfReplaceAll]);
-    LogLine(redLog,'Calling program: ' + Prog + ' ' + Param);
+    LogLine('Calling program: ' + Prog + ' ' + Param);
     if not ExecuteProgram(Prog,Param) then
     begin
         MessageDlg('Encountered an error while trying to set file flags' + #13#10 +
@@ -403,7 +393,7 @@ begin
     Prog := Settings.ProgMkSquash;
     Param := StringReplace(Settings.ParamMkSquash,SOURCE_VAR,ConvertPath(TEMP_PATH),[rfReplaceAll]);
     Param := StringReplace(Param,TARGET_VAR,ConvertPath(FileName),[rfReplaceAll]);
-    LogLine(redLog,'Calling program: ' + Prog + ' ' + Param);
+    LogLine('Calling program: ' + Prog + ' ' + Param);
     if not ExecuteProgram(Prog,Param) then
     begin
         MessageDlg('Encountered an error while creating SquashFS archive' + #13#10 +
@@ -412,23 +402,23 @@ begin
     end;
 
     // append PXML and icon
-    LogLine(redLog,'Appending icon and PXML data (if found).');
+    LogLine('Appending icon and PXML data (if found).');
     PNDFile := TFileStream.Create(FileName,fmOpenReadWrite);
     try
         if not NoPXML then  
             AppendDataToFileStream(PNDFile,PXML)
         else
-            LogLine(redLog,'Creating PND without PXML data (you should not do this!)',
+            LogLine('Creating PND without PXML data (you should not do this!)',
                 LOG_WARNING_COLOR); 
         if (Icon <> '') AND FileExists(Icon) then
             AppendDataToFileStream(PNDFile,Icon)
         else
-            LogLine(redLog,'No icon found or icon could not be accessed',
+            LogLine('No icon found or icon could not be accessed',
                 LOG_WARNING_COLOR);
     finally
         PNDFile.Free;
     end;
-    LogLine(redLog,'PND created successfully: ' + FileName,LOG_SUCCESS_COLOR);
+    LogLine('PND created successfully: ' + FileName,LOG_SUCCESS_COLOR);
 end;
 
 procedure TfrmMain.LoadSettings(const FileName: string; var S: rSettings);
@@ -647,6 +637,16 @@ begin
     else
         C.Height := C.Constraints.MinHeight;
     C.Top := pnlButtons.Top - C.Height;
+end;
+
+// --- Misc. -------------------------------------------------------------------   
+
+procedure TfrmMain.edtPXMLChange(Sender: TObject);
+begin
+    if Length(edtPXML.Text) = 0 then
+        btnPXMLEdit.Caption := 'Create PXML'
+    else                                    
+        btnPXMLEdit.Caption := 'Edit PXML'
 end;
 
 // --- Files Tree --------------------------------------------------------------

@@ -8,6 +8,8 @@
 	 string - optional argument is a hard-coded filter type or a list of allowed characters
 	 boolean - no argument, becomes a check box
 	 set - argument is a list of allowed values which will be added to a drop-down list
+	 category - list of main categories as described here: http://standards.freedesktop.org/menu-spec/latest/apa.html
+	 subcategory - list of sub-categories (to matching main category) as described here: http://standards.freedesktop.org/menu-spec/latest/apa.html
 	 
 	 Supported filter types (for string elements):
 	 version - allows only numeric chars and '+' and '-'
@@ -59,8 +61,8 @@
     </previewpics> 
     <info name="required,string" type="required,set,test/html,text/plain" src="required,string,path" elemdesc="descriptions\info.rtf" min="0"/>
     <categories elemdesc="descriptions\category.rtf">
-      <category name="required,string" elemdesc="descriptions\category.rtf" max="0">
-        <subcategory name="required,string" elemdesc="descriptions\category.rtf"/>
+      <category name="required,category" elemdesc="descriptions\category.rtf" max="0">
+        <subcategory name="required,subcategory" elemdesc="descriptions\category.rtf"/>
       </category>
     </categories>
     <associations elemdesc="descriptions\association.rtf" min="0">

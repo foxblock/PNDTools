@@ -2,7 +2,7 @@ object frmPXML: TfrmPXML
   Left = 0
   Top = 0
   Caption = 'PXML'
-  ClientHeight = 435
+  ClientHeight = 492
   ClientWidth = 404
   Color = clBtnFace
   Constraints.MinHeight = 300
@@ -12,6 +12,7 @@ object frmPXML: TfrmPXML
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  KeyPreview = True
   OldCreateOrder = False
   OnClose = FormClose
   OnCreate = FormCreate
@@ -20,7 +21,7 @@ object frmPXML: TfrmPXML
   object sptHor: TSplitter
     Left = 158
     Top = 0
-    Height = 299
+    Height = 356
     AutoSnap = False
     Beveled = True
     ResizeStyle = rsUpdate
@@ -30,7 +31,7 @@ object frmPXML: TfrmPXML
   end
   object sptVert: TSplitter
     Left = 0
-    Top = 299
+    Top = 356
     Width = 404
     Height = 3
     Cursor = crVSplit
@@ -42,7 +43,7 @@ object frmPXML: TfrmPXML
   end
   object pnlButtons: TPanel
     Left = 0
-    Top = 402
+    Top = 459
     Width = 404
     Height = 33
     Align = alBottom
@@ -64,7 +65,6 @@ object frmPXML: TfrmPXML
       Caption = 'Cancel'
       TabOrder = 1
       OnClick = btnCancelClick
-      ExplicitHeight = 25
     end
     object btnOK: TButton
       AlignWithMargins = True
@@ -80,25 +80,23 @@ object frmPXML: TfrmPXML
       Caption = 'OK'
       TabOrder = 0
       OnClick = btnOKClick
-      ExplicitHeight = 25
     end
   end
   object pnlData: TPanel
     Left = 161
     Top = 0
     Width = 243
-    Height = 299
+    Height = 356
     Align = alClient
     BevelOuter = bvNone
     Constraints.MinWidth = 200
     TabOrder = 1
-    ExplicitHeight = 402
     object scbValues: TScrollBox
       AlignWithMargins = True
       Left = 4
       Top = 4
       Width = 235
-      Height = 293
+      Height = 350
       Margins.Left = 4
       Margins.Top = 4
       Margins.Right = 4
@@ -110,7 +108,6 @@ object frmPXML: TfrmPXML
       BevelInner = bvNone
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitHeight = 396
       object lblValue: TLabel
         AlignWithMargins = True
         Left = 3
@@ -131,7 +128,7 @@ object frmPXML: TfrmPXML
       object lblAttr: TLabel
         AlignWithMargins = True
         Left = 3
-        Top = 74
+        Top = 180
         Width = 225
         Height = 19
         Align = alTop
@@ -148,7 +145,7 @@ object frmPXML: TfrmPXML
       object lblDescription: TLabel
         AlignWithMargins = True
         Left = 3
-        Top = 118
+        Top = 224
         Width = 225
         Height = 19
         Align = alTop
@@ -182,7 +179,7 @@ object frmPXML: TfrmPXML
       object lblNoAttr: TLabel
         AlignWithMargins = True
         Left = 3
-        Top = 99
+        Top = 205
         Width = 225
         Height = 13
         Align = alTop
@@ -217,9 +214,9 @@ object frmPXML: TfrmPXML
       end
       object redDescription: TRichEdit
         Left = 0
-        Top = 140
+        Top = 246
         Width = 231
-        Height = 149
+        Height = 100
         Align = alClient
         BevelInner = bvNone
         BevelOuter = bvNone
@@ -231,7 +228,25 @@ object frmPXML: TfrmPXML
         ReadOnly = True
         ScrollBars = ssVertical
         TabOrder = 1
-        ExplicitHeight = 252
+      end
+      object pnlValueText: TPanel
+        AlignWithMargins = True
+        Left = 3
+        Top = 74
+        Width = 225
+        Height = 100
+        Align = alTop
+        BevelOuter = bvNone
+        TabOrder = 2
+        object memValue: TMemo
+          Left = 0
+          Top = 0
+          Width = 225
+          Height = 100
+          Align = alClient
+          ScrollBars = ssVertical
+          TabOrder = 0
+        end
       end
     end
   end
@@ -239,7 +254,7 @@ object frmPXML: TfrmPXML
     Left = 0
     Top = 0
     Width = 158
-    Height = 299
+    Height = 356
     Margins.Left = 4
     Margins.Top = 4
     Margins.Right = 4
@@ -249,13 +264,12 @@ object frmPXML: TfrmPXML
     Constraints.MaxWidth = 300
     Constraints.MinWidth = 100
     TabOrder = 0
-    ExplicitHeight = 402
     object vstPXML: TVirtualStringTree
       AlignWithMargins = True
       Left = 4
       Top = 4
       Width = 150
-      Height = 293
+      Height = 350
       Margins.Left = 4
       Margins.Top = 4
       Margins.Right = 4
@@ -281,8 +295,8 @@ object frmPXML: TfrmPXML
       OnChange = vstPXMLChange
       OnGetText = vstPXMLGetText
       OnInitNode = vstPXMLInitNode
+      OnKeyDown = vstPXMLKeyDown
       OnMouseUp = vstPXMLMouseUp
-      ExplicitHeight = 396
       Columns = <
         item
           Options = [coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coVisible, coAllowFocus]
@@ -294,7 +308,7 @@ object frmPXML: TfrmPXML
   end
   object pnlElements: TPanel
     Left = 0
-    Top = 302
+    Top = 359
     Width = 404
     Height = 100
     Align = alBottom
@@ -319,10 +333,6 @@ object frmPXML: TfrmPXML
       Items = <>
       TabOrder = 1
       OnButtonClicked = bugElementsButtonClicked
-      ExplicitLeft = 0
-      ExplicitTop = 17
-      ExplicitWidth = 404
-      ExplicitHeight = 96
     end
     object pnlFilter: TPanel
       Left = 0
@@ -362,9 +372,6 @@ object frmPXML: TfrmPXML
         TabOrder = 0
         TabStop = True
         OnClick = rabSelectionClick
-        ExplicitLeft = 55
-        ExplicitTop = 5
-        ExplicitHeight = 17
       end
       object rabPackage: TRadioButton
         AlignWithMargins = True
@@ -380,9 +387,6 @@ object frmPXML: TfrmPXML
         Caption = 'Package'
         TabOrder = 1
         OnClick = rabSelectionClick
-        ExplicitLeft = 130
-        ExplicitTop = 5
-        ExplicitHeight = 17
       end
       object rabApplication: TRadioButton
         AlignWithMargins = True
@@ -398,9 +402,6 @@ object frmPXML: TfrmPXML
         Caption = 'Application'
         TabOrder = 2
         OnClick = rabSelectionClick
-        ExplicitLeft = 222
-        ExplicitTop = 2
-        ExplicitHeight = 19
       end
     end
   end
