@@ -227,7 +227,7 @@ object frmPXML: TfrmPXML
           'no description available for this element')
         ReadOnly = True
         ScrollBars = ssVertical
-        TabOrder = 1
+        TabOrder = 2
       end
       object pnlValueText: TPanel
         AlignWithMargins = True
@@ -237,7 +237,7 @@ object frmPXML: TfrmPXML
         Height = 100
         Align = alTop
         BevelOuter = bvNone
-        TabOrder = 2
+        TabOrder = 1
         object memValue: TMemo
           Left = 0
           Top = 0
@@ -275,6 +275,8 @@ object frmPXML: TfrmPXML
       Margins.Right = 4
       Margins.Bottom = 2
       Align = alClient
+      DragOperations = [doMove]
+      DragType = dtVCL
       Header.AutoSizeIndex = 0
       Header.DefaultHeight = 17
       Header.Font.Charset = DEFAULT_CHARSET

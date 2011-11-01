@@ -4,14 +4,14 @@
 		<author name="Name of package author/maintainer (you if this is a port)" />
 		<version major="1" minor="0" release="0" build="0"/>
 		<titles>
-			<title lang="en_US">Package title</title>
+			<title lang="en_US">Package title (same as application title for single application PNDs)</title>
 		</titles>
 		<descriptions>
-			<description lang="en_US">Package description (short and simple)</description>
+			<description lang="en_US">Package description (short and simple - use applicaiton description for single application PNDs)</description>
 		</descriptions>
 	</package>
 
-	<application id="application.id.here">
+	<application id="application.id.here.use.package.id.for.single.appliation.pnds">
 		<exec command="path_to_executable"/>
 		<author name="Name of application author (not you if this is a port)" />
 		<version major="1" minor="1" release="0" build="5"/>
@@ -27,7 +27,7 @@
 			<license name="License name"/>
 		</licenses>
 		<categories>
-			<category name="Main category (check the freedesktop list)">
+			<category name="Main category">
 				<subcategory name="Sub category matching the used main category"/>
 			</category>
 		</categories>
