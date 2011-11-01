@@ -11,7 +11,8 @@ uses
   FileUtils in 'FileUtils.pas',
   OptionsForm in 'OptionsForm.pas' {frmOptions},
   ControlHideFix in 'ControlHideFix.pas',
-  PXMLForm in 'PXMLForm.pas' {frmPXML};
+  PXMLForm in 'PXMLForm.pas' {frmPXML},
+  CreatorForm in 'CreatorForm.pas' {frmCreator};
 
 {$R *.res}
 
@@ -21,5 +22,6 @@ begin
   Application.CreateForm(TfrmOptions, frmOptions);
   Application.CreateForm(TfrmPXML, frmPXML);
   Application.CreateForm(TfrmPXML, frmPXML);
+  Application.CreateForm(TfrmCreator, frmCreator);
   Application.Run;
 end.
