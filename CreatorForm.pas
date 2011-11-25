@@ -3,29 +3,36 @@ unit CreatorForm;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, Spin, ExtCtrls;
+  Messages, Classes, Graphics, Controls, Forms, Dialogs, Spin, ComCtrls,
+  StdCtrls, ExtCtrls;
 
 type
-  TfrmCreator = class(TForm)
-    grbApp: TGroupBox;
-    pnlRight: TPanel;
-    grbLicense: TGroupBox;
-    grbAuthor: TGroupBox;
-    grbAdvanced: TGroupBox;
-    pnlButtons: TPanel;
-    Button1: TButton;
-    Button2: TButton;
+  Tfrm_easyprofile = class(TForm)
+    pgcMain: TPageControl;
+    pgcMain3: TTabSheet;
+    pgcMain4: TTabSheet;
+    pgcMain1: TTabSheet;
+    TabSheet1: TTabSheet;
+    TabSheet2: TTabSheet;
+    pgcMain2: TTabSheet;
+    cobCategory: TComboBox;
+    cobSubcategory: TComboBox;
     edtTitle: TEdit;
-    lblTitle: TLabel;
+    lblCategory: TLabel;
     lblDescription: TLabel;
+    lblExe: TLabel;
+    lblSubcategory: TLabel;
+    lblTitle: TLabel;
     memDescription: TMemo;
+    pnlExe: TPanel;
+    edtExe: TEdit;
+    btnExe: TButton;
     pnlVersion: TPanel;
     lblVersion: TLabel;
     pnlVBuild: TPanel;
+    lblVBuild: TLabel;
     spbVBuild: TSpinButton;
     edtVBuild: TEdit;
-    lblVBuild: TLabel;
     pnlVRelease: TPanel;
     lblVRelease: TLabel;
     spbVRelease: TSpinButton;
@@ -38,42 +45,47 @@ type
     lblVMajor: TLabel;
     spbVMajor: TSpinButton;
     edtVMajor: TEdit;
-    lblCategory: TLabel;
-    cobCategory: TComboBox;
-    lblSubcategory: TLabel;
-    cobSubcategory: TComboBox;
-    lblName: TLabel;
-    edtName: TEdit;
-    lblWebsite: TLabel;
-    lblMail: TLabel;
-    edtWebsite: TEdit;
     edtMail: TEdit;
+    edtName: TEdit;
+    edtWebsite: TEdit;
     grbAppAuthor: TGroupBox;
-    cbxPort: TCheckBox;
     lblAppAuthor: TLabel;
-    edtAppAuthor: TEdit;
     lblAppWebsite: TLabel;
-    edtAppWebsite: TEdit;
     lblAppMail: TLabel;
+    edtAppAuthor: TEdit;
+    edtAppWebsite: TEdit;
     edtAppMail: TEdit;
+    lblMail: TLabel;
+    lblName: TLabel;
+    lblWebsite: TLabel;
     memAuthorHelp: TMemo;
-    lblExe: TLabel;
-    Panel1: TPanel;
-    edtExe: TEdit;
-    btnExe: TButton;
+    grbLicense: TGroupBox;
     lblLicense: TLabel;
     lblLicenseURL: TLabel;
-    edtLicenseURL: TEdit;
     lblSourceURL: TLabel;
+    edtLicenseURL: TEdit;
     edtSourceURL: TEdit;
     memLicenseHelp: TMemo;
     cbxLicense: TComboBox;
+    grbAdvanced: TGroupBox;
     lblID: TLabel;
     edtID: TEdit;
-    lblVType: TLabel;
-    cbxVType: TComboBox;
     memAdvancedHelp: TMemo;
     cbxAdvanced: TCheckBox;
+    pnlButtons: TPanel;
+    Button1: TButton;
+    Button2: TButton;
+    cbxPort: TCheckBox;
+    pnlVType: TPanel;
+    lblVType: TLabel;
+    cbxVType: TComboBox;
+    memHello: TMemo;
+    Label1: TLabel;
+    redErrors: TRichEdit;
+    grbScreenshots: TGroupBox;
+    GroupBox1: TGroupBox;
+    procedure Button2Click(Sender: TObject);
+    procedure cbxPortClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -81,10 +93,24 @@ type
   end;
 
 var
-  frmCreator: TfrmCreator;
+  frm_easyprofile: Tfrm_easyprofile;
 
 implementation
 
 {$R *.dfm}
+
+procedure Tfrm_easyprofile.Button2Click(Sender: TObject);
+begin
+    Close;
+end;
+
+procedure Tfrm_easyprofile.cbxPortClick(Sender: TObject);
+var I : Integer;
+begin
+    for I := 0 to grbAppAuthor.ControlCount - 1 do
+    begin
+        grbAppAuthor.Controls[I].Enabled := (Sender as TCheckBox).Checked;
+    end;
+end;
 
 end.
