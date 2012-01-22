@@ -140,8 +140,8 @@ type
   end;
 
 const
-    VERSION : String           = '0.3.8';
-    BUILD_DATE : String        = '31.10.2011';
+    VERSION : String           = '0.3.9';
+    BUILD_DATE : String        = '22.01.2012';
     LOG_ERROR_COLOR : TColor   = clRed;
     LOG_WARNING_COLOR : TColor = $0000AAFF;
     LOG_SUCCESS_COLOR : TColor = clGreen;  
