@@ -17,6 +17,7 @@ object frmPXML: TfrmPXML
   Position = poDesigned
   OnClose = FormClose
   OnCreate = FormCreate
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object sptHor: TSplitter

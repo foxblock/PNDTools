@@ -12,9 +12,9 @@
 	 subcategory - list of sub-categories (to matching main category) as described here: http://standards.freedesktop.org/menu-spec/latest/apa.html
 	 
 	 Supported filter types (for string elements):
-	 version - allows only numeric chars and '+' and '-'
+	 version - allows only alphanumeric chars and '+' and '-'
 	 email - allows only one of '@' and does not allow any of ()[]\;:,<>|
-	 folder - does not allow ' ' and any of -/\:?*<>|"
+	 folder - does not allow space and any of -/\:?*<>|"
 	 language - only allows alpha characters and one of '_'
 	 mime - only allows alphanumerical characters as well as '-' and '.' and one of '/'
 	 id - allows alphanumerical chars as well as .-!_+
