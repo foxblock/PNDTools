@@ -12,7 +12,7 @@ uses
   OptionsForm in 'OptionsForm.pas' {frmOptions},
   ControlHideFix in 'ControlHideFix.pas',
   PXMLForm in 'PXMLForm.pas' {frmPXML},
-  CreatorForm in 'CreatorForm.pas' {frm_easyprofile};
+  CreatorForm in 'CreatorForm.pas' {frmCreator};
 
 {$R *.res}
 
@@ -22,6 +22,6 @@ begin
   Application.CreateForm(TfrmOptions, frmOptions);
   Application.CreateForm(TfrmPXML, frmPXML);
   Application.CreateForm(TfrmPXML, frmPXML);
-  Application.CreateForm(Tfrm_easyprofile, frm_easyprofile);
+  Application.CreateForm(TfrmCreator, frmCreator);
   Application.Run;
 end.

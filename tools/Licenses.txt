@@ -1,0 +1,17 @@
+none
+
+GNU GPL v2
+http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+GNU GPL v3
+http://www.gnu.org/licenses/gpl.html
+GNU Lesser GPL v3 (LGPL)
+http://www.gnu.org/licenses/lgpl.html
+Mozilla Public License 1.1 (MPL)
+http://www.mozilla.org/MPL/MPL-1.1.html
+zLib License
+http://www.gzip.org/zlib/zlib_license.html
+Beerware
+people.freebsd.org/~phk/
+WTFPL
+http://sam.zoy.org/wtfpl/
+commercial

@@ -101,7 +101,6 @@ object frmMain: TfrmMain
     Align = alClient
     Caption = '   Files (drag&&drop stuff here)   '
     TabOrder = 0
-    ExplicitLeft = -1
     object vstFiles: TVirtualStringTree
       AlignWithMargins = True
       Left = 6

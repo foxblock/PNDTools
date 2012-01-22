@@ -1,12 +1,13 @@
-object frm_easyprofile: Tfrm_easyprofile
+object frmCreator: TfrmCreator
   Left = 208
   Top = 284
   BorderIcons = [biSystemMenu, biMinimize]
-  BorderStyle = bsSingle
-  Caption = 'Easy profile creator'
-  ClientHeight = 480
-  ClientWidth = 511
+  Caption = 'PXML Creation Utility'
+  ClientHeight = 488
+  ClientWidth = 510
   Color = clBtnFace
+  Constraints.MinHeight = 526
+  Constraints.MinWidth = 526
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -15,22 +16,24 @@ object frm_easyprofile: Tfrm_easyprofile
   OldCreateOrder = False
   Position = poDesigned
   Visible = True
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object pgcMain: TPageControl
     Left = 0
     Top = 0
-    Width = 511
-    Height = 449
+    Width = 510
+    Height = 457
     Margins.Left = 5
     Margins.Top = 0
     Margins.Right = 0
     Margins.Bottom = 0
-    ActivePage = TabSheet2
+    ActivePage = pgcMain3
     Align = alClient
     MultiLine = True
     Style = tsFlatButtons
     TabOrder = 0
+    OnChange = pgcMainChange
     object pgcMain1: TTabSheet
       Caption = '1 - Hello...'
       ImageIndex = 4
@@ -38,7 +41,7 @@ object frm_easyprofile: Tfrm_easyprofile
         AlignWithMargins = True
         Left = 4
         Top = 6
-        Width = 495
+        Width = 494
         Height = 139
         Margins.Left = 4
         Margins.Top = 6
@@ -79,7 +82,7 @@ object frm_easyprofile: Tfrm_easyprofile
         AlignWithMargins = True
         Left = 4
         Top = 90
-        Width = 495
+        Width = 494
         Height = 13
         Margins.Left = 4
         Margins.Top = 2
@@ -99,7 +102,7 @@ object frm_easyprofile: Tfrm_easyprofile
         AlignWithMargins = True
         Left = 4
         Top = 2
-        Width = 495
+        Width = 494
         Height = 13
         Margins.Left = 4
         Margins.Top = 2
@@ -119,7 +122,7 @@ object frm_easyprofile: Tfrm_easyprofile
         AlignWithMargins = True
         Left = 4
         Top = 46
-        Width = 495
+        Width = 494
         Height = 13
         Margins.Left = 4
         Margins.Top = 2
@@ -139,7 +142,7 @@ object frm_easyprofile: Tfrm_easyprofile
         AlignWithMargins = True
         Left = 4
         Top = 107
-        Width = 495
+        Width = 494
         Height = 21
         Margins.Left = 4
         Margins.Top = 4
@@ -153,7 +156,7 @@ object frm_easyprofile: Tfrm_easyprofile
         AlignWithMargins = True
         Left = 4
         Top = 19
-        Width = 495
+        Width = 494
         Height = 21
         Margins.Left = 4
         Margins.Top = 4
@@ -167,7 +170,7 @@ object frm_easyprofile: Tfrm_easyprofile
         AlignWithMargins = True
         Left = 4
         Top = 63
-        Width = 495
+        Width = 494
         Height = 21
         Margins.Left = 4
         Margins.Top = 4
@@ -181,7 +184,7 @@ object frm_easyprofile: Tfrm_easyprofile
         AlignWithMargins = True
         Left = 4
         Top = 183
-        Width = 495
+        Width = 494
         Height = 154
         Margins.Left = 4
         Margins.Top = 2
@@ -193,7 +196,7 @@ object frm_easyprofile: Tfrm_easyprofile
           AlignWithMargins = True
           Left = 6
           Top = 15
-          Width = 483
+          Width = 482
           Height = 13
           Margins.Left = 4
           Margins.Top = 0
@@ -201,20 +204,20 @@ object frm_easyprofile: Tfrm_easyprofile
           Margins.Bottom = 0
           Align = alTop
           Caption = 'Application Author'
+          Enabled = False
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
           ParentFont = False
-          ExplicitTop = 19
           ExplicitWidth = 105
         end
         object lblAppWebsite: TLabel
           AlignWithMargins = True
           Left = 6
           Top = 59
-          Width = 483
+          Width = 482
           Height = 13
           Margins.Left = 4
           Margins.Top = 2
@@ -229,14 +232,13 @@ object frm_easyprofile: Tfrm_easyprofile
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
           ParentFont = False
-          ExplicitTop = 63
           ExplicitWidth = 105
         end
         object lblAppMail: TLabel
           AlignWithMargins = True
           Left = 6
           Top = 103
-          Width = 483
+          Width = 482
           Height = 13
           Margins.Left = 4
           Margins.Top = 2
@@ -251,29 +253,28 @@ object frm_easyprofile: Tfrm_easyprofile
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
           ParentFont = False
-          ExplicitTop = 107
           ExplicitWidth = 93
         end
         object edtAppAuthor: TEdit
           AlignWithMargins = True
           Left = 6
           Top = 32
-          Width = 483
+          Width = 482
           Height = 21
           Margins.Left = 4
           Margins.Top = 4
           Margins.Right = 4
           Margins.Bottom = 4
           Align = alTop
+          Enabled = False
           TabOrder = 0
           Text = 'The application author'#39's name'
-          ExplicitTop = 36
         end
         object edtAppWebsite: TEdit
           AlignWithMargins = True
           Left = 6
           Top = 76
-          Width = 483
+          Width = 482
           Height = 21
           Margins.Left = 4
           Margins.Top = 4
@@ -283,13 +284,12 @@ object frm_easyprofile: Tfrm_easyprofile
           Enabled = False
           TabOrder = 1
           Text = 'Website of the application'
-          ExplicitTop = 80
         end
         object edtAppMail: TEdit
           AlignWithMargins = True
           Left = 6
           Top = 120
-          Width = 483
+          Width = 482
           Height = 21
           Margins.Left = 4
           Margins.Top = 4
@@ -299,14 +299,13 @@ object frm_easyprofile: Tfrm_easyprofile
           Enabled = False
           TabOrder = 2
           Text = 'Mail of the application'#39's author'
-          ExplicitTop = 124
         end
       end
       object memAuthorHelp: TMemo
         AlignWithMargins = True
         Left = 4
         Top = 138
-        Width = 495
+        Width = 494
         Height = 43
         Margins.Left = 4
         Margins.Top = 6
@@ -326,7 +325,6 @@ object frm_easyprofile: Tfrm_easyprofile
           'If you are the original author, just ignore those fields.')
         ReadOnly = True
         TabOrder = 4
-        ExplicitTop = 134
       end
       object cbxPort: TCheckBox
         AlignWithMargins = True
@@ -345,8 +343,8 @@ object frm_easyprofile: Tfrm_easyprofile
       object lblCategory: TLabel
         AlignWithMargins = True
         Left = 4
-        Top = 332
-        Width = 495
+        Top = 340
+        Width = 494
         Height = 13
         Margins.Left = 4
         Margins.Top = 2
@@ -366,7 +364,7 @@ object frm_easyprofile: Tfrm_easyprofile
         AlignWithMargins = True
         Left = 4
         Top = 46
-        Width = 495
+        Width = 494
         Height = 13
         Margins.Left = 4
         Margins.Top = 2
@@ -385,8 +383,8 @@ object frm_easyprofile: Tfrm_easyprofile
       object lblExe: TLabel
         AlignWithMargins = True
         Left = 4
-        Top = 231
-        Width = 495
+        Top = 239
+        Width = 494
         Height = 13
         Margins.Left = 4
         Margins.Top = 2
@@ -405,8 +403,8 @@ object frm_easyprofile: Tfrm_easyprofile
       object lblSubcategory: TLabel
         AlignWithMargins = True
         Left = 4
-        Top = 376
-        Width = 495
+        Top = 384
+        Width = 494
         Height = 13
         Margins.Left = 4
         Margins.Top = 2
@@ -426,7 +424,7 @@ object frm_easyprofile: Tfrm_easyprofile
         AlignWithMargins = True
         Left = 4
         Top = 2
-        Width = 495
+        Width = 494
         Height = 13
         Margins.Left = 4
         Margins.Top = 2
@@ -445,8 +443,8 @@ object frm_easyprofile: Tfrm_easyprofile
       object cobCategory: TComboBox
         AlignWithMargins = True
         Left = 4
-        Top = 349
-        Width = 495
+        Top = 357
+        Width = 494
         Height = 21
         Margins.Left = 4
         Margins.Top = 4
@@ -455,12 +453,13 @@ object frm_easyprofile: Tfrm_easyprofile
         Align = alBottom
         ItemHeight = 13
         TabOrder = 0
+        OnChange = cobCategoryChange
       end
       object cobSubcategory: TComboBox
         AlignWithMargins = True
         Left = 4
-        Top = 393
-        Width = 495
+        Top = 401
+        Width = 494
         Height = 21
         Margins.Left = 4
         Margins.Top = 4
@@ -474,7 +473,7 @@ object frm_easyprofile: Tfrm_easyprofile
         AlignWithMargins = True
         Left = 4
         Top = 19
-        Width = 495
+        Width = 494
         Height = 21
         Margins.Left = 4
         Margins.Top = 4
@@ -488,8 +487,8 @@ object frm_easyprofile: Tfrm_easyprofile
         AlignWithMargins = True
         Left = 4
         Top = 63
-        Width = 495
-        Height = 162
+        Width = 494
+        Height = 170
         Margins.Left = 4
         Margins.Top = 4
         Margins.Right = 4
@@ -504,8 +503,8 @@ object frm_easyprofile: Tfrm_easyprofile
       object pnlExe: TPanel
         AlignWithMargins = True
         Left = 4
-        Top = 248
-        Width = 495
+        Top = 256
+        Width = 494
         Height = 21
         Margins.Left = 4
         Margins.Top = 4
@@ -517,7 +516,7 @@ object frm_easyprofile: Tfrm_easyprofile
         object edtExe: TEdit
           Left = 0
           Top = 0
-          Width = 474
+          Width = 473
           Height = 21
           Margins.Left = 4
           Margins.Top = 4
@@ -527,7 +526,7 @@ object frm_easyprofile: Tfrm_easyprofile
           TabOrder = 0
         end
         object btnExe: TButton
-          Left = 474
+          Left = 473
           Top = 0
           Width = 21
           Height = 21
@@ -539,8 +538,8 @@ object frm_easyprofile: Tfrm_easyprofile
       object pnlVersion: TPanel
         AlignWithMargins = True
         Left = 4
-        Top = 275
-        Width = 495
+        Top = 283
+        Width = 494
         Height = 51
         Margins.Left = 4
         Margins.Top = 2
@@ -552,7 +551,7 @@ object frm_easyprofile: Tfrm_easyprofile
         object lblVersion: TLabel
           Left = 0
           Top = 0
-          Width = 495
+          Width = 494
           Height = 13
           Align = alTop
           Caption = 'Version'
@@ -589,8 +588,7 @@ object frm_easyprofile: Tfrm_easyprofile
             Margins.Bottom = 2
             Align = alTop
             Caption = 'Build'
-            ExplicitLeft = -55
-            ExplicitTop = 16
+            ExplicitWidth = 22
           end
           object spbVBuild: TSpinButton
             Left = 40
@@ -619,6 +617,8 @@ object frm_easyprofile: Tfrm_easyprofile
               8000008080000080800000808000008080000080800000808000000000000080
               8000008080000080800000808000008080000080800000808000008080000080
               800000808000008080000080800000808000}
+            OnDownClick = spbVMajorDownClick
+            OnUpClick = spbVMajorUpClick
           end
           object edtVBuild: TEdit
             Left = 0
@@ -684,6 +684,8 @@ object frm_easyprofile: Tfrm_easyprofile
               8000008080000080800000808000008080000080800000808000000000000080
               8000008080000080800000808000008080000080800000808000008080000080
               800000808000008080000080800000808000}
+            OnDownClick = spbVMajorDownClick
+            OnUpClick = spbVMajorUpClick
           end
           object edtVRelease: TEdit
             Left = 0
@@ -749,6 +751,8 @@ object frm_easyprofile: Tfrm_easyprofile
               8000008080000080800000808000008080000080800000808000000000000080
               8000008080000080800000808000008080000080800000808000008080000080
               800000808000008080000080800000808000}
+            OnDownClick = spbVMajorDownClick
+            OnUpClick = spbVMajorUpClick
           end
           object edtVMinor: TEdit
             Left = 0
@@ -814,6 +818,8 @@ object frm_easyprofile: Tfrm_easyprofile
               8000008080000080800000808000008080000080800000808000000000000080
               8000008080000080800000808000008080000080800000808000008080000080
               800000808000008080000080800000808000}
+            OnDownClick = spbVMajorDownClick
+            OnUpClick = spbVMajorUpClick
           end
           object edtVMajor: TEdit
             Left = 0
@@ -852,7 +858,7 @@ object frm_easyprofile: Tfrm_easyprofile
             Caption = 'Type'
             ExplicitWidth = 24
           end
-          object cbxVType: TComboBox
+          object cobVType: TComboBox
             AlignWithMargins = True
             Left = 0
             Top = 15
@@ -863,7 +869,6 @@ object frm_easyprofile: Tfrm_easyprofile
             Margins.Right = 0
             Margins.Bottom = 0
             Align = alClient
-            Enabled = False
             ItemHeight = 13
             TabOrder = 0
             Text = 'release'
@@ -871,8 +876,6 @@ object frm_easyprofile: Tfrm_easyprofile
               'alpha'
               'beta'
               'release')
-            ExplicitLeft = -6
-            ExplicitWidth = 61
           end
         end
       end
@@ -883,9 +886,9 @@ object frm_easyprofile: Tfrm_easyprofile
       object grbScreenshots: TGroupBox
         AlignWithMargins = True
         Left = 0
-        Top = 121
-        Width = 503
-        Height = 293
+        Top = 105
+        Width = 502
+        Height = 317
         Margins.Left = 0
         Margins.Top = 4
         Margins.Right = 0
@@ -893,22 +896,162 @@ object frm_easyprofile: Tfrm_easyprofile
         Align = alClient
         Caption = '   Screenshots   '
         TabOrder = 0
-        ExplicitTop = 264
-        ExplicitHeight = 150
+        object Image1: TImage
+          AlignWithMargins = True
+          Left = 6
+          Top = 19
+          Width = 490
+          Height = 245
+          Margins.Left = 4
+          Margins.Top = 4
+          Margins.Right = 4
+          Margins.Bottom = 4
+          Align = alClient
+          ExplicitLeft = 88
+          ExplicitTop = 96
+          ExplicitWidth = 105
+          ExplicitHeight = 105
+        end
+        object memScreenshots: TMemo
+          AlignWithMargins = True
+          Left = 6
+          Top = 268
+          Width = 490
+          Height = 43
+          Margins.Left = 4
+          Margins.Top = 0
+          Margins.Right = 4
+          Margins.Bottom = 4
+          Align = alBottom
+          BevelInner = bvNone
+          BevelOuter = bvNone
+          BorderStyle = bsNone
+          Color = clBtnFace
+          Enabled = False
+          Lines.Strings = (
+            'Add screenshots at their original size, don'#39't add thumbnails!'
+            
+              'Try to supply shots of different parts of the application, to ge' +
+              't people interested (not just the title '
+            'screen for example).')
+          ReadOnly = True
+          TabOrder = 0
+          ExplicitLeft = 4
+          ExplicitTop = 138
+          ExplicitWidth = 494
+        end
       end
       object GroupBox1: TGroupBox
         AlignWithMargins = True
         Left = 0
         Top = 4
-        Width = 503
-        Height = 109
+        Width = 502
+        Height = 93
         Margins.Left = 0
         Margins.Top = 4
         Margins.Right = 0
         Margins.Bottom = 4
         Align = alTop
         Caption = '   Icon   '
+        DragMode = dmAutomatic
         TabOrder = 1
+        object imgIcon: TImage
+          AlignWithMargins = True
+          Left = 10
+          Top = 19
+          Width = 64
+          Height = 64
+          Margins.Left = 8
+          Margins.Top = 4
+          Margins.Right = 4
+          Margins.Bottom = 8
+          Align = alLeft
+          ExplicitLeft = 6
+        end
+        object pnlIcon: TPanel
+          AlignWithMargins = True
+          Left = 78
+          Top = 19
+          Width = 418
+          Height = 68
+          Margins.Left = 0
+          Margins.Top = 4
+          Margins.Right = 4
+          Margins.Bottom = 4
+          Align = alClient
+          BevelOuter = bvNone
+          TabOrder = 0
+          object lblIcon: TLabel
+            AlignWithMargins = True
+            Left = 4
+            Top = 2
+            Width = 410
+            Height = 13
+            Margins.Left = 4
+            Margins.Top = 2
+            Margins.Right = 4
+            Margins.Bottom = 0
+            Align = alTop
+            Caption = 'Path'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold]
+            ParentFont = False
+            ExplicitWidth = 26
+          end
+          object lblIconInfo: TLabel
+            AlignWithMargins = True
+            Left = 16
+            Top = 44
+            Width = 398
+            Height = 13
+            Margins.Left = 16
+            Margins.Top = 0
+            Margins.Right = 4
+            Margins.Bottom = 4
+            Align = alTop
+            Caption = 'Icon Info'
+            ExplicitWidth = 44
+          end
+          object pnlIconPath: TPanel
+            AlignWithMargins = True
+            Left = 4
+            Top = 19
+            Width = 410
+            Height = 21
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
+            Align = alTop
+            BevelOuter = bvNone
+            TabOrder = 0
+            object edtIcon: TEdit
+              Left = 0
+              Top = 0
+              Width = 389
+              Height = 21
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
+              Align = alClient
+              TabOrder = 0
+              OnExit = edtIconExit
+            end
+            object btnIcon: TButton
+              Left = 389
+              Top = 0
+              Width = 21
+              Height = 21
+              Align = alRight
+              Caption = '...'
+              TabOrder = 1
+            end
+          end
+        end
       end
     end
     object TabSheet2: TTabSheet
@@ -917,17 +1060,16 @@ object frm_easyprofile: Tfrm_easyprofile
       object grbLicense: TGroupBox
         Left = 0
         Top = 0
-        Width = 503
-        Height = 260
+        Width = 502
+        Height = 246
         Align = alClient
         Caption = '   License   '
         TabOrder = 0
-        ExplicitHeight = 210
         object lblLicense: TLabel
           AlignWithMargins = True
           Left = 6
           Top = 17
-          Width = 491
+          Width = 490
           Height = 13
           Margins.Left = 4
           Margins.Top = 2
@@ -947,7 +1089,7 @@ object frm_easyprofile: Tfrm_easyprofile
           AlignWithMargins = True
           Left = 6
           Top = 61
-          Width = 491
+          Width = 490
           Height = 13
           Margins.Left = 4
           Margins.Top = 2
@@ -967,7 +1109,7 @@ object frm_easyprofile: Tfrm_easyprofile
           AlignWithMargins = True
           Left = 6
           Top = 105
-          Width = 491
+          Width = 490
           Height = 13
           Margins.Left = 4
           Margins.Top = 2
@@ -987,7 +1129,7 @@ object frm_easyprofile: Tfrm_easyprofile
           AlignWithMargins = True
           Left = 6
           Top = 78
-          Width = 491
+          Width = 490
           Height = 21
           Margins.Left = 4
           Margins.Top = 4
@@ -1001,7 +1143,7 @@ object frm_easyprofile: Tfrm_easyprofile
           AlignWithMargins = True
           Left = 6
           Top = 122
-          Width = 491
+          Width = 490
           Height = 21
           Margins.Left = 4
           Margins.Top = 4
@@ -1015,8 +1157,8 @@ object frm_easyprofile: Tfrm_easyprofile
           AlignWithMargins = True
           Left = 6
           Top = 149
-          Width = 491
-          Height = 109
+          Width = 490
+          Height = 95
           Margins.Left = 4
           Margins.Top = 2
           Margins.Right = 4
@@ -1037,20 +1179,18 @@ object frm_easyprofile: Tfrm_easyprofile
               'Additionally for commercial applications enter "commercial" as t' +
               'he name.'
             'Both URL-fields are optional, but recommended (if applicable).'
-            ''
             
               'Consider packaging your code with the PND, too, in case online h' +
               'osting becomes unavailable at one '
             'point.')
           ReadOnly = True
           TabOrder = 2
-          ExplicitHeight = 59
         end
-        object cbxLicense: TComboBox
+        object cobLicense: TComboBox
           AlignWithMargins = True
           Left = 6
           Top = 34
-          Width = 491
+          Width = 490
           Height = 21
           Margins.Left = 4
           Margins.Top = 4
@@ -1059,14 +1199,15 @@ object frm_easyprofile: Tfrm_easyprofile
           Align = alTop
           ItemHeight = 13
           TabOrder = 3
+          OnChange = cobLicenseChange
         end
       end
       object grbAdvanced: TGroupBox
         AlignWithMargins = True
         Left = 0
-        Top = 264
-        Width = 503
-        Height = 150
+        Top = 250
+        Width = 502
+        Height = 172
         Margins.Left = 0
         Margins.Top = 4
         Margins.Right = 0
@@ -1078,7 +1219,7 @@ object frm_easyprofile: Tfrm_easyprofile
           AlignWithMargins = True
           Left = 6
           Top = 60
-          Width = 491
+          Width = 490
           Height = 13
           Margins.Left = 4
           Margins.Top = 2
@@ -1099,7 +1240,7 @@ object frm_easyprofile: Tfrm_easyprofile
           AlignWithMargins = True
           Left = 6
           Top = 77
-          Width = 491
+          Width = 490
           Height = 21
           Margins.Left = 4
           Margins.Top = 4
@@ -1113,7 +1254,7 @@ object frm_easyprofile: Tfrm_easyprofile
           AlignWithMargins = True
           Left = 6
           Top = 17
-          Width = 491
+          Width = 490
           Height = 16
           Margins.Left = 4
           Margins.Top = 2
@@ -1126,7 +1267,7 @@ object frm_easyprofile: Tfrm_easyprofile
           Color = clBtnFace
           Enabled = False
           Lines.Strings = (
-            'Advanced settings - change at own risk.')
+            'Change these settings at you own risk.')
           ReadOnly = True
           TabOrder = 1
         end
@@ -1134,7 +1275,7 @@ object frm_easyprofile: Tfrm_easyprofile
           AlignWithMargins = True
           Left = 6
           Top = 37
-          Width = 491
+          Width = 490
           Height = 17
           Margins.Left = 4
           Margins.Top = 4
@@ -1143,19 +1284,46 @@ object frm_easyprofile: Tfrm_easyprofile
           Align = alTop
           Caption = 'I know what I am doing'
           TabOrder = 2
+          OnClick = cbxAdvancedClick
+        end
+        object memID: TMemo
+          AlignWithMargins = True
+          Left = 6
+          Top = 104
+          Width = 490
+          Height = 66
+          Margins.Left = 4
+          Margins.Top = 2
+          Margins.Right = 4
+          Margins.Bottom = 0
+          Align = alClient
+          BevelInner = bvNone
+          BevelOuter = bvNone
+          BorderStyle = bsNone
+          Color = clBtnFace
+          Enabled = False
+          Lines.Strings = (
+            'This ID is the unique identifier for your PND.'
+            
+              'You should not change it between version changes as it determine' +
+              's where your appdata goes.'
+            
+              'The utility creates one for you automatically, but you can set i' +
+              't manually here, in case it looks not '
+            'unique or somewhat hideous.')
+          ReadOnly = True
+          TabOrder = 3
         end
       end
     end
     object TabSheet1: TTabSheet
       Caption = '6 - Finish...'
       ImageIndex = 5
-      ExplicitLeft = 5
-      ExplicitTop = 25
       object Label1: TLabel
         AlignWithMargins = True
         Left = 4
         Top = 6
-        Width = 495
+        Width = 494
         Height = 13
         Margins.Left = 4
         Margins.Top = 6
@@ -1163,45 +1331,42 @@ object frm_easyprofile: Tfrm_easyprofile
         Margins.Bottom = 6
         Align = alTop
         Caption = 'The following errors or warnings have occured:'
-        ExplicitLeft = 0
-        ExplicitTop = 0
         ExplicitWidth = 226
       end
       object redErrors: TRichEdit
         AlignWithMargins = True
         Left = 10
         Top = 25
-        Width = 489
-        Height = 89
+        Width = 488
+        Height = 397
         Margins.Left = 10
         Margins.Top = 0
         Margins.Right = 4
         Margins.Bottom = 4
-        Align = alTop
+        Align = alClient
         BevelInner = bvNone
         BevelOuter = bvNone
         BorderStyle = bsNone
         Color = clBtnFace
         Lines.Strings = (
           'All valid, good job!')
+        ReadOnly = True
         TabOrder = 0
-        ExplicitLeft = 64
-        ExplicitTop = 104
-        ExplicitWidth = 185
       end
     end
   end
   object pnlButtons: TPanel
     Left = 0
-    Top = 449
-    Width = 511
+    Top = 457
+    Width = 510
     Height = 31
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    object Button1: TButton
+    ExplicitTop = 456
+    object btnOK: TButton
       AlignWithMargins = True
-      Left = 352
+      Left = 351
       Top = 3
       Width = 75
       Height = 25
@@ -1209,16 +1374,16 @@ object frm_easyprofile: Tfrm_easyprofile
       Caption = 'OK'
       TabOrder = 0
     end
-    object Button2: TButton
+    object btnCancel: TButton
       AlignWithMargins = True
-      Left = 433
+      Left = 432
       Top = 3
       Width = 75
       Height = 25
       Align = alRight
       Caption = 'Cancel'
       TabOrder = 1
-      OnClick = Button2Click
+      OnClick = btnCancelClick
     end
   end
 end
