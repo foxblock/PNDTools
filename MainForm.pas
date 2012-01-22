@@ -625,6 +625,9 @@ end;
 procedure TfrmMain.FormShow(Sender: TObject);
 begin
     LoadSettings(SETTINGS_PATH,Settings);
+    if ParamCount > 0 then
+        if FileExists(ParamStr(1)) then
+            OpenPND(ParamStr(1));
 end;
 
 procedure TfrmMain.grbLogDblClick(Sender: TObject);

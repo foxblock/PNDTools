@@ -65,6 +65,7 @@ type
     rabApplication: TRadioButton;
     pnlValueText: TPanel;
     memValue: TMemo;
+    procedure FormShow(Sender: TObject);
     procedure vstPXMLKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure rabSelectionClick(Sender: TObject);
@@ -226,7 +227,6 @@ uses {$Ifdef Win32}ControlHideFix,{$Endif} MainForm, FormatUtils, Math;
     // DONE: Custom ItemPanel classes for special fields (dropDown, etc.)
     // DONE: Add info about multiple elements of the same kind to scheme and loading functionality here
     // TODO: Context-sensitive context menu for adding elements
-    // TODO: Wizard for PXML creation (creating a quick-and-dirty PXML)
     // DONE: Fill element dropDown (preferrebly from schema file)
     // TODO: Panel type for paths (tricky to do as relative from PND)
     // DONE: Panel type for category and sub-category
@@ -964,6 +964,17 @@ begin
     FalseBoolStrs[1] := '0';
 end;
 
+procedure TfrmPXML.FormShow(Sender: TObject);
+begin
+    if not IsExistingFile then
+        MessageDlg('The necessary structure for a valid PXML file will be auto-generated.'#13#10 +
+                   'You must enter valid data to all those nodes (exect where optional).'#13#10 +
+                   'It is also recommended you add optional data such as an icon to make your PND'#13#10 +
+                   'more recognizable. You can do so with the buttons at the bottom of the window.'#13#10 +
+                   'Click on nodes in the structure on the left to show input fields to their values.',
+                   mtInformation,[mbOK],0);
+end;
+
 // --- TItemPanel --------------------------------------------------------------
 
 constructor TItemPanel.Create(NewParent : TWinControl; AttrNode, ParentNode : IXMLNode);
@@ -1081,7 +1092,7 @@ end;
 procedure TStringItemPanel.VersionKeyPress(Sender: TObject; var Key: Char);
 begin
     // Process input normally if...
-    if not (Key in ['0'..'9',#8,'+','-']) then // is backspace or a number
+    if not (Key in ['0'..'9','a'..'z','A'..'Z',#8,'+','-']) then // is backspace or a number
         DisregardKey(Key);
 end;
 
@@ -1259,7 +1270,7 @@ begin
         begin
             ReadLn(F,S);
             cobValue.Items.Add(S);
-            ReadLn(F,S);
+            ReadLn(F,S); // Skip sub-categories
         end;
     finally
         CloseFile(F);

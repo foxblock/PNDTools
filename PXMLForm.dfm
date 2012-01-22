@@ -1,6 +1,6 @@
 object frmPXML: TfrmPXML
-  Left = 0
-  Top = 0
+  Left = 820
+  Top = 125
   Caption = 'PXML'
   ClientHeight = 492
   ClientWidth = 404
@@ -14,8 +14,10 @@ object frmPXML: TfrmPXML
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  Position = poDesigned
   OnClose = FormClose
   OnCreate = FormCreate
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object sptHor: TSplitter
