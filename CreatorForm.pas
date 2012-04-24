@@ -83,7 +83,7 @@ type
     Label1: TLabel;
     redErrors: TRichEdit;
     grbScreenshots: TGroupBox;
-    GroupBox1: TGroupBox;
+    grbIcon: TGroupBox;
     memID: TMemo;
     imgIcon: TImage;
     pnlIcon: TPanel;
@@ -139,7 +139,7 @@ begin
     except
         Exit;
     end;
-    if temp > 0 then
+    if (temp > 0) OR ((Target.Text = '0') AND (Delta > 0)) then
         Target.Text := IntToStr(temp+Delta);
 end;
 

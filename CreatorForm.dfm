@@ -28,7 +28,7 @@ object frmCreator: TfrmCreator
     Margins.Top = 0
     Margins.Right = 0
     Margins.Bottom = 0
-    ActivePage = pgcMain3
+    ActivePage = TabSheet1
     Align = alClient
     MultiLine = True
     Style = tsFlatButtons
@@ -149,7 +149,7 @@ object frmCreator: TfrmCreator
         Margins.Right = 4
         Margins.Bottom = 4
         Align = alTop
-        TabOrder = 0
+        TabOrder = 2
         Text = 'Your E-Mail address'
       end
       object edtName: TEdit
@@ -163,7 +163,7 @@ object frmCreator: TfrmCreator
         Margins.Right = 4
         Margins.Bottom = 4
         Align = alTop
-        TabOrder = 1
+        TabOrder = 0
         Text = 'Your name'
       end
       object edtWebsite: TEdit
@@ -177,7 +177,7 @@ object frmCreator: TfrmCreator
         Margins.Right = 4
         Margins.Bottom = 4
         Align = alTop
-        TabOrder = 2
+        TabOrder = 1
         Text = 'Your website'
       end
       object grbAppAuthor: TGroupBox
@@ -191,7 +191,7 @@ object frmCreator: TfrmCreator
         Margins.Right = 4
         Margins.Bottom = 4
         Align = alTop
-        TabOrder = 3
+        TabOrder = 5
         object lblAppAuthor: TLabel
           AlignWithMargins = True
           Left = 6
@@ -324,7 +324,7 @@ object frmCreator: TfrmCreator
           'details of the original author in the boxes below that.'
           'If you are the original author, just ignore those fields.')
         ReadOnly = True
-        TabOrder = 4
+        TabOrder = 3
       end
       object cbxPort: TCheckBox
         AlignWithMargins = True
@@ -333,7 +333,7 @@ object frmCreator: TfrmCreator
         Width = 90
         Height = 17
         Caption = 'This is a port'
-        TabOrder = 5
+        TabOrder = 4
         OnClick = cbxPortClick
       end
     end
@@ -452,7 +452,7 @@ object frmCreator: TfrmCreator
         Margins.Bottom = 4
         Align = alBottom
         ItemHeight = 13
-        TabOrder = 0
+        TabOrder = 4
         OnChange = cobCategoryChange
       end
       object cobSubcategory: TComboBox
@@ -467,7 +467,7 @@ object frmCreator: TfrmCreator
         Margins.Bottom = 4
         Align = alBottom
         ItemHeight = 13
-        TabOrder = 1
+        TabOrder = 5
       end
       object edtTitle: TEdit
         AlignWithMargins = True
@@ -480,7 +480,7 @@ object frmCreator: TfrmCreator
         Margins.Right = 4
         Margins.Bottom = 4
         Align = alTop
-        TabOrder = 2
+        TabOrder = 0
         Text = 'Application title'
       end
       object memDescription: TMemo
@@ -498,7 +498,7 @@ object frmCreator: TfrmCreator
           'Short description of the application'
           'Use multiple lines if you must')
         ScrollBars = ssVertical
-        TabOrder = 3
+        TabOrder = 1
       end
       object pnlExe: TPanel
         AlignWithMargins = True
@@ -512,7 +512,7 @@ object frmCreator: TfrmCreator
         Margins.Bottom = 4
         Align = alBottom
         BevelOuter = bvNone
-        TabOrder = 4
+        TabOrder = 2
         object edtExe: TEdit
           Left = 0
           Top = 0
@@ -547,7 +547,7 @@ object frmCreator: TfrmCreator
         Margins.Bottom = 4
         Align = alBottom
         BevelOuter = bvNone
-        TabOrder = 5
+        TabOrder = 3
         object lblVersion: TLabel
           Left = 0
           Top = 0
@@ -575,7 +575,7 @@ object frmCreator: TfrmCreator
           Margins.Bottom = 0
           Align = alLeft
           BevelOuter = bvNone
-          TabOrder = 0
+          TabOrder = 3
           object lblVBuild: TLabel
             AlignWithMargins = True
             Left = 0
@@ -642,7 +642,7 @@ object frmCreator: TfrmCreator
           Margins.Bottom = 0
           Align = alLeft
           BevelOuter = bvNone
-          TabOrder = 1
+          TabOrder = 2
           object lblVRelease: TLabel
             AlignWithMargins = True
             Left = 0
@@ -709,7 +709,7 @@ object frmCreator: TfrmCreator
           Margins.Bottom = 0
           Align = alLeft
           BevelOuter = bvNone
-          TabOrder = 2
+          TabOrder = 1
           object lblVMinor: TLabel
             AlignWithMargins = True
             Left = 0
@@ -776,7 +776,7 @@ object frmCreator: TfrmCreator
           Margins.Bottom = 0
           Align = alLeft
           BevelOuter = bvNone
-          TabOrder = 3
+          TabOrder = 0
           object lblVMajor: TLabel
             AlignWithMargins = True
             Left = 0
@@ -895,7 +895,7 @@ object frmCreator: TfrmCreator
         Margins.Bottom = 4
         Align = alClient
         Caption = '   Screenshots   '
-        TabOrder = 0
+        TabOrder = 1
         object Image1: TImage
           AlignWithMargins = True
           Left = 6
@@ -936,12 +936,9 @@ object frmCreator: TfrmCreator
             'screen for example).')
           ReadOnly = True
           TabOrder = 0
-          ExplicitLeft = 4
-          ExplicitTop = 138
-          ExplicitWidth = 494
         end
       end
-      object GroupBox1: TGroupBox
+      object grbIcon: TGroupBox
         AlignWithMargins = True
         Left = 0
         Top = 4
@@ -954,7 +951,7 @@ object frmCreator: TfrmCreator
         Align = alTop
         Caption = '   Icon   '
         DragMode = dmAutomatic
-        TabOrder = 1
+        TabOrder = 0
         object imgIcon: TImage
           AlignWithMargins = True
           Left = 10
@@ -1136,7 +1133,7 @@ object frmCreator: TfrmCreator
           Margins.Right = 4
           Margins.Bottom = 4
           Align = alTop
-          TabOrder = 0
+          TabOrder = 1
           Text = 'URL to a site describing the license'
         end
         object edtSourceURL: TEdit
@@ -1150,7 +1147,7 @@ object frmCreator: TfrmCreator
           Margins.Right = 4
           Margins.Bottom = 4
           Align = alTop
-          TabOrder = 1
+          TabOrder = 2
           Text = 'URL to a repo or file containing the source'
         end
         object memLicenseHelp: TMemo
@@ -1184,7 +1181,7 @@ object frmCreator: TfrmCreator
               'osting becomes unavailable at one '
             'point.')
           ReadOnly = True
-          TabOrder = 2
+          TabOrder = 3
         end
         object cobLicense: TComboBox
           AlignWithMargins = True
@@ -1198,7 +1195,7 @@ object frmCreator: TfrmCreator
           Margins.Bottom = 4
           Align = alTop
           ItemHeight = 13
-          TabOrder = 3
+          TabOrder = 0
           OnChange = cobLicenseChange
         end
       end
@@ -1248,7 +1245,7 @@ object frmCreator: TfrmCreator
           Margins.Bottom = 4
           Align = alTop
           Enabled = False
-          TabOrder = 0
+          TabOrder = 2
         end
         object memAdvancedHelp: TMemo
           AlignWithMargins = True
@@ -1269,7 +1266,7 @@ object frmCreator: TfrmCreator
           Lines.Strings = (
             'Change these settings at you own risk.')
           ReadOnly = True
-          TabOrder = 1
+          TabOrder = 0
         end
         object cbxAdvanced: TCheckBox
           AlignWithMargins = True
@@ -1283,7 +1280,7 @@ object frmCreator: TfrmCreator
           Margins.Bottom = 4
           Align = alTop
           Caption = 'I know what I am doing'
-          TabOrder = 2
+          TabOrder = 1
           OnClick = cbxAdvancedClick
         end
         object memID: TMemo
@@ -1363,7 +1360,6 @@ object frmCreator: TfrmCreator
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 456
     object btnOK: TButton
       AlignWithMargins = True
       Left = 351
