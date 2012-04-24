@@ -342,7 +342,9 @@ begin
     edtIcon.Text := Icon;
     if vstFiles.GetFirst = nil then
         LogLine('No files have been added, this most likely is due to an ' +
-                'error while extracting the PND',LOG_ERROR_COLOR)
+                'error while extracting the PND.'#13#10 +
+                'The PND might use the ISO file-system, in which case you can '+
+                'simply open it in a program like 7-zip or WinRAR.',LOG_ERROR_COLOR)
     else
         LogLine('PND successfully extracted to ' +
             ExtractFilePath(Application.ExeName) + TEMP_PATH,LOG_SUCCESS_COLOR);
