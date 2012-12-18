@@ -971,7 +971,9 @@ begin
                    'You must enter valid data to all those nodes (exect where optional).'#13#10 +
                    'It is also recommended you add optional data such as an icon to make your PND'#13#10 +
                    'more recognizable. You can do so with the buttons at the bottom of the window.'#13#10 +
-                   'Click on nodes in the structure on the left to show input fields to their values.',
+                   'Click on nodes in the structure on the left to show input fields to their values.'#13#10 +
+                   'Don''t forget to update mandatory package information, such as id and name, on'#13#10 +
+                   'the application and package tags!',
                    mtInformation,[mbOK],0);
 end;
 
