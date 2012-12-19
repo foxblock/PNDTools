@@ -12,7 +12,8 @@ uses
   OptionsForm in 'OptionsForm.pas' {frmOptions},
   ControlHideFix in 'ControlHideFix.pas',
   PXMLForm in 'PXMLForm.pas' {frmPXML},
-  CreatorForm in 'CreatorForm.pas' {frmCreator};
+  CreatorForm in 'CreatorForm.pas' {frmCreator},
+  InputFilterFunctions in 'InputFilterFunctions.pas';
 
 {$R *.res}
 

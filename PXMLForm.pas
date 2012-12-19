@@ -9,7 +9,8 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, VirtualTrees, ExtCtrls, XMLDoc, XMLIntf, ComCtrls, Menus,
-  ButtonGroup;
+  ButtonGroup,
+  InputFilterFunctions;
 
 type
   { DataType for caching the schema file in an array for faster access to needed
@@ -144,17 +145,8 @@ type
     procedure SetOptional(const Optional : Boolean); override;
     procedure SetTypeData(const Arguments : TStrings); override;
     procedure UpdateData; override;
-  private
-    // OnKeyPress functions limiting the input for various hard coded types
+  private     
     procedure GenericKeyPress(Sender: TObject; var Key: Char);
-    procedure VersionKeyPress(Sender: TObject; var Key: Char);
-    procedure EmailKeyPress(Sender: TObject; var Key: Char);
-    procedure FolderKeyPress(Sender: TObject; var Key: Char);
-    procedure LanguageKeyPress(Sender: TObject; var Key: Char);  
-    procedure MimeKeyPress(Sender: TObject; var Key: Char);
-    procedure IntegerKeyPress(Sender: TObject; var Key: Char);
-    procedure IDKeyPress(Sender: TObject; var Key: Char);
-    procedure DisregardKey(var Key: Char);
   end;
 
   TSetItemPanel = class (TItemPanel)
@@ -212,6 +204,7 @@ var
   CurrentNode : PVirtualNode;
   IsExistingFile : Boolean;
   Successful : Boolean;
+  InputFilter : TInputFilters;
 
 implementation
 
@@ -1051,19 +1044,19 @@ var
 begin
     temp := Arguments.Strings[0];
     if temp = 'version' then
-        edtValue.OnKeyPress := VersionKeyPress
+        edtValue.OnKeyPress := InputFilter.VersionKeyPress
     else if temp = 'email' then
-        edtValue.OnKeyPress := EmailKeyPress
+        edtValue.OnKeyPress := InputFilter.EmailKeyPress
     else if temp = 'folder' then
-        edtValue.OnKeyPress := FolderKeyPress
+        edtValue.OnKeyPress := InputFilter.FolderKeyPress
     else if temp = 'language' then
-        edtValue.OnKeyPress := LanguageKeyPress
+        edtValue.OnKeyPress := InputFilter.LanguageKeyPress
     else if temp = 'mime' then
-        edtValue.OnKeyPress := MimeKeyPress
+        edtValue.OnKeyPress := InputFilter.MimeKeyPress
     else if temp = 'integer' then
-        edtValue.OnKeyPress := IntegerKeyPress
+        edtValue.OnKeyPress := InputFilter.IntegerKeyPress
     else if temp = 'id' then
-        edtValue.OnKeyPress := IDKeyPress
+        edtValue.OnKeyPress := InputFilter.IDKeyPress
     else
     begin
         chars := TStringList.Create;
@@ -1088,59 +1081,7 @@ end;
 procedure TStringItemPanel.GenericKeyPress(Sender: TObject; var Key: Char);
 begin
     if (Key = #8) OR (chars.IndexOf(Key) = -1) then
-        DisregardKey(Key);
-end;
-
-procedure TStringItemPanel.VersionKeyPress(Sender: TObject; var Key: Char);
-begin
-    // Process input normally if...
-    if not (Key in ['0'..'9','a'..'z','A'..'Z',#8,'+','-']) then // is backspace or a number
-        DisregardKey(Key);
-end;
-
-procedure TStringItemPanel.EmailKeyPress(Sender: TObject; var Key: Char);
-begin
-    if (Key in ['(',')','[',']','\',';',':',',','<','>','|']) OR // non-allowed chars
-       ((Key = '@') AND (Pos('@',(Sender as TCustomEdit).Text) <> 0)) then // only one @
-        DisregardKey(Key);
-end;
-
-procedure TStringItemPanel.FolderKeyPress(Sender: TObject; var Key: Char);
-begin
-    if (Key in [' ','-','/','\',':','?','*','<','>','|','"']) then
-        DisregardKey(Key);
-end;
-
-procedure TStringItemPanel.LanguageKeyPress(Sender: TObject; var Key: Char);
-begin
-    if not (Key in ['a'..'z','A'..'Z','_',#8]) OR
-       ((Key = '_') AND (Pos('_',(Sender as TCustomEdit).Text) <> 0)) then
-       DisregardKey(Key);
-end;
-
-procedure TStringItemPanel.MimeKeyPress(Sender: TObject; var Key: Char);
-begin
-    if not (Key in ['a'..'z','A'..'Z','0'..'9','-','.','/',#8]) OR
-       ((Key = '/') AND (Pos('/',(Sender as TCustomEdit).Text) <> 0)) then 
-       DisregardKey(Key);    
-end;
-
-procedure TStringItemPanel.IntegerKeyPress(Sender: TObject; var Key: Char);
-begin
-    if not(Key in ['0'..'9',#8]) then
-        DisregardKey(Key);
-end;
-
-procedure TStringItemPanel.IDKeyPress(Sender: TObject; var Key: Char);
-begin
-    if not (Key in['a'..'z','A'..'Z','0'..'9','.','_','!','-','+',#8]) then
-        DisregardKey(Key);
-end;
-
-procedure TStringItemPanel.DisregardKey(var Key: Char);
-begin
-    Key := #0;
-    Beep;
+        InputFilter.DisregardKey(Key);
 end;
 
 // --- TBooleanItemPanel -------------------------------------------------------

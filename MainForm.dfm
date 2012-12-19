@@ -398,7 +398,6 @@ object frmMain: TfrmMain
       Caption = 'Create PXML'
       TabOrder = 2
       OnClick = btnPXMLEditClick
-      ExplicitTop = 17
     end
   end
   object imlFileTree: TImageList

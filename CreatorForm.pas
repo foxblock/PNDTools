@@ -4,7 +4,8 @@ interface
 
 uses
   Messages, Classes, Graphics, Controls, Forms, Dialogs, Spin, ComCtrls,
-  StdCtrls, ExtCtrls, SysUtils, GraphicEx;
+  StdCtrls, ExtCtrls, SysUtils, GraphicEx,
+  InputFilterFunctions, pngimage;
 
 type
   TfrmCreator = class(TForm)
@@ -85,15 +86,24 @@ type
     grbScreenshots: TGroupBox;
     grbIcon: TGroupBox;
     memID: TMemo;
-    imgIcon: TImage;
     pnlIcon: TPanel;
     lblIcon: TLabel;
     pnlIconPath: TPanel;
     edtIcon: TEdit;
     btnIcon: TButton;
     lblIconInfo: TLabel;
-    Image1: TImage;
     memScreenshots: TMemo;
+    edtAppdata: TEdit;
+    lblAppdata: TLabel;
+    Memo1: TMemo;
+    opdIcon: TOpenDialog;
+    scbScreenshots: TScrollBox;
+    pnlScreenButtons: TPanel;
+    Button1: TButton;
+    btnScreenAdd: TButton;
+    imgIcon: TImage;
+    procedure btnIconClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
     procedure pgcMainChange(Sender: TObject);
     procedure edtIconExit(Sender: TObject);
     procedure cbxAdvancedClick(Sender: TObject);
@@ -125,6 +135,7 @@ const
 
 var
   frmCreator: TfrmCreator;
+  InputFilter: TInputFilters;
 
 implementation
 
@@ -155,6 +166,18 @@ begin
 end;
 
 // --- Form --------------------------------------------------------------------
+
+procedure TfrmCreator.FormCreate(Sender: TObject);
+begin
+    edtMail.OnKeyPress := InputFilter.EmailKeyPress;
+    edtAppMail.OnKeyPress := InputFilter.EmailKeyPress;
+    edtID.OnKeyPress := InputFilter.IDKeyPress;
+    edtVMajor.OnKeyPress := InputFilter.VersionKeyPress;
+    edtVMinor.OnKeyPress := InputFilter.VersionKeyPress;
+    edtVRelease.OnKeyPress := InputFilter.VersionKeyPress;
+    edtVBuild.OnKeyPress := InputFilter.VersionKeyPress;
+    edtAppdata.OnKeyPress := InputFilter.FolderKeyPress;
+end;
 
 procedure TfrmCreator.FormShow(Sender: TObject);
 var F : TextFile;
@@ -218,6 +241,12 @@ end;
 procedure TfrmCreator.btnCancelClick(Sender: TObject);
 begin
     Close;
+end;
+
+procedure TfrmCreator.btnIconClick(Sender: TObject);
+begin
+    if opdIcon.Execute then
+        edtIcon.Text := opdIcon.FileName;
 end;
 
 procedure TfrmCreator.cobLicenseChange(Sender: TObject);
