@@ -29,7 +29,7 @@ object frmCreator: TfrmCreator
     Margins.Top = 0
     Margins.Right = 0
     Margins.Bottom = 0
-    ActivePage = pgcMain4
+    ActivePage = pgcMain1
     Align = alClient
     MultiLine = True
     Style = tsFlatButtons
@@ -38,7 +38,6 @@ object frmCreator: TfrmCreator
     object pgcMain1: TTabSheet
       Caption = '1 - Hello...'
       ImageIndex = 4
-      ExplicitHeight = 516
       object memHello: TMemo
         AlignWithMargins = True
         Left = 4
@@ -80,7 +79,6 @@ object frmCreator: TfrmCreator
     end
     object pgcMain2: TTabSheet
       Caption = '2 - Author...'
-      ExplicitHeight = 516
       object lblMail: TLabel
         AlignWithMargins = True
         Left = 4
@@ -343,7 +341,6 @@ object frmCreator: TfrmCreator
     object pgcMain3: TTabSheet
       Caption = '3 - Application...'
       ImageIndex = 1
-      ExplicitHeight = 516
       object lblCategory: TLabel
         AlignWithMargins = True
         Left = 4
@@ -362,7 +359,6 @@ object frmCreator: TfrmCreator
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitTop = 430
         ExplicitWidth = 52
       end
       object lblDescription: TLabel
@@ -403,7 +399,6 @@ object frmCreator: TfrmCreator
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitTop = 329
         ExplicitWidth = 62
       end
       object lblSubcategory: TLabel
@@ -424,7 +419,6 @@ object frmCreator: TfrmCreator
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitTop = 474
         ExplicitWidth = 77
       end
       object lblTitle: TLabel
@@ -461,7 +455,6 @@ object frmCreator: TfrmCreator
         ItemHeight = 13
         TabOrder = 4
         OnChange = cobCategoryChange
-        ExplicitTop = 447
       end
       object cobSubcategory: TComboBox
         AlignWithMargins = True
@@ -476,7 +469,6 @@ object frmCreator: TfrmCreator
         Align = alBottom
         ItemHeight = 13
         TabOrder = 5
-        ExplicitTop = 491
       end
       object edtTitle: TEdit
         AlignWithMargins = True
@@ -505,10 +497,9 @@ object frmCreator: TfrmCreator
         Align = alClient
         Lines.Strings = (
           'Short description of the application'
-          'Use multiple lines if you must')
+          'Use multiple lines if you really have to')
         ScrollBars = ssVertical
         TabOrder = 1
-        ExplicitHeight = 260
       end
       object pnlExe: TPanel
         AlignWithMargins = True
@@ -523,7 +514,6 @@ object frmCreator: TfrmCreator
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 2
-        ExplicitTop = 346
         object edtExe: TEdit
           Left = 0
           Top = 0
@@ -559,7 +549,6 @@ object frmCreator: TfrmCreator
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 3
-        ExplicitTop = 373
         object lblVersion: TLabel
           Left = 0
           Top = 0
@@ -895,7 +884,6 @@ object frmCreator: TfrmCreator
     object pgcMain4: TTabSheet
       Caption = '4 - Images...'
       ImageIndex = 2
-      ExplicitHeight = 516
       object grbScreenshots: TGroupBox
         AlignWithMargins = True
         Left = 0
@@ -909,7 +897,6 @@ object frmCreator: TfrmCreator
         Align = alClient
         Caption = '   Screenshots   '
         TabOrder = 1
-        ExplicitTop = 121
         object memScreenshots: TMemo
           AlignWithMargins = True
           Left = 6
@@ -934,7 +921,6 @@ object frmCreator: TfrmCreator
             'screen for example).')
           ReadOnly = True
           TabOrder = 0
-          ExplicitTop = 15
         end
         object scbScreenshots: TScrollBox
           AlignWithMargins = True
@@ -948,8 +934,6 @@ object frmCreator: TfrmCreator
           Margins.Bottom = 4
           Align = alClient
           TabOrder = 1
-          ExplicitTop = 66
-          ExplicitHeight = 300
         end
         object pnlScreenButtons: TPanel
           Left = 2
@@ -973,9 +957,6 @@ object frmCreator: TfrmCreator
             Caption = 'Remove'
             Enabled = False
             TabOrder = 0
-            ExplicitLeft = 339
-            ExplicitTop = 3
-            ExplicitHeight = 25
           end
           object btnScreenAdd: TButton
             AlignWithMargins = True
@@ -990,9 +971,6 @@ object frmCreator: TfrmCreator
             Align = alRight
             Caption = 'Add...'
             TabOrder = 1
-            ExplicitLeft = 420
-            ExplicitTop = 3
-            ExplicitHeight = 25
           end
         end
       end
@@ -1226,7 +1204,6 @@ object frmCreator: TfrmCreator
               Align = alClient
               TabOrder = 0
               OnExit = edtIconExit
-              ExplicitWidth = 389
             end
             object btnIcon: TButton
               AlignWithMargins = True
@@ -1250,7 +1227,6 @@ object frmCreator: TfrmCreator
     object TabSheet2: TTabSheet
       Caption = '5 - Additional...'
       ImageIndex = 5
-      ExplicitHeight = 516
       object grbLicense: TGroupBox
         Left = 0
         Top = 0
@@ -1411,7 +1387,6 @@ object frmCreator: TfrmCreator
         Constraints.MaxHeight = 256
         Constraints.MinHeight = 18
         TabOrder = 1
-        ExplicitHeight = 256
         object lblID: TLabel
           AlignWithMargins = True
           Left = 6
@@ -1572,15 +1547,12 @@ object frmCreator: TfrmCreator
               'er name')
           ReadOnly = True
           TabOrder = 5
-          ExplicitLeft = 8
-          ExplicitHeight = 44
         end
       end
     end
     object TabSheet1: TTabSheet
       Caption = '6 - Finish...'
       ImageIndex = 5
-      ExplicitHeight = 516
       object Label1: TLabel
         AlignWithMargins = True
         Left = 4
@@ -1614,7 +1586,6 @@ object frmCreator: TfrmCreator
           'All valid, good job!')
         ReadOnly = True
         TabOrder = 0
-        ExplicitHeight = 487
       end
     end
   end
@@ -1626,8 +1597,7 @@ object frmCreator: TfrmCreator
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 537
-    object btnOK: TButton
+    object btnNext: TButton
       AlignWithMargins = True
       Left = 348
       Top = 4
@@ -1638,10 +1608,9 @@ object frmCreator: TfrmCreator
       Margins.Right = 4
       Margins.Bottom = 4
       Align = alRight
-      Caption = 'OK'
+      Caption = 'Next ->'
       TabOrder = 0
-      ExplicitLeft = 351
-      ExplicitTop = 3
+      OnClick = btnNextClick
     end
     object btnCancel: TButton
       AlignWithMargins = True
@@ -1657,8 +1626,23 @@ object frmCreator: TfrmCreator
       Caption = 'Cancel'
       TabOrder = 1
       OnClick = btnCancelClick
-      ExplicitLeft = 432
-      ExplicitTop = 3
+    end
+    object btnPrev: TButton
+      AlignWithMargins = True
+      Left = 265
+      Top = 4
+      Width = 75
+      Height = 25
+      Margins.Left = 4
+      Margins.Top = 4
+      Margins.Right = 4
+      Margins.Bottom = 4
+      Align = alRight
+      Caption = '<- Prevous'
+      Enabled = False
+      TabOrder = 2
+      OnClick = btnPrevClick
+      ExplicitLeft = 348
     end
   end
   object opdIcon: TOpenDialog

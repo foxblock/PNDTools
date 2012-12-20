@@ -74,7 +74,7 @@ type
     memAdvancedHelp: TMemo;
     cbxAdvanced: TCheckBox;
     pnlButtons: TPanel;
-    btnOK: TButton;
+    btnNext: TButton;
     btnCancel: TButton;
     cbxPort: TCheckBox;
     pnlVType: TPanel;
@@ -102,6 +102,9 @@ type
     Button1: TButton;
     btnScreenAdd: TButton;
     imgIcon: TImage;
+    btnPrev: TButton;
+    procedure btnPrevClick(Sender: TObject);
+    procedure btnNextClick(Sender: TObject);
     procedure btnIconClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure pgcMainChange(Sender: TObject);
@@ -222,8 +225,18 @@ end;
 
 procedure TfrmCreator.pgcMainChange(Sender: TObject);
 begin
-    if pgcMain.TabIndex <> 5 then // Finish tab
+    if pgcMain.ActivePageIndex = 0 then
+        btnPrev.Enabled := false
+    else
+        btnPrev.Enabled := true;
+    if pgcMain.ActivePageIndex = pgcMain.PageCount-1 then // Finish tab
+       btnNext.Caption := 'Finish'
+    else
+        begin
+        btnNext.Caption := 'Next ->';
+        btnNext.Enabled := true;
         Exit;
+        end;
     redErrors.Clear;     
     // Check for errors and display them
     if Length(edtIcon.Text) = 0 then
@@ -233,7 +246,11 @@ begin
     // etc...
 
     if redErrors.Lines.Count = 0 then
-        AddError('All valid, good job!',LOG_SUCCESS_COLOR);
+    begin
+        AddError('All valid, good job!',LOG_SUCCESS_COLOR);      
+        btnNext.Enabled := true;
+    end else
+        btnNext.Enabled := false;
 end;
 
 // --- Buttons -----------------------------------------------------------------
@@ -247,6 +264,24 @@ procedure TfrmCreator.btnIconClick(Sender: TObject);
 begin
     if opdIcon.Execute then
         edtIcon.Text := opdIcon.FileName;
+end;
+
+procedure TfrmCreator.btnNextClick(Sender: TObject);
+begin
+    if pgcMain.ActivePageIndex < pgcMain.PageCount-1 then
+    begin
+        pgcMain.ActivePageIndex := pgcMain.ActivePageIndex + 1;
+        pgcMainChange(Sender);
+    end;
+end;
+
+procedure TfrmCreator.btnPrevClick(Sender: TObject);
+begin
+    if pgcMain.ActivePageIndex > 0 then
+    begin
+        pgcMain.ActivePageIndex := pgcMain.ActivePageIndex - 1;
+        pgcMainChange(Sender);
+    end;
 end;
 
 procedure TfrmCreator.cobLicenseChange(Sender: TObject);
