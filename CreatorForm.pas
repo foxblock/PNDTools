@@ -4,8 +4,8 @@ interface
 
 uses
   Messages, Classes, Graphics, Controls, Forms, Dialogs, Spin, ComCtrls,
-  StdCtrls, ExtCtrls, SysUtils, GraphicEx,
-  InputFilterFunctions, pngimage;
+  StdCtrls, ExtCtrls, SysUtils, GraphicEx, Types,
+  InputFilterFunctions;
 
 type
   TfrmCreator = class(TForm)
@@ -99,10 +99,10 @@ type
     opdIcon: TOpenDialog;
     scbScreenshots: TScrollBox;
     pnlScreenButtons: TPanel;
-    Button1: TButton;
     btnScreenAdd: TButton;
     imgIcon: TImage;
     btnPrev: TButton;
+    Button1: TButton;
     procedure btnPrevClick(Sender: TObject);
     procedure btnNextClick(Sender: TObject);
     procedure btnIconClick(Sender: TObject);
@@ -122,6 +122,22 @@ type
     procedure AddError(const TextToAdd : String; const Color: TColor = clBlack);
   public
     { Public declarations }
+  end;
+
+  TScreenshotPanel = class (TCustomPanel)
+    imgScreenshot: TImage;
+    pnlText: TPanel;
+    pnlButtons: TPanel;
+    lblPath: TLabel;
+    lblSize: TLabel;
+    btnRemove: TButton;
+    btnMoveUp: TButton;
+    btnMoveDown: TButton;
+    procedure btnRemoveClick(Sender: TObject);
+    procedure btnMoveUpClick(Sender: TObject);
+    procedure btnMoveDownClick(Sender: TObject);
+  public
+    constructor Create(const Filepath: String); virtual;
   end;
 
   TStringPair = class
@@ -263,7 +279,10 @@ end;
 procedure TfrmCreator.btnIconClick(Sender: TObject);
 begin
     if opdIcon.Execute then
+    begin
         edtIcon.Text := opdIcon.FileName;
+        edtIconExit(Sender);
+    end;
 end;
 
 procedure TfrmCreator.btnNextClick(Sender: TObject);
@@ -300,12 +319,13 @@ var temp : TPicture;
 begin
     try
         temp := TPicture.Create;
-        temp.LoadFromFile(edtIcon.Text);   
-        imgIcon.Canvas.Draw(0,0,temp.Graphic);
+        temp.LoadFromFile(edtIcon.Text);
+        imgIcon.Canvas.StretchDraw(Rect(0,0,imgIcon.Width,imgIcon.Height),temp.Graphic);
         lblIconInfo.Caption := UpperCase(ExtractFileExt(edtIcon.Text)) + ', ' +
                                IntToStr(temp.Width) + 'x' + IntToStr(temp.Height);
         temp.Free;
     except
+        lblIconInfo.Caption := 'No icon loaded';
         temp.Free;
     end;
 end;
@@ -366,5 +386,139 @@ begin
             ChangeVersionNumber(((Sender as TControl).Parent.Controls[I] as TCustomEdit),1);
     end;
 end;
+
+// --- ScreenshotPanel ---------------------------------------------------------
+                    
+constructor TScreenshotPanel.Create(const Filepath: String);
+begin
+    Align := alTop;
+    Height := 100;
+    Caption := '';
+    ParentBackground := false;
+    with imgScreenshot do
+    begin
+        Align := alLeft;
+        AlignWithMargins := true;
+        with Margins do
+        begin
+            Bottom := 4;
+            Left := 4;
+            Right := 4;
+            Top := 4;
+        end;
+        Width := 150;
+        Parent := Self;
+    end;
+    with pnlText do
+    begin
+        Align := alClient;
+        BevelOuter := bvNone;
+        Caption := '';
+        ParentColor := true;
+        Parent := Self;
+    end;
+    with pnlButtons do
+    begin
+        Align := alRight;
+        BevelOuter := bvNone;
+        Caption := '';
+        ParentColor := true;
+        Parent := Self;
+        Width := 33;
+    end;
+    with lblPath do
+    begin
+        Parent := pnlText;
+        Align := alTop;
+        AlignWithMargins := true;
+        Caption := 'C:\Path\here.filename';
+        with Margins do
+        begin
+            Bottom := 0;
+            Left := 0;
+            Right := 0;
+            Top := 34;
+        end;
+    end;
+    with lblSize do
+    begin
+        Parent := pnlText;
+        Align := alTop;
+        AlignWithMargins := true;
+        Caption := 'size';
+        with Margins do
+        begin
+            Bottom := 0;
+            Left := 0;
+            Right := 0;
+            Top := 4;
+        end;
+        Top := 51;
+    end;
+    with btnRemove do
+    begin
+        Parent := pnlButtons;
+        Align := alTop;
+        AlignWithMargins := true;
+        Caption := 'X';
+        Height := 25;
+        with Margins do
+        begin
+            Bottom := 4;
+            Left := 4;
+            Right := 4;
+            Top := 4;
+        end;
+        TabOrder := 0;
+    end;
+    with btnMoveUp do
+    begin
+        Parent := pnlButtons;
+        Align := alBottom;
+        AlignWithMargins := true;
+        Caption := '^';
+        Height := 25;
+        with Margins do
+        begin
+            Bottom := 0;
+            Left := 4;
+            Right := 4;
+            Top := 4;
+        end;     
+        TabOrder := 1;
+    end;
+    with btnMoveDown do
+    begin
+        Parent := pnlButtons;
+        Align := alBottom;
+        AlignWithMargins := true;
+        Caption := 'v';
+        Height := 25;
+        with Margins do
+        begin
+            Bottom := 4;
+            Left := 4;
+            Right := 4;
+            Top := 0;
+        end;    
+        TabOrder := 2;
+    end;
+end;
+
+procedure TScreenshotPanel.btnRemoveClick(Sender: TObject);
+begin
+    //
+end;
+
+procedure TScreenshotPanel.btnMoveUpClick(Sender: TObject);
+begin
+    //
+end;
+
+procedure TScreenshotPanel.btnMoveDownClick(Sender: TObject);
+begin
+    //
+end;
+
 
 end.
