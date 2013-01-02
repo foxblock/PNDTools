@@ -103,6 +103,7 @@ type
     imgIcon: TImage;
     btnPrev: TButton;
     Button1: TButton;
+    procedure btnScreenAddClick(Sender: TObject);
     procedure btnPrevClick(Sender: TObject);
     procedure btnNextClick(Sender: TObject);
     procedure btnIconClick(Sender: TObject);
@@ -137,7 +138,8 @@ type
     procedure btnMoveUpClick(Sender: TObject);
     procedure btnMoveDownClick(Sender: TObject);
   public
-    constructor Create(const Filepath: String); virtual;
+    constructor Create(AOwner : TComponent); overload;
+    constructor Create(const Filepath: String); overload;
   end;
 
   TStringPair = class
@@ -303,6 +305,13 @@ begin
     end;
 end;
 
+procedure TfrmCreator.btnScreenAddClick(Sender: TObject);
+var temp : TScreenshotPanel;
+begin
+    if opdIcon.Execute then
+        temp := TScreenshotPanel.Create(opdIcon.FileName);
+end;
+
 procedure TfrmCreator.cobLicenseChange(Sender: TObject);
 var S : String;
 begin
@@ -388,13 +397,22 @@ begin
 end;
 
 // --- ScreenshotPanel ---------------------------------------------------------
-                    
-constructor TScreenshotPanel.Create(const Filepath: String);
+
+constructor TScreenshotPanel.Create(AOwner : TComponent);
 begin
+    inherited;
+end;
+
+constructor TScreenshotPanel.Create(const Filepath: String);
+var temp : TPicture;
+begin
+    Create(frmCreator);
+    Parent := frmCreator.scbScreenshots;
     Align := alTop;
     Height := 100;
     Caption := '';
     ParentBackground := false;
+    imgScreenshot := TImage.Create(Self);
     with imgScreenshot do
     begin
         Align := alLeft;
@@ -409,14 +427,24 @@ begin
         Width := 150;
         Parent := Self;
     end;
+    pnlText := TPanel.Create(Self);
     with pnlText do
     begin
         Align := alClient;
+        AlignWithMargins := true; 
+        with Margins do
+        begin
+            Bottom := 0;
+            Left := 4;
+            Right := 0;
+            Top := 0;
+        end;
         BevelOuter := bvNone;
         Caption := '';
         ParentColor := true;
         Parent := Self;
     end;
+    pnlButtons := TPanel.Create(Self);
     with pnlButtons do
     begin
         Align := alRight;
@@ -426,12 +454,13 @@ begin
         Parent := Self;
         Width := 33;
     end;
+    lblPath := TLabel.Create(Self);
     with lblPath do
     begin
         Parent := pnlText;
         Align := alTop;
         AlignWithMargins := true;
-        Caption := 'C:\Path\here.filename';
+        Caption := Filepath;
         with Margins do
         begin
             Bottom := 0;
@@ -439,7 +468,9 @@ begin
             Right := 0;
             Top := 34;
         end;
+        Font.Style := [];
     end;
+    lblSize := TLabel.Create(Self);
     with lblSize do
     begin
         Parent := pnlText;
@@ -453,8 +484,10 @@ begin
             Right := 0;
             Top := 4;
         end;
-        Top := 51;
+        Top := 51; 
+        Font.Style := [];
     end;
+    btnRemove := TButton.Create(Self);
     with btnRemove do
     begin
         Parent := pnlButtons;
@@ -470,23 +503,10 @@ begin
             Top := 4;
         end;
         TabOrder := 0;
-    end;
-    with btnMoveUp do
-    begin
-        Parent := pnlButtons;
-        Align := alBottom;
-        AlignWithMargins := true;
-        Caption := '^';
-        Height := 25;
-        with Margins do
-        begin
-            Bottom := 0;
-            Left := 4;
-            Right := 4;
-            Top := 4;
-        end;     
-        TabOrder := 1;
-    end;
+        OnClick := btnRemoveClick;   
+        Font.Style := [];
+    end;     
+    btnMoveDown := TButton.Create(Self);
     with btnMoveDown do
     begin
         Parent := pnlButtons;
@@ -502,22 +522,55 @@ begin
             Top := 0;
         end;    
         TabOrder := 2;
+        OnClick := btnMoveDownClick;   
+        Font.Style := [];
+    end;
+    btnMoveUp := TButton.Create(Self);
+    with btnMoveUp do
+    begin
+        Parent := pnlButtons;
+        Align := alBottom;
+        AlignWithMargins := true;
+        Caption := '^';
+        Height := 25;
+        with Margins do
+        begin
+            Bottom := 0;
+            Left := 4;
+            Right := 4;
+            Top := 4;
+        end;     
+        TabOrder := 1;
+        OnClick := btnMoveUpClick;    
+        Font.Style := [];
+    end;
+
+    try
+        temp := TPicture.Create;
+        temp.LoadFromFile(Filepath);
+        imgScreenshot.Canvas.StretchDraw(Rect(0,0,imgScreenshot.Width,imgScreenshot.Height),temp.Graphic);
+        lblSize.Caption := UpperCase(ExtractFileExt(Filepath)) + ', ' +
+                            IntToStr(temp.Width) + 'x' + IntToStr(temp.Height);
+        temp.Free;
+    except
+        lblSize.Caption := 'No icon loaded';
+        temp.Free;
     end;
 end;
 
 procedure TScreenshotPanel.btnRemoveClick(Sender: TObject);
 begin
-    //
+    Self.Free;
 end;
 
 procedure TScreenshotPanel.btnMoveUpClick(Sender: TObject);
 begin
-    //
+    Self.Top := Self.Top - Self.Height;
 end;
 
 procedure TScreenshotPanel.btnMoveDownClick(Sender: TObject);
 begin
-    //
+    Self.Top := Self.Top + Self.Height + 1;
 end;
 
 

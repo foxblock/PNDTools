@@ -896,6 +896,12 @@ object frmCreator: TfrmCreator
         Margins.Bottom = 0
         Align = alClient
         Caption = '   Screenshots   '
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
         TabOrder = 1
         object memScreenshots: TMemo
           AlignWithMargins = True
@@ -913,12 +919,18 @@ object frmCreator: TfrmCreator
           BorderStyle = bsNone
           Color = clBtnFace
           Enabled = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
           Lines.Strings = (
             'Add screenshots at their original size, don'#39't add thumbnails!'
             
               'Try to supply shots of different parts of the application, to ge' +
               't people interested (not just the title '
             'screen for example).')
+          ParentFont = False
           ReadOnly = True
           TabOrder = 0
         end
@@ -937,6 +949,7 @@ object frmCreator: TfrmCreator
           VertScrollBar.Tracking = True
           Align = alClient
           TabOrder = 1
+          ExplicitLeft = 8
         end
         object pnlScreenButtons: TPanel
           Left = 2
@@ -958,7 +971,14 @@ object frmCreator: TfrmCreator
             Margins.Bottom = 0
             Align = alRight
             Caption = 'Add...'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
             TabOrder = 0
+            OnClick = btnScreenAddClick
           end
           object Button1: TButton
             AlignWithMargins = True
@@ -973,6 +993,12 @@ object frmCreator: TfrmCreator
             Align = alRight
             Caption = 'Remove All'
             Enabled = False
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
             TabOrder = 1
           end
         end
@@ -990,6 +1016,12 @@ object frmCreator: TfrmCreator
         Align = alTop
         Caption = '   Icon   '
         DragMode = dmAutomatic
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
         TabOrder = 0
         object imgIcon: TImage
           AlignWithMargins = True
@@ -1051,6 +1083,12 @@ object frmCreator: TfrmCreator
             Margins.Bottom = 4
             Align = alTop
             Caption = 'Icon Info'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
             ExplicitWidth = 44
           end
           object pnlIconPath: TPanel
@@ -1076,6 +1114,12 @@ object frmCreator: TfrmCreator
               Margins.Right = 4
               Margins.Bottom = 4
               Align = alClient
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
               TabOrder = 0
               OnExit = edtIconExit
             end
@@ -1108,6 +1152,12 @@ object frmCreator: TfrmCreator
         Height = 252
         Align = alTop
         Caption = '   License   '
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
         TabOrder = 0
         object lblLicense: TLabel
           AlignWithMargins = True
@@ -1180,6 +1230,12 @@ object frmCreator: TfrmCreator
           Margins.Right = 4
           Margins.Bottom = 4
           Align = alTop
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
           TabOrder = 1
           Text = 'URL to a site describing the license'
         end
@@ -1194,6 +1250,12 @@ object frmCreator: TfrmCreator
           Margins.Right = 4
           Margins.Bottom = 4
           Align = alTop
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
           TabOrder = 2
           Text = 'URL to a repo or file containing the source'
         end
@@ -1213,6 +1275,11 @@ object frmCreator: TfrmCreator
           BorderStyle = bsNone
           Color = clBtnFace
           Enabled = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
           Lines.Strings = (
             'You may enter any license or choose one of the presets.'
             
@@ -1227,6 +1294,7 @@ object frmCreator: TfrmCreator
               'Consider packaging your code with the PND, too, in case online h' +
               'osting becomes unavailable at one '
             'point.')
+          ParentFont = False
           ReadOnly = True
           TabOrder = 3
         end
@@ -1241,7 +1309,13 @@ object frmCreator: TfrmCreator
           Margins.Right = 4
           Margins.Bottom = 4
           Align = alTop
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
           ItemHeight = 13
+          ParentFont = False
           TabOrder = 0
           OnChange = cobLicenseChange
         end
@@ -1260,6 +1334,12 @@ object frmCreator: TfrmCreator
         Caption = '   Advanced   '
         Constraints.MaxHeight = 256
         Constraints.MinHeight = 18
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
         TabOrder = 1
         object lblID: TLabel
           AlignWithMargins = True
@@ -1315,6 +1395,12 @@ object frmCreator: TfrmCreator
           Margins.Bottom = 4
           Align = alTop
           Enabled = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
           TabOrder = 2
         end
         object memAdvancedHelp: TMemo
@@ -1333,8 +1419,14 @@ object frmCreator: TfrmCreator
           BorderStyle = bsNone
           Color = clBtnFace
           Enabled = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
           Lines.Strings = (
             'Change these settings at you own risk.')
+          ParentFont = False
           ReadOnly = True
           TabOrder = 0
         end
@@ -1350,6 +1442,12 @@ object frmCreator: TfrmCreator
           Margins.Bottom = 4
           Align = alTop
           Caption = 'I know what I am doing'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
           TabOrder = 1
           OnClick = cbxAdvancedClick
         end
@@ -1369,6 +1467,11 @@ object frmCreator: TfrmCreator
           BorderStyle = bsNone
           Color = clBtnFace
           Enabled = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
           Lines.Strings = (
             'This ID is the unique identifier for your PND.'
             
@@ -1378,6 +1481,7 @@ object frmCreator: TfrmCreator
               'The utility creates one for you automatically, but you can set i' +
               't manually here, in case it looks not '
             'unique or somewhat hideous.')
+          ParentFont = False
           ReadOnly = True
           TabOrder = 3
         end
@@ -1393,6 +1497,12 @@ object frmCreator: TfrmCreator
           Margins.Bottom = 4
           Align = alTop
           Enabled = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
           TabOrder = 4
         end
         object Memo1: TMemo
@@ -1411,6 +1521,11 @@ object frmCreator: TfrmCreator
           BorderStyle = bsNone
           Color = clBtnFace
           Enabled = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
           Lines.Strings = (
             
               'This is the name of the folder the appdata for your game will be' +
@@ -1419,8 +1534,10 @@ object frmCreator: TfrmCreator
             
               'It'#39's optional and if left blank the id will be used for the fold' +
               'er name')
+          ParentFont = False
           ReadOnly = True
           TabOrder = 5
+          ExplicitLeft = 8
         end
       end
     end
