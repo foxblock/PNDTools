@@ -121,6 +121,7 @@ type
   private
     procedure ChangeVersionNumber(Target: TCustomEdit; const Delta: Integer);
     procedure AddError(const TextToAdd : String; const Color: TColor = clBlack);
+    procedure CheckForErrors;
   public
     { Public declarations }
   end;
@@ -255,20 +256,8 @@ begin
         btnNext.Enabled := true;
         Exit;
         end;
-    redErrors.Clear;     
-    // Check for errors and display them
-    if Length(edtIcon.Text) = 0 then
-        AddError('No icon specified!',LOG_ERROR_COLOR)
-    else if not FileExists(edtIcon.Text) then
-        AddError('The specified icon does not exist!',LOG_ERROR_COLOR);
-    // etc...
-
-    if redErrors.Lines.Count = 0 then
-    begin
-        AddError('All valid, good job!',LOG_SUCCESS_COLOR);      
-        btnNext.Enabled := true;
-    end else
-        btnNext.Enabled := false;
+                      
+    CheckForErrors;
 end;
 
 // --- Buttons -----------------------------------------------------------------
@@ -394,6 +383,43 @@ begin
         if (Sender as TControl).Parent.Controls[I] is TCustomEdit then
             ChangeVersionNumber(((Sender as TControl).Parent.Controls[I] as TCustomEdit),1);
     end;
+end;
+
+procedure TfrmCreator.CheckForErrors;
+begin         
+    redErrors.Clear;
+    // Page 2
+    if (Length(edtName.Text) = 0) OR (edtName.Text = 'Your name') then
+        AddError('Invalid or no author name specified!',LOG_ERROR_COLOR);
+    if (cbxPort.Checked) AND ((Length(edtAppAuthor.Text) = 0) OR
+        (edtAppAuthor.Text = 'The application author''s name')) then
+        AddError('Invalid or no name for the application author entered!',LOG_ERROR_COLOR);   
+    // Page 3
+    if (Length(edtTitle.Text) = 0) OR (edtTitle.Text = 'Application title') then
+        AddError('Invalid or no title set!',LOG_ERROR_COLOR);  
+    if Length(edtExe.Text) = 0 then
+        AddError('No executable specified!',LOG_ERROR_COLOR)
+    else if not FileExists(edtExe.Text) then
+        AddError('The selected executable does not exist!',LOG_ERROR_COLOR);
+    if Length(cobCategory.Text) = 0 then
+        AddError('No category specified!',LOG_ERROR_COLOR);
+    if Length(cobSubcategory.Text) = 0 then
+        AddError('No sub-category set!',LOG_ERROR_COLOR);
+    // Page 4
+    if Length(edtIcon.Text) = 0 then
+        AddError('No icon specified!',LOG_ERROR_COLOR)
+    else if not FileExists(edtIcon.Text) then
+        AddError('The specified icon does not exist!',LOG_ERROR_COLOR); 
+    // Page 5
+    if Length(cobLicense.Text) = 0 then
+        AddError('No license set!',LOG_ERROR_COLOR);
+
+    if redErrors.Lines.Count = 0 then
+    begin
+        AddError('All valid, good job!',LOG_SUCCESS_COLOR);      
+        btnNext.Enabled := true;
+    end else
+        btnNext.Enabled := false;
 end;
 
 // --- ScreenshotPanel ---------------------------------------------------------

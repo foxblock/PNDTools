@@ -323,7 +323,9 @@ object frmCreator: TfrmCreator
             'If you are not the original author of this application and porte' +
             'd it, tick the check-box and enter the '
           'details of the original author in the boxes below that.'
-          'If you are the original author, just ignore those fields.')
+          
+            'If you are the original author, just ignore those following fiel' +
+            'ds.')
         ReadOnly = True
         TabOrder = 3
       end
@@ -452,6 +454,7 @@ object frmCreator: TfrmCreator
         Margins.Right = 4
         Margins.Bottom = 4
         Align = alBottom
+        Style = csDropDownList
         ItemHeight = 13
         TabOrder = 4
         OnChange = cobCategoryChange
@@ -467,6 +470,7 @@ object frmCreator: TfrmCreator
         Margins.Right = 4
         Margins.Bottom = 4
         Align = alBottom
+        Style = csDropDownList
         ItemHeight = 13
         TabOrder = 5
       end
