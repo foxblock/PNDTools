@@ -11,7 +11,7 @@ http://www.mozilla.org/MPL/MPL-1.1.html
 zLib License
 http://www.gzip.org/zlib/zlib_license.html
 Beerware
-people.freebsd.org/~phk/
+http://people.freebsd.org/~phk/
 WTFPL
 http://sam.zoy.org/wtfpl/
 commercial

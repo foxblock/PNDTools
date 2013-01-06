@@ -4,7 +4,7 @@ interface
 
 uses
   Messages, Classes, Graphics, Controls, Forms, Dialogs, Spin, ComCtrls,
-  StdCtrls, ExtCtrls, SysUtils, GraphicEx, Types,
+  StdCtrls, ExtCtrls, SysUtils, GraphicEx, Types, XMLDoc, XMLIntf, 
   InputFilterFunctions;
 
 type
@@ -13,8 +13,8 @@ type
     pgcMain3: TTabSheet;
     pgcMain4: TTabSheet;
     pgcMain1: TTabSheet;
-    TabSheet1: TTabSheet;
-    TabSheet2: TTabSheet;
+    pgcMain6: TTabSheet;
+    pgcMain5: TTabSheet;
     pgcMain2: TTabSheet;
     cobCategory: TComboBox;
     cobSubcategory: TComboBox;
@@ -108,6 +108,7 @@ type
     pnlVType: TPanel;
     lblVType: TLabel;
     cobVType: TComboBox;
+    sadPXML: TSaveDialog;
     procedure cbxExeSettingsClick(Sender: TObject);
     procedure btnScreenAddClick(Sender: TObject);
     procedure btnPrevClick(Sender: TObject);
@@ -128,6 +129,7 @@ type
     procedure ChangeVersionNumber(Target: TCustomEdit; const Delta: Integer);
     procedure AddError(const TextToAdd : String; const Color: TColor = clBlack);
     procedure CheckForErrors;
+    procedure SavePXMLFile(const Filename : String);
   public
     { Public declarations }
   end;
@@ -193,6 +195,56 @@ begin
     redErrors.SelAttributes.Color := Color;
 end;
 
+procedure TfrmCreator.CheckForErrors;
+begin         
+    redErrors.Clear;
+    // Page 2
+    if (Length(edtName.Text) = 0) OR (edtName.Text = 'Your name') then
+        AddError('Invalid or no author name specified!',LOG_ERROR_COLOR);
+    if (cbxPort.Checked) AND ((Length(edtAppAuthor.Text) = 0) OR
+        (edtAppAuthor.Text = 'The application author''s name')) then
+        AddError('Invalid or no name for the application author entered!',LOG_ERROR_COLOR);   
+    // Page 3
+    if (Length(edtTitle.Text) = 0) OR (edtTitle.Text = 'Application title') then
+        AddError('Invalid or no title set!',LOG_ERROR_COLOR);  
+    if Length(edtExe.Text) = 0 then
+        AddError('No executable specified!',LOG_ERROR_COLOR)
+    else if not FileExists(edtExe.Text) then
+        AddError('The selected executable does not exist!',LOG_ERROR_COLOR);
+    if Length(cobCategory.Text) = 0 then
+        AddError('No category specified!',LOG_ERROR_COLOR);
+    if Length(cobSubcategory.Text) = 0 then
+        AddError('No sub-category set!',LOG_ERROR_COLOR);
+    // Page 4
+    if Length(edtIcon.Text) = 0 then
+        AddError('No icon specified!',LOG_ERROR_COLOR)
+    else if not FileExists(edtIcon.Text) then
+        AddError('The specified icon does not exist!',LOG_ERROR_COLOR); 
+    // Page 5
+    if Length(cobLicense.Text) = 0 then
+        AddError('No license set!',LOG_ERROR_COLOR);
+    if cbxAdvanced.Checked then
+    begin
+        if Length(edtID.Text) = 0 then
+            AddError('Invalid ID entered!',LOG_ERROR_COLOR);
+        if Length(edtAppdata.Text) = 0 then
+            AddError('Invalid appdata directory entered!',LOG_ERROR_COLOR);
+    end;
+    
+
+    if redErrors.Lines.Count = 0 then
+    begin
+        AddError('All valid, good job!',LOG_SUCCESS_COLOR);      
+        btnNext.Enabled := true;
+    end else
+        btnNext.Enabled := false;
+end;
+
+procedure TfrmCreator.SavePXMLFile(const Filename: string);
+begin
+    //
+end;
+
 // --- Form --------------------------------------------------------------------
 
 procedure TfrmCreator.FormCreate(Sender: TObject);
@@ -255,7 +307,7 @@ begin
     else
         btnPrev.Enabled := true;
     if pgcMain.ActivePageIndex = pgcMain.PageCount-1 then // Finish tab
-       btnNext.Caption := 'Finish'
+       btnNext.Caption := 'Finish...'
     else
         begin
         btnNext.Caption := 'Next ->';
@@ -288,6 +340,10 @@ begin
     begin
         pgcMain.ActivePageIndex := pgcMain.ActivePageIndex + 1;
         pgcMainChange(Sender);
+    end else
+    begin
+        if sadPXML.Execute then
+            SavePXMLFile(sadPXML.Filename);
     end;
 end;
 
@@ -398,51 +454,6 @@ begin
     begin
         grbExeSettings.Controls[I].Enabled := (Sender as TCheckBox).Checked;
     end;
-end;
-
-procedure TfrmCreator.CheckForErrors;
-begin         
-    redErrors.Clear;
-    // Page 2
-    if (Length(edtName.Text) = 0) OR (edtName.Text = 'Your name') then
-        AddError('Invalid or no author name specified!',LOG_ERROR_COLOR);
-    if (cbxPort.Checked) AND ((Length(edtAppAuthor.Text) = 0) OR
-        (edtAppAuthor.Text = 'The application author''s name')) then
-        AddError('Invalid or no name for the application author entered!',LOG_ERROR_COLOR);   
-    // Page 3
-    if (Length(edtTitle.Text) = 0) OR (edtTitle.Text = 'Application title') then
-        AddError('Invalid or no title set!',LOG_ERROR_COLOR);  
-    if Length(edtExe.Text) = 0 then
-        AddError('No executable specified!',LOG_ERROR_COLOR)
-    else if not FileExists(edtExe.Text) then
-        AddError('The selected executable does not exist!',LOG_ERROR_COLOR);
-    if Length(cobCategory.Text) = 0 then
-        AddError('No category specified!',LOG_ERROR_COLOR);
-    if Length(cobSubcategory.Text) = 0 then
-        AddError('No sub-category set!',LOG_ERROR_COLOR);
-    // Page 4
-    if Length(edtIcon.Text) = 0 then
-        AddError('No icon specified!',LOG_ERROR_COLOR)
-    else if not FileExists(edtIcon.Text) then
-        AddError('The specified icon does not exist!',LOG_ERROR_COLOR); 
-    // Page 5
-    if Length(cobLicense.Text) = 0 then
-        AddError('No license set!',LOG_ERROR_COLOR);
-    if cbxAdvanced.Checked then
-    begin
-        if Length(edtID.Text) = 0 then
-            AddError('Invalid ID entered!',LOG_ERROR_COLOR);
-        if Length(edtAppdata.Text) = 0 then
-            AddError('Invalid appdata directory entered!',LOG_ERROR_COLOR);
-    end;
-    
-
-    if redErrors.Lines.Count = 0 then
-    begin
-        AddError('All valid, good job!',LOG_SUCCESS_COLOR);      
-        btnNext.Enabled := true;
-    end else
-        btnNext.Enabled := false;
 end;
 
 // --- ScreenshotPanel ---------------------------------------------------------

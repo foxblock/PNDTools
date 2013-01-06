@@ -29,7 +29,7 @@ object frmCreator: TfrmCreator
     Margins.Top = 0
     Margins.Right = 0
     Margins.Bottom = 0
-    ActivePage = pgcMain3
+    ActivePage = pgcMain1
     Align = alClient
     MultiLine = True
     Style = tsFlatButtons
@@ -1312,7 +1312,7 @@ object frmCreator: TfrmCreator
         end
       end
     end
-    object TabSheet2: TTabSheet
+    object pgcMain5: TTabSheet
       Caption = '5 - Additional...'
       ImageIndex = 5
       object grbLicense: TGroupBox
@@ -1709,7 +1709,7 @@ object frmCreator: TfrmCreator
         end
       end
     end
-    object TabSheet1: TTabSheet
+    object pgcMain6: TTabSheet
       Caption = '6 - Finish...'
       ImageIndex = 5
       object Label1: TLabel
@@ -1810,6 +1810,13 @@ object frmCreator: TfrmCreator
     FilterIndex = 0
     Options = [ofHideReadOnly, ofPathMustExist, ofFileMustExist, ofEnableSizing]
     Title = 'Select icon for the PND'
+    Top = 544
+  end
+  object sadPXML: TSaveDialog
+    Filter = 'PXML file (*.xml)'
+    Options = [ofOverwritePrompt, ofHideReadOnly, ofPathMustExist, ofCreatePrompt, ofEnableSizing]
+    Title = 'Select a destination for the PXML file'
+    Left = 32
     Top = 544
   end
 end
