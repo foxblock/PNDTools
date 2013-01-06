@@ -28,24 +28,6 @@ type
     pnlExe: TPanel;
     edtExe: TEdit;
     btnExe: TButton;
-    pnlVersion: TPanel;
-    lblVersion: TLabel;
-    pnlVBuild: TPanel;
-    lblVBuild: TLabel;
-    spbVBuild: TSpinButton;
-    edtVBuild: TEdit;
-    pnlVRelease: TPanel;
-    lblVRelease: TLabel;
-    spbVRelease: TSpinButton;
-    edtVRelease: TEdit;
-    pnlVMinor: TPanel;
-    lblVMinor: TLabel;
-    spbVMinor: TSpinButton;
-    edtVMinor: TEdit;
-    pnlVMajor: TPanel;
-    lblVMajor: TLabel;
-    spbVMajor: TSpinButton;
-    edtVMajor: TEdit;
     edtMail: TEdit;
     edtName: TEdit;
     edtWebsite: TEdit;
@@ -77,9 +59,6 @@ type
     btnNext: TButton;
     btnCancel: TButton;
     cbxPort: TCheckBox;
-    pnlVType: TPanel;
-    lblVType: TLabel;
-    cobVType: TComboBox;
     memHello: TMemo;
     Label1: TLabel;
     redErrors: TRichEdit;
@@ -103,6 +82,33 @@ type
     imgIcon: TImage;
     btnPrev: TButton;
     Button1: TButton;
+    grbExeSettings: TGroupBox;
+    cbxExeSettings: TCheckBox;
+    lblStartdir: TLabel;
+    edtStartdir: TEdit;
+    edtArguments: TEdit;
+    lblArguments: TLabel;
+    grbVersion: TGroupBox;
+    pnlVMajor: TPanel;
+    lblVMajor: TLabel;
+    spbVMajor: TSpinButton;
+    edtVMajor: TEdit;
+    pnlVMinor: TPanel;
+    lblVMinor: TLabel;
+    spbVMinor: TSpinButton;
+    edtVMinor: TEdit;
+    pnlVRelease: TPanel;
+    lblVRelease: TLabel;
+    spbVRelease: TSpinButton;
+    edtVRelease: TEdit;
+    pnlVBuild: TPanel;
+    lblVBuild: TLabel;
+    spbVBuild: TSpinButton;
+    edtVBuild: TEdit;
+    pnlVType: TPanel;
+    lblVType: TLabel;
+    cobVType: TComboBox;
+    procedure cbxExeSettingsClick(Sender: TObject);
     procedure btnScreenAddClick(Sender: TObject);
     procedure btnPrevClick(Sender: TObject);
     procedure btnNextClick(Sender: TObject);
@@ -385,6 +391,15 @@ begin
     end;
 end;
 
+procedure TfrmCreator.cbxExeSettingsClick(Sender: TObject);
+var I : Integer;
+begin
+    for I := 0 to grbExeSettings.ControlCount - 1 do
+    begin
+        grbExeSettings.Controls[I].Enabled := (Sender as TCheckBox).Checked;
+    end;
+end;
+
 procedure TfrmCreator.CheckForErrors;
 begin         
     redErrors.Clear;
@@ -413,6 +428,14 @@ begin
     // Page 5
     if Length(cobLicense.Text) = 0 then
         AddError('No license set!',LOG_ERROR_COLOR);
+    if cbxAdvanced.Checked then
+    begin
+        if Length(edtID.Text) = 0 then
+            AddError('Invalid ID entered!',LOG_ERROR_COLOR);
+        if Length(edtAppdata.Text) = 0 then
+            AddError('Invalid appdata directory entered!',LOG_ERROR_COLOR);
+    end;
+    
 
     if redErrors.Lines.Count = 0 then
     begin

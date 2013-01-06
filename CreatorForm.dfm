@@ -29,7 +29,7 @@ object frmCreator: TfrmCreator
     Margins.Top = 0
     Margins.Right = 0
     Margins.Bottom = 0
-    ActivePage = pgcMain1
+    ActivePage = pgcMain3
     Align = alClient
     MultiLine = True
     Style = tsFlatButtons
@@ -333,7 +333,7 @@ object frmCreator: TfrmCreator
         AlignWithMargins = True
         Left = 18
         Top = 178
-        Width = 90
+        Width = 86
         Height = 17
         Caption = 'This is a port'
         TabOrder = 4
@@ -386,7 +386,7 @@ object frmCreator: TfrmCreator
       object lblExe: TLabel
         AlignWithMargins = True
         Left = 4
-        Top = 321
+        Top = 195
         Width = 494
         Height = 13
         Margins.Left = 4
@@ -401,6 +401,7 @@ object frmCreator: TfrmCreator
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitTop = 321
         ExplicitWidth = 62
       end
       object lblSubcategory: TLabel
@@ -456,7 +457,7 @@ object frmCreator: TfrmCreator
         Align = alBottom
         Style = csDropDownList
         ItemHeight = 13
-        TabOrder = 4
+        TabOrder = 3
         OnChange = cobCategoryChange
       end
       object cobSubcategory: TComboBox
@@ -472,7 +473,7 @@ object frmCreator: TfrmCreator
         Align = alBottom
         Style = csDropDownList
         ItemHeight = 13
-        TabOrder = 5
+        TabOrder = 4
       end
       object edtTitle: TEdit
         AlignWithMargins = True
@@ -493,7 +494,7 @@ object frmCreator: TfrmCreator
         Left = 4
         Top = 63
         Width = 494
-        Height = 252
+        Height = 126
         Margins.Left = 4
         Margins.Top = 4
         Margins.Right = 4
@@ -504,11 +505,12 @@ object frmCreator: TfrmCreator
           'Use multiple lines if you really have to')
         ScrollBars = ssVertical
         TabOrder = 1
+        ExplicitHeight = 252
       end
       object pnlExe: TPanel
         AlignWithMargins = True
         Left = 4
-        Top = 338
+        Top = 212
         Width = 494
         Height = 21
         Margins.Left = 4
@@ -518,6 +520,7 @@ object frmCreator: TfrmCreator
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 2
+        ExplicitTop = 338
         object edtExe: TEdit
           Left = 0
           Top = 0
@@ -540,248 +543,141 @@ object frmCreator: TfrmCreator
           TabOrder = 1
         end
       end
-      object pnlVersion: TPanel
+      object grbExeSettings: TGroupBox
         AlignWithMargins = True
         Left = 4
-        Top = 365
+        Top = 241
         Width = 494
-        Height = 51
+        Height = 109
         Margins.Left = 4
-        Margins.Top = 2
+        Margins.Top = 4
         Margins.Right = 4
         Margins.Bottom = 4
         Align = alBottom
-        BevelOuter = bvNone
-        TabOrder = 3
-        object lblVersion: TLabel
-          Left = 0
-          Top = 0
-          Width = 494
+        TabOrder = 5
+        ExplicitTop = 284
+        object lblStartdir: TLabel
+          AlignWithMargins = True
+          Left = 6
+          Top = 61
+          Width = 482
           Height = 13
+          Margins.Left = 4
+          Margins.Top = 2
+          Margins.Right = 4
+          Margins.Bottom = 0
           Align = alTop
-          Caption = 'Version'
+          Caption = 'Starting Directory'
+          Enabled = False
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
           ParentFont = False
-          ExplicitWidth = 42
+          ExplicitWidth = 102
         end
-        object pnlVBuild: TPanel
+        object lblArguments: TLabel
           AlignWithMargins = True
-          Left = 177
-          Top = 15
-          Width = 55
-          Height = 36
-          Margins.Left = 0
+          Left = 6
+          Top = 17
+          Width = 482
+          Height = 13
+          Margins.Left = 4
           Margins.Top = 2
           Margins.Right = 4
           Margins.Bottom = 0
-          Align = alLeft
-          BevelOuter = bvNone
-          TabOrder = 3
-          object lblVBuild: TLabel
-            AlignWithMargins = True
-            Left = 0
-            Top = 0
-            Width = 55
-            Height = 13
-            Margins.Left = 0
-            Margins.Top = 0
-            Margins.Right = 0
-            Margins.Bottom = 2
-            Align = alTop
-            Caption = 'Build'
-            ExplicitWidth = 22
-          end
-          object spbVBuild: TSpinButton
-            Left = 40
-            Top = 15
-            Width = 15
-            Height = 21
-            Align = alRight
-            DownGlyph.Data = {
-              0E010000424D0E01000000000000360000002800000009000000060000000100
-              200000000000D800000000000000000000000000000000000000008080000080
-              8000008080000080800000808000008080000080800000808000008080000080
-              8000008080000080800000808000000000000080800000808000008080000080
-              8000008080000080800000808000000000000000000000000000008080000080
-              8000008080000080800000808000000000000000000000000000000000000000
-              0000008080000080800000808000000000000000000000000000000000000000
-              0000000000000000000000808000008080000080800000808000008080000080
-              800000808000008080000080800000808000}
-            TabOrder = 0
-            UpGlyph.Data = {
-              0E010000424D0E01000000000000360000002800000009000000060000000100
-              200000000000D800000000000000000000000000000000000000008080000080
-              8000008080000080800000808000008080000080800000808000008080000080
-              8000000000000000000000000000000000000000000000000000000000000080
-              8000008080000080800000000000000000000000000000000000000000000080
-              8000008080000080800000808000008080000000000000000000000000000080
-              8000008080000080800000808000008080000080800000808000000000000080
-              8000008080000080800000808000008080000080800000808000008080000080
-              800000808000008080000080800000808000}
-            OnDownClick = spbVMajorDownClick
-            OnUpClick = spbVMajorUpClick
-          end
-          object edtVBuild: TEdit
-            Left = 0
-            Top = 15
-            Width = 40
-            Height = 21
-            Align = alClient
-            TabOrder = 1
-            Text = '0'
-          end
+          Align = alTop
+          Caption = 'Program Arguments'
+          Enabled = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          ParentFont = False
+          ExplicitLeft = 8
         end
-        object pnlVRelease: TPanel
+        object edtStartdir: TEdit
           AlignWithMargins = True
-          Left = 118
-          Top = 15
-          Width = 55
-          Height = 36
-          Margins.Left = 0
-          Margins.Top = 2
+          Left = 6
+          Top = 78
+          Width = 482
+          Height = 21
+          Margins.Left = 4
+          Margins.Top = 4
           Margins.Right = 4
-          Margins.Bottom = 0
-          Align = alLeft
-          BevelOuter = bvNone
-          TabOrder = 2
-          object lblVRelease: TLabel
-            AlignWithMargins = True
-            Left = 0
-            Top = 0
-            Width = 55
-            Height = 13
-            Margins.Left = 0
-            Margins.Top = 0
-            Margins.Right = 0
-            Margins.Bottom = 2
-            Align = alTop
-            Caption = 'Release'
-            ExplicitWidth = 38
-          end
-          object spbVRelease: TSpinButton
-            Left = 40
-            Top = 15
-            Width = 15
-            Height = 21
-            Align = alRight
-            DownGlyph.Data = {
-              0E010000424D0E01000000000000360000002800000009000000060000000100
-              200000000000D800000000000000000000000000000000000000008080000080
-              8000008080000080800000808000008080000080800000808000008080000080
-              8000008080000080800000808000000000000080800000808000008080000080
-              8000008080000080800000808000000000000000000000000000008080000080
-              8000008080000080800000808000000000000000000000000000000000000000
-              0000008080000080800000808000000000000000000000000000000000000000
-              0000000000000000000000808000008080000080800000808000008080000080
-              800000808000008080000080800000808000}
-            TabOrder = 0
-            UpGlyph.Data = {
-              0E010000424D0E01000000000000360000002800000009000000060000000100
-              200000000000D800000000000000000000000000000000000000008080000080
-              8000008080000080800000808000008080000080800000808000008080000080
-              8000000000000000000000000000000000000000000000000000000000000080
-              8000008080000080800000000000000000000000000000000000000000000080
-              8000008080000080800000808000008080000000000000000000000000000080
-              8000008080000080800000808000008080000080800000808000000000000080
-              8000008080000080800000808000008080000080800000808000008080000080
-              800000808000008080000080800000808000}
-            OnDownClick = spbVMajorDownClick
-            OnUpClick = spbVMajorUpClick
-          end
-          object edtVRelease: TEdit
-            Left = 0
-            Top = 15
-            Width = 40
-            Height = 21
-            Align = alClient
-            TabOrder = 1
-            Text = '0'
-          end
-        end
-        object pnlVMinor: TPanel
-          AlignWithMargins = True
-          Left = 59
-          Top = 15
-          Width = 55
-          Height = 36
-          Margins.Left = 0
-          Margins.Top = 2
-          Margins.Right = 4
-          Margins.Bottom = 0
-          Align = alLeft
-          BevelOuter = bvNone
+          Margins.Bottom = 4
+          Align = alTop
+          Enabled = False
           TabOrder = 1
-          object lblVMinor: TLabel
-            AlignWithMargins = True
-            Left = 0
-            Top = 0
-            Width = 55
-            Height = 13
-            Margins.Left = 0
-            Margins.Top = 0
-            Margins.Right = 0
-            Margins.Bottom = 2
-            Align = alTop
-            Caption = 'Minor'
-            ExplicitWidth = 26
-          end
-          object spbVMinor: TSpinButton
-            Left = 40
-            Top = 15
-            Width = 15
-            Height = 21
-            Align = alRight
-            DownGlyph.Data = {
-              0E010000424D0E01000000000000360000002800000009000000060000000100
-              200000000000D800000000000000000000000000000000000000008080000080
-              8000008080000080800000808000008080000080800000808000008080000080
-              8000008080000080800000808000000000000080800000808000008080000080
-              8000008080000080800000808000000000000000000000000000008080000080
-              8000008080000080800000808000000000000000000000000000000000000000
-              0000008080000080800000808000000000000000000000000000000000000000
-              0000000000000000000000808000008080000080800000808000008080000080
-              800000808000008080000080800000808000}
-            TabOrder = 0
-            UpGlyph.Data = {
-              0E010000424D0E01000000000000360000002800000009000000060000000100
-              200000000000D800000000000000000000000000000000000000008080000080
-              8000008080000080800000808000008080000080800000808000008080000080
-              8000000000000000000000000000000000000000000000000000000000000080
-              8000008080000080800000000000000000000000000000000000000000000080
-              8000008080000080800000808000008080000000000000000000000000000080
-              8000008080000080800000808000008080000080800000808000000000000080
-              8000008080000080800000808000008080000080800000808000008080000080
-              800000808000008080000080800000808000}
-            OnDownClick = spbVMajorDownClick
-            OnUpClick = spbVMajorUpClick
-          end
-          object edtVMinor: TEdit
-            Left = 0
-            Top = 15
-            Width = 40
-            Height = 21
-            Align = alClient
-            TabOrder = 1
-            Text = '0'
-          end
+          ExplicitLeft = 4
+          ExplicitTop = 19
+          ExplicitWidth = 494
         end
+        object edtArguments: TEdit
+          AlignWithMargins = True
+          Left = 6
+          Top = 34
+          Width = 482
+          Height = 21
+          Margins.Left = 4
+          Margins.Top = 4
+          Margins.Right = 4
+          Margins.Bottom = 4
+          Align = alTop
+          Enabled = False
+          TabOrder = 0
+          ExplicitLeft = 4
+          ExplicitTop = 19
+          ExplicitWidth = 494
+        end
+      end
+      object cbxExeSettings: TCheckBox
+        Left = 18
+        Top = 236
+        Width = 172
+        Height = 17
+        Caption = 'Advanced Executable Settings'
+        TabOrder = 6
+        OnClick = cbxExeSettingsClick
+      end
+      object grbVersion: TGroupBox
+        AlignWithMargins = True
+        Left = 4
+        Top = 358
+        Width = 494
+        Height = 58
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
+        Align = alBottom
+        Caption = '   Version   '
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 7
+        ExplicitLeft = 0
+        ExplicitTop = 359
+        ExplicitWidth = 502
         object pnlVMajor: TPanel
           AlignWithMargins = True
-          Left = 0
-          Top = 15
+          Left = 6
+          Top = 17
           Width = 55
-          Height = 36
-          Margins.Left = 0
+          Height = 35
+          Margins.Left = 4
           Margins.Top = 2
           Margins.Right = 4
-          Margins.Bottom = 0
+          Margins.Bottom = 4
           Align = alLeft
           BevelOuter = bvNone
           TabOrder = 0
+          ExplicitLeft = 0
           object lblVMajor: TLabel
             AlignWithMargins = True
             Left = 0
@@ -794,13 +690,19 @@ object frmCreator: TfrmCreator
             Margins.Bottom = 2
             Align = alTop
             Caption = 'Major'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
             ExplicitWidth = 27
           end
           object spbVMajor: TSpinButton
             Left = 40
             Top = 15
             Width = 15
-            Height = 21
+            Height = 20
             Align = alRight
             DownGlyph.Data = {
               0E010000424D0E01000000000000360000002800000009000000060000000100
@@ -825,30 +727,281 @@ object frmCreator: TfrmCreator
               800000808000008080000080800000808000}
             OnDownClick = spbVMajorDownClick
             OnUpClick = spbVMajorUpClick
+            ExplicitHeight = 71
           end
           object edtVMajor: TEdit
             Left = 0
             Top = 15
             Width = 40
-            Height = 21
+            Height = 20
             Align = alClient
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
             TabOrder = 1
             Text = '1'
           end
         end
+        object pnlVMinor: TPanel
+          AlignWithMargins = True
+          Left = 65
+          Top = 17
+          Width = 55
+          Height = 35
+          Margins.Left = 0
+          Margins.Top = 2
+          Margins.Right = 4
+          Margins.Bottom = 4
+          Align = alLeft
+          BevelOuter = bvNone
+          TabOrder = 1
+          ExplicitLeft = 0
+          object lblVMinor: TLabel
+            AlignWithMargins = True
+            Left = 0
+            Top = 0
+            Width = 55
+            Height = 13
+            Margins.Left = 0
+            Margins.Top = 0
+            Margins.Right = 0
+            Margins.Bottom = 2
+            Align = alTop
+            Caption = 'Minor'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            ExplicitWidth = 26
+          end
+          object spbVMinor: TSpinButton
+            Left = 40
+            Top = 15
+            Width = 15
+            Height = 20
+            Align = alRight
+            DownGlyph.Data = {
+              0E010000424D0E01000000000000360000002800000009000000060000000100
+              200000000000D800000000000000000000000000000000000000008080000080
+              8000008080000080800000808000008080000080800000808000008080000080
+              8000008080000080800000808000000000000080800000808000008080000080
+              8000008080000080800000808000000000000000000000000000008080000080
+              8000008080000080800000808000000000000000000000000000000000000000
+              0000008080000080800000808000000000000000000000000000000000000000
+              0000000000000000000000808000008080000080800000808000008080000080
+              800000808000008080000080800000808000}
+            TabOrder = 0
+            UpGlyph.Data = {
+              0E010000424D0E01000000000000360000002800000009000000060000000100
+              200000000000D800000000000000000000000000000000000000008080000080
+              8000008080000080800000808000008080000080800000808000008080000080
+              8000000000000000000000000000000000000000000000000000000000000080
+              8000008080000080800000000000000000000000000000000000000000000080
+              8000008080000080800000808000008080000000000000000000000000000080
+              8000008080000080800000808000008080000080800000808000000000000080
+              8000008080000080800000808000008080000080800000808000008080000080
+              800000808000008080000080800000808000}
+            OnDownClick = spbVMajorDownClick
+            OnUpClick = spbVMajorUpClick
+            ExplicitHeight = 71
+          end
+          object edtVMinor: TEdit
+            Left = 0
+            Top = 15
+            Width = 40
+            Height = 20
+            Align = alClient
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 1
+            Text = '0'
+          end
+        end
+        object pnlVRelease: TPanel
+          AlignWithMargins = True
+          Left = 124
+          Top = 17
+          Width = 55
+          Height = 35
+          Margins.Left = 0
+          Margins.Top = 2
+          Margins.Right = 4
+          Margins.Bottom = 4
+          Align = alLeft
+          BevelOuter = bvNone
+          TabOrder = 2
+          ExplicitLeft = 0
+          object lblVRelease: TLabel
+            AlignWithMargins = True
+            Left = 0
+            Top = 0
+            Width = 55
+            Height = 13
+            Margins.Left = 0
+            Margins.Top = 0
+            Margins.Right = 0
+            Margins.Bottom = 2
+            Align = alTop
+            Caption = 'Release'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            ExplicitWidth = 38
+          end
+          object spbVRelease: TSpinButton
+            Left = 40
+            Top = 15
+            Width = 15
+            Height = 20
+            Align = alRight
+            DownGlyph.Data = {
+              0E010000424D0E01000000000000360000002800000009000000060000000100
+              200000000000D800000000000000000000000000000000000000008080000080
+              8000008080000080800000808000008080000080800000808000008080000080
+              8000008080000080800000808000000000000080800000808000008080000080
+              8000008080000080800000808000000000000000000000000000008080000080
+              8000008080000080800000808000000000000000000000000000000000000000
+              0000008080000080800000808000000000000000000000000000000000000000
+              0000000000000000000000808000008080000080800000808000008080000080
+              800000808000008080000080800000808000}
+            TabOrder = 0
+            UpGlyph.Data = {
+              0E010000424D0E01000000000000360000002800000009000000060000000100
+              200000000000D800000000000000000000000000000000000000008080000080
+              8000008080000080800000808000008080000080800000808000008080000080
+              8000000000000000000000000000000000000000000000000000000000000080
+              8000008080000080800000000000000000000000000000000000000000000080
+              8000008080000080800000808000008080000000000000000000000000000080
+              8000008080000080800000808000008080000080800000808000000000000080
+              8000008080000080800000808000008080000080800000808000008080000080
+              800000808000008080000080800000808000}
+            OnDownClick = spbVMajorDownClick
+            OnUpClick = spbVMajorUpClick
+            ExplicitHeight = 71
+          end
+          object edtVRelease: TEdit
+            Left = 0
+            Top = 15
+            Width = 40
+            Height = 20
+            Align = alClient
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 1
+            Text = '0'
+          end
+        end
+        object pnlVBuild: TPanel
+          AlignWithMargins = True
+          Left = 183
+          Top = 17
+          Width = 55
+          Height = 35
+          Margins.Left = 0
+          Margins.Top = 2
+          Margins.Right = 4
+          Margins.Bottom = 4
+          Align = alLeft
+          BevelOuter = bvNone
+          TabOrder = 3
+          ExplicitLeft = 0
+          object lblVBuild: TLabel
+            AlignWithMargins = True
+            Left = 0
+            Top = 0
+            Width = 55
+            Height = 13
+            Margins.Left = 0
+            Margins.Top = 0
+            Margins.Right = 0
+            Margins.Bottom = 2
+            Align = alTop
+            Caption = 'Build'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            ExplicitWidth = 22
+          end
+          object spbVBuild: TSpinButton
+            Left = 40
+            Top = 15
+            Width = 15
+            Height = 20
+            Align = alRight
+            DownGlyph.Data = {
+              0E010000424D0E01000000000000360000002800000009000000060000000100
+              200000000000D800000000000000000000000000000000000000008080000080
+              8000008080000080800000808000008080000080800000808000008080000080
+              8000008080000080800000808000000000000080800000808000008080000080
+              8000008080000080800000808000000000000000000000000000008080000080
+              8000008080000080800000808000000000000000000000000000000000000000
+              0000008080000080800000808000000000000000000000000000000000000000
+              0000000000000000000000808000008080000080800000808000008080000080
+              800000808000008080000080800000808000}
+            TabOrder = 0
+            UpGlyph.Data = {
+              0E010000424D0E01000000000000360000002800000009000000060000000100
+              200000000000D800000000000000000000000000000000000000008080000080
+              8000008080000080800000808000008080000080800000808000008080000080
+              8000000000000000000000000000000000000000000000000000000000000080
+              8000008080000080800000000000000000000000000000000000000000000080
+              8000008080000080800000808000008080000000000000000000000000000080
+              8000008080000080800000808000008080000080800000808000000000000080
+              8000008080000080800000808000008080000080800000808000008080000080
+              800000808000008080000080800000808000}
+            OnDownClick = spbVMajorDownClick
+            OnUpClick = spbVMajorUpClick
+            ExplicitHeight = 71
+          end
+          object edtVBuild: TEdit
+            Left = 0
+            Top = 15
+            Width = 40
+            Height = 20
+            Align = alClient
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 1
+            Text = '0'
+          end
+        end
         object pnlVType: TPanel
           AlignWithMargins = True
-          Left = 236
-          Top = 15
+          Left = 242
+          Top = 17
           Width = 65
           Height = 36
           Margins.Left = 0
           Margins.Top = 2
           Margins.Right = 0
-          Margins.Bottom = 0
           Align = alLeft
           BevelOuter = bvNone
           TabOrder = 4
+          ExplicitLeft = 236
+          ExplicitTop = 15
           object lblVType: TLabel
             AlignWithMargins = True
             Left = 0
@@ -861,6 +1014,12 @@ object frmCreator: TfrmCreator
             Margins.Bottom = 2
             Align = alTop
             Caption = 'Type'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
             ExplicitWidth = 24
           end
           object cobVType: TComboBox
@@ -874,7 +1033,15 @@ object frmCreator: TfrmCreator
             Margins.Right = 0
             Margins.Bottom = 0
             Align = alClient
+            Style = csDropDownList
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
             ItemHeight = 13
+            ItemIndex = 2
+            ParentFont = False
             TabOrder = 0
             Text = 'release'
             Items.Strings = (
@@ -953,7 +1120,6 @@ object frmCreator: TfrmCreator
           VertScrollBar.Tracking = True
           Align = alClient
           TabOrder = 1
-          ExplicitLeft = 8
         end
         object pnlScreenButtons: TPanel
           Left = 2
@@ -1377,7 +1543,7 @@ object frmCreator: TfrmCreator
           Margins.Right = 4
           Margins.Bottom = 0
           Align = alTop
-          Caption = 'Appdata'
+          Caption = 'Appdata Folder (optional)'
           Enabled = False
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -1385,7 +1551,7 @@ object frmCreator: TfrmCreator
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
           ParentFont = False
-          ExplicitWidth = 48
+          ExplicitWidth = 145
         end
         object edtID: TEdit
           AlignWithMargins = True
@@ -1532,16 +1698,14 @@ object frmCreator: TfrmCreator
           Font.Style = []
           Lines.Strings = (
             
-              'This is the name of the folder the appdata for your game will be' +
-              ' saved in (savegames, temporary '
-            'files, etc.)'
+              'Appdata for your game (savegames, temporary files, etc.) will be' +
+              ' saved in this folder.'
             
               'It'#39's optional and if left blank the id will be used for the fold' +
               'er name')
           ParentFont = False
           ReadOnly = True
           TabOrder = 5
-          ExplicitLeft = 8
         end
       end
     end
