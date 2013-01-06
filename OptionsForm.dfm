@@ -126,8 +126,6 @@ object frmOptions: TfrmOptions
         Align = alClient
         TabOrder = 0
         Text = 'edtProgMkSquash'
-        ExplicitLeft = 56
-        ExplicitWidth = 409
       end
       object btnMkSquash: TButton
         Left = 469
@@ -179,8 +177,6 @@ object frmOptions: TfrmOptions
         Align = alClient
         TabOrder = 0
         Text = 'edtMkSquash'
-        ExplicitLeft = 56
-        ExplicitWidth = 409
       end
       object btnUnSquash: TButton
         Left = 469
@@ -232,8 +228,6 @@ object frmOptions: TfrmOptions
         Align = alClient
         TabOrder = 0
         Text = 'edtMkSquash'
-        ExplicitLeft = 56
-        ExplicitWidth = 409
       end
       object btnChmod: TButton
         Left = 469
@@ -259,8 +253,6 @@ object frmOptions: TfrmOptions
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 3
-      ExplicitLeft = 4
-      ExplicitTop = 86
       object lblSchema: TLabel
         AlignWithMargins = True
         Left = 0
@@ -313,7 +305,6 @@ object frmOptions: TfrmOptions
     Align = alTop
     Caption = '   Params   '
     TabOrder = 2
-    ExplicitTop = 174
     object memParams: TMemo
       AlignWithMargins = True
       Left = 6
@@ -482,7 +473,6 @@ object frmOptions: TfrmOptions
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 3
-    ExplicitTop = 336
     object btnCancel: TButton
       Left = 427
       Top = 0
@@ -510,7 +500,7 @@ object frmOptions: TfrmOptions
     end
   end
   object opdExeFile: TOpenDialog
-    Filter = 'Exe-File (*.exe)|*.exe|Any file|*'
+    Filter = 'Executable files (*.exe;*.bat)|*.exe;*.bat|Any file|*'
     Options = [ofHideReadOnly, ofPathMustExist, ofFileMustExist, ofEnableSizing]
     Left = 456
     Top = 16

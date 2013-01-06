@@ -398,7 +398,6 @@ object frmMain: TfrmMain
       Caption = 'Create PXML'
       TabOrder = 2
       OnClick = btnPXMLEditClick
-      ExplicitTop = 17
     end
   end
   object imlFileTree: TImageList
@@ -436,7 +435,7 @@ object frmMain: TfrmMain
   object sadPND: TSaveDialog
     Filter = 'PND files (*.pnd)|*.pnd'
     Options = [ofOverwritePrompt, ofHideReadOnly, ofPathMustExist, ofCreatePrompt, ofEnableSizing]
-    Title = 'Destination for the PND file'
+    Title = 'Select a destination for the PND file'
     Left = 144
     Top = 48
   end
