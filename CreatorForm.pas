@@ -4,7 +4,7 @@ interface
 
 uses
   Messages, Classes, Graphics, Controls, Forms, Dialogs, Spin, ComCtrls,
-  StdCtrls, ExtCtrls, SysUtils, GraphicEx, Types, XMLDoc, XMLIntf, 
+  StdCtrls, ExtCtrls, SysUtils, GraphicEx, Types, XMLDoc, XMLIntf, StrUtils,
   InputFilterFunctions;
 
 type
@@ -64,24 +64,24 @@ type
     redErrors: TRichEdit;
     grbScreenshots: TGroupBox;
     grbIcon: TGroupBox;
-    memID: TMemo;
+    memIDHelp: TMemo;
     pnlIcon: TPanel;
     lblIcon: TLabel;
     pnlIconPath: TPanel;
     edtIcon: TEdit;
     btnIcon: TButton;
     lblIconInfo: TLabel;
-    memScreenshots: TMemo;
+    memScreenshotsHelp: TMemo;
     edtAppdata: TEdit;
     lblAppdata: TLabel;
-    Memo1: TMemo;
+    memAppdataHelp: TMemo;
     opdIcon: TOpenDialog;
     scbScreenshots: TScrollBox;
     pnlScreenButtons: TPanel;
     btnScreenAdd: TButton;
     imgIcon: TImage;
     btnPrev: TButton;
-    Button1: TButton;
+    btnRemove: TButton;
     grbExeSettings: TGroupBox;
     cbxExeSettings: TCheckBox;
     lblStartdir: TLabel;
@@ -109,7 +109,7 @@ type
     lblVType: TLabel;
     cobVType: TComboBox;
     sadPXML: TSaveDialog;
-    Memo2: TMemo;
+    memDetailsHelp: TMemo;
     procedure cbxExeSettingsClick(Sender: TObject);
     procedure btnScreenAddClick(Sender: TObject);
     procedure btnPrevClick(Sender: TObject);
@@ -301,24 +301,6 @@ begin
     end;
 end;
 
-procedure TfrmCreator.pgcMainChange(Sender: TObject);
-begin
-    if pgcMain.ActivePageIndex = 0 then
-        btnPrev.Enabled := false
-    else
-        btnPrev.Enabled := true;
-    if pgcMain.ActivePageIndex = pgcMain.PageCount-1 then // Finish tab
-       btnNext.Caption := 'Finish...'
-    else
-        begin
-        btnNext.Caption := 'Next ->';
-        btnNext.Enabled := true;
-        Exit;
-        end;
-                      
-    CheckForErrors;
-end;
-
 // --- Buttons -----------------------------------------------------------------
 
 procedure TfrmCreator.btnCancelClick(Sender: TObject);
@@ -364,32 +346,7 @@ begin
         temp := TScreenshotPanel.Create(opdIcon.FileName);
 end;
 
-procedure TfrmCreator.cobLicenseChange(Sender: TObject);
-var S : String;
-begin
-    edtLicenseURL.Clear;
-    if cobLicense.ItemIndex >= 0 then
-        S := (cobLicense.Items.Objects[cobLicense.ItemIndex] as TStringPair).S2
-    else
-        S := '';
-    edtLicenseURL.Text := S;
-end;
-
-procedure TfrmCreator.edtIconExit(Sender: TObject);
-var temp : TPicture;
-begin
-    try
-        temp := TPicture.Create;
-        temp.LoadFromFile(edtIcon.Text);
-        imgIcon.Canvas.StretchDraw(Rect(0,0,imgIcon.Width,imgIcon.Height),temp.Graphic);
-        lblIconInfo.Caption := UpperCase(ExtractFileExt(edtIcon.Text)) + ', ' +
-                               IntToStr(temp.Width) + 'x' + IntToStr(temp.Height);
-        temp.Free;
-    except
-        lblIconInfo.Caption := 'No icon loaded';
-        temp.Free;
-    end;
-end;
+// --- Checkboxes --------------------------------------------------------------
 
 procedure TfrmCreator.cbxAdvancedClick(Sender: TObject);
 var I : Integer;
@@ -408,7 +365,91 @@ begin
     begin
         grbAppAuthor.Controls[I].Enabled := (Sender as TCheckBox).Checked;
     end;
+end; 
+
+procedure TfrmCreator.cbxExeSettingsClick(Sender: TObject);
+var I : Integer;
+begin
+    for I := 0 to grbExeSettings.ControlCount - 1 do
+    begin
+        grbExeSettings.Controls[I].Enabled := (Sender as TCheckBox).Checked;
+    end;
 end;
+
+// --- PageControl -------------------------------------------------------------
+
+procedure TfrmCreator.pgcMainChange(Sender: TObject);
+
+function IDFormatString(const S : String) : String;
+var I : Integer;
+begin
+    Result := S;
+    I := 1;
+    while I <= Length(Result) do
+    begin
+        if NOT (Result[I] in ['a'..'z','A'..'Z','0'..'9','-','.','/']) then
+            Result := LeftStr(Result,I-1) + RightStr(Result,Length(Result)-I)
+        else
+            Inc(I);
+    end;
+end;
+
+begin
+    if pgcMain.ActivePageIndex = 0 then
+        btnPrev.Enabled := false
+    else
+        btnPrev.Enabled := true;
+    if pgcMain.ActivePageIndex = 4 then
+    begin
+        if (Length(edtTitle.Text) > 0) AND (Length(edtName.Text) > 0) AND NOT cbxAdvanced.Checked then
+        begin
+            edtID.Text := IDFormatString(edtTitle.Text) + '.' + IDFormatString(edtName.Text);
+        end;
+    end;
+    if pgcMain.ActivePageIndex = pgcMain.PageCount-1 then // Finish tab
+       btnNext.Caption := 'Finish...'
+    else
+        begin
+        btnNext.Caption := 'Next ->';
+        btnNext.Enabled := true;
+        Exit;
+        end;
+                      
+    CheckForErrors;
+end;
+
+// --- License -----------------------------------------------------------------
+
+procedure TfrmCreator.cobLicenseChange(Sender: TObject);
+var S : String;
+begin
+    edtLicenseURL.Clear;
+    if cobLicense.ItemIndex >= 0 then
+        S := (cobLicense.Items.Objects[cobLicense.ItemIndex] as TStringPair).S2
+    else
+        S := '';
+    edtLicenseURL.Text := S;
+end;
+
+// --- Icon --------------------------------------------------------------------
+
+procedure TfrmCreator.edtIconExit(Sender: TObject);
+var temp : TPicture;
+begin
+    try
+        temp := TPicture.Create;
+        temp.LoadFromFile(edtIcon.Text);
+        imgIcon.Canvas.StretchDraw(Rect(0,0,imgIcon.Width,imgIcon.Height),temp.Graphic);
+        lblIconInfo.Caption := UpperCase(ExtractFileExt(edtIcon.Text)) + ', ' +
+                               IntToStr(temp.Width) + 'x' + IntToStr(temp.Height);
+        temp.Free;
+    except
+        lblIconInfo.Caption := 'No icon loaded';
+        temp.Free;
+    end;
+end;
+
+// --- Category ----------------------------------------------------------------
 
 procedure TfrmCreator.cobCategoryChange(Sender: TObject);
 var S,temp : String;
@@ -428,6 +469,8 @@ begin
     cobSubcategory.Text := temp;
 end;
 
+// --- Version -----------------------------------------------------------------
+
 procedure TfrmCreator.spbVMajorDownClick(Sender: TObject);
 var I : Integer;
 begin
@@ -445,15 +488,6 @@ begin
     begin
         if (Sender as TControl).Parent.Controls[I] is TCustomEdit then
             ChangeVersionNumber(((Sender as TControl).Parent.Controls[I] as TCustomEdit),1);
-    end;
-end;
-
-procedure TfrmCreator.cbxExeSettingsClick(Sender: TObject);
-var I : Integer;
-begin
-    for I := 0 to grbExeSettings.ControlCount - 1 do
-    begin
-        grbExeSettings.Controls[I].Enabled := (Sender as TCheckBox).Checked;
     end;
 end;
 

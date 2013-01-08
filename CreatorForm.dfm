@@ -99,7 +99,6 @@ object frmCreator: TfrmCreator
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitTop = 90
         ExplicitWidth = 93
       end
       object lblName: TLabel
@@ -120,7 +119,6 @@ object frmCreator: TfrmCreator
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitTop = 2
         ExplicitWidth = 32
       end
       object lblWebsite: TLabel
@@ -141,7 +139,6 @@ object frmCreator: TfrmCreator
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitTop = 46
         ExplicitWidth = 105
       end
       object edtMail: TEdit
@@ -155,8 +152,7 @@ object frmCreator: TfrmCreator
         Margins.Right = 4
         Margins.Bottom = 4
         Align = alTop
-        TabOrder = 2
-        ExplicitTop = 107
+        TabOrder = 3
       end
       object edtName: TEdit
         AlignWithMargins = True
@@ -169,8 +165,7 @@ object frmCreator: TfrmCreator
         Margins.Right = 4
         Margins.Bottom = 4
         Align = alTop
-        TabOrder = 0
-        ExplicitTop = 19
+        TabOrder = 1
       end
       object edtWebsite: TEdit
         AlignWithMargins = True
@@ -183,8 +178,7 @@ object frmCreator: TfrmCreator
         Margins.Right = 4
         Margins.Bottom = 4
         Align = alTop
-        TabOrder = 1
-        ExplicitTop = 63
+        TabOrder = 2
       end
       object grbAppAuthor: TGroupBox
         AlignWithMargins = True
@@ -197,8 +191,7 @@ object frmCreator: TfrmCreator
         Margins.Right = 4
         Margins.Bottom = 4
         Align = alTop
-        TabOrder = 5
-        ExplicitTop = 183
+        TabOrder = 6
         object lblAppAuthor: TLabel
           AlignWithMargins = True
           Left = 6
@@ -327,8 +320,7 @@ object frmCreator: TfrmCreator
             'd it, tick the check-box and enter the '
           'details of the original author in the boxes below that.')
         ReadOnly = True
-        TabOrder = 3
-        ExplicitTop = 160
+        TabOrder = 4
       end
       object cbxPort: TCheckBox
         AlignWithMargins = True
@@ -337,10 +329,10 @@ object frmCreator: TfrmCreator
         Width = 86
         Height = 17
         Caption = 'This is a port'
-        TabOrder = 4
+        TabOrder = 5
         OnClick = cbxPortClick
       end
-      object Memo2: TMemo
+      object memDetailsHelp: TMemo
         AlignWithMargins = True
         Left = 4
         Top = 6
@@ -361,7 +353,7 @@ object frmCreator: TfrmCreator
             'Enter your details below (no matter whether you created or porte' +
             'd the application).')
         ReadOnly = True
-        TabOrder = 6
+        TabOrder = 0
       end
     end
     object pgcMain3: TTabSheet
@@ -1078,7 +1070,7 @@ object frmCreator: TfrmCreator
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 1
-        object memScreenshots: TMemo
+        object memScreenshotsHelp: TMemo
           AlignWithMargins = True
           Left = 6
           Top = 19
@@ -1127,8 +1119,7 @@ object frmCreator: TfrmCreator
           VertScrollBar.Smooth = True
           VertScrollBar.Tracking = True
           Align = alClient
-          TabOrder = 1
-          ExplicitLeft = 8
+          TabOrder = 2
         end
         object pnlScreenButtons: TPanel
           Left = 2
@@ -1137,8 +1128,7 @@ object frmCreator: TfrmCreator
           Height = 20
           Align = alTop
           BevelOuter = bvNone
-          TabOrder = 2
-          ExplicitTop = 62
+          TabOrder = 1
           object btnScreenAdd: TButton
             AlignWithMargins = True
             Left = 417
@@ -1157,10 +1147,10 @@ object frmCreator: TfrmCreator
             Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
-            TabOrder = 0
+            TabOrder = 1
             OnClick = btnScreenAddClick
           end
-          object Button1: TButton
+          object btnRemove: TButton
             AlignWithMargins = True
             Left = 334
             Top = 0
@@ -1179,7 +1169,7 @@ object frmCreator: TfrmCreator
             Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
-            TabOrder = 1
+            TabOrder = 0
           end
         end
       end
@@ -1476,7 +1466,6 @@ object frmCreator: TfrmCreator
           ParentFont = False
           ReadOnly = True
           TabOrder = 3
-          ExplicitHeight = 101
         end
         object cobLicense: TComboBox
           AlignWithMargins = True
@@ -1631,7 +1620,7 @@ object frmCreator: TfrmCreator
           TabOrder = 1
           OnClick = cbxAdvancedClick
         end
-        object memID: TMemo
+        object memIDHelp: TMemo
           AlignWithMargins = True
           Left = 6
           Top = 104
@@ -1685,7 +1674,7 @@ object frmCreator: TfrmCreator
           ParentFont = False
           TabOrder = 4
         end
-        object Memo1: TMemo
+        object memAppdataHelp: TMemo
           AlignWithMargins = True
           Left = 6
           Top = 207
@@ -1716,8 +1705,6 @@ object frmCreator: TfrmCreator
           ParentFont = False
           ReadOnly = True
           TabOrder = 5
-          ExplicitLeft = 8
-          ExplicitHeight = 31
         end
       end
     end
@@ -1780,7 +1767,7 @@ object frmCreator: TfrmCreator
       Margins.Bottom = 4
       Align = alRight
       Caption = 'Next ->'
-      TabOrder = 0
+      TabOrder = 1
       OnClick = btnNextClick
     end
     object btnCancel: TButton
@@ -1795,7 +1782,7 @@ object frmCreator: TfrmCreator
       Margins.Bottom = 4
       Align = alRight
       Caption = 'Cancel'
-      TabOrder = 1
+      TabOrder = 2
       OnClick = btnCancelClick
     end
     object btnPrev: TButton
@@ -1811,7 +1798,7 @@ object frmCreator: TfrmCreator
       Align = alRight
       Caption = '<- Prevous'
       Enabled = False
-      TabOrder = 2
+      TabOrder = 0
       OnClick = btnPrevClick
     end
   end
