@@ -109,6 +109,7 @@ type
     lblVType: TLabel;
     cobVType: TComboBox;
     sadPXML: TSaveDialog;
+    Memo2: TMemo;
     procedure cbxExeSettingsClick(Sender: TObject);
     procedure btnScreenAddClick(Sender: TObject);
     procedure btnPrevClick(Sender: TObject);

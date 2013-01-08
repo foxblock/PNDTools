@@ -1,6 +1,6 @@
 object frmCreator: TfrmCreator
-  Left = 208
-  Top = 284
+  Left = 120
+  Top = 145
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'PXML Creation Utility'
   ClientHeight = 572
@@ -63,7 +63,9 @@ object frmCreator: TfrmCreator
           
             'Only basic use-cases are covered here (no multi-app PNDs for exa' +
             'mple), but you can manually adjust '
-          'advanced settings afterwards using the full editor.'
+          
+            'advanced settings afterwards using the full editor available fro' +
+            'm the main window.'
           ''
           
             'Start on the following tab and enter your personal information, ' +
@@ -82,7 +84,7 @@ object frmCreator: TfrmCreator
       object lblMail: TLabel
         AlignWithMargins = True
         Left = 4
-        Top = 90
+        Top = 113
         Width = 494
         Height = 13
         Margins.Left = 4
@@ -97,12 +99,13 @@ object frmCreator: TfrmCreator
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitTop = 90
         ExplicitWidth = 93
       end
       object lblName: TLabel
         AlignWithMargins = True
         Left = 4
-        Top = 2
+        Top = 25
         Width = 494
         Height = 13
         Margins.Left = 4
@@ -117,12 +120,13 @@ object frmCreator: TfrmCreator
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitTop = 2
         ExplicitWidth = 32
       end
       object lblWebsite: TLabel
         AlignWithMargins = True
         Left = 4
-        Top = 46
+        Top = 69
         Width = 494
         Height = 13
         Margins.Left = 4
@@ -137,12 +141,13 @@ object frmCreator: TfrmCreator
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitTop = 46
         ExplicitWidth = 105
       end
       object edtMail: TEdit
         AlignWithMargins = True
         Left = 4
-        Top = 107
+        Top = 130
         Width = 494
         Height = 21
         Margins.Left = 4
@@ -151,12 +156,12 @@ object frmCreator: TfrmCreator
         Margins.Bottom = 4
         Align = alTop
         TabOrder = 2
-        Text = 'Your E-Mail address'
+        ExplicitTop = 107
       end
       object edtName: TEdit
         AlignWithMargins = True
         Left = 4
-        Top = 19
+        Top = 42
         Width = 494
         Height = 21
         Margins.Left = 4
@@ -165,12 +170,12 @@ object frmCreator: TfrmCreator
         Margins.Bottom = 4
         Align = alTop
         TabOrder = 0
-        Text = 'Your name'
+        ExplicitTop = 19
       end
       object edtWebsite: TEdit
         AlignWithMargins = True
         Left = 4
-        Top = 63
+        Top = 86
         Width = 494
         Height = 21
         Margins.Left = 4
@@ -179,12 +184,12 @@ object frmCreator: TfrmCreator
         Margins.Bottom = 4
         Align = alTop
         TabOrder = 1
-        Text = 'Your website'
+        ExplicitTop = 63
       end
       object grbAppAuthor: TGroupBox
         AlignWithMargins = True
         Left = 4
-        Top = 183
+        Top = 195
         Width = 494
         Height = 154
         Margins.Left = 4
@@ -193,6 +198,7 @@ object frmCreator: TfrmCreator
         Margins.Bottom = 4
         Align = alTop
         TabOrder = 5
+        ExplicitTop = 183
         object lblAppAuthor: TLabel
           AlignWithMargins = True
           Left = 6
@@ -225,7 +231,7 @@ object frmCreator: TfrmCreator
           Margins.Right = 4
           Margins.Bottom = 0
           Align = alTop
-          Caption = 'Website (optional)'
+          Caption = 'Application Website (optional)'
           Enabled = False
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -233,7 +239,7 @@ object frmCreator: TfrmCreator
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
           ParentFont = False
-          ExplicitWidth = 105
+          ExplicitWidth = 171
         end
         object lblAppMail: TLabel
           AlignWithMargins = True
@@ -246,7 +252,7 @@ object frmCreator: TfrmCreator
           Margins.Right = 4
           Margins.Bottom = 0
           Align = alTop
-          Caption = 'E-Mail (optional)'
+          Caption = 'App Author'#39's E-Mail (optional)'
           Enabled = False
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -254,7 +260,7 @@ object frmCreator: TfrmCreator
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
           ParentFont = False
-          ExplicitWidth = 93
+          ExplicitWidth = 169
         end
         object edtAppAuthor: TEdit
           AlignWithMargins = True
@@ -269,7 +275,6 @@ object frmCreator: TfrmCreator
           Align = alTop
           Enabled = False
           TabOrder = 0
-          Text = 'The application author'#39's name'
         end
         object edtAppWebsite: TEdit
           AlignWithMargins = True
@@ -284,7 +289,6 @@ object frmCreator: TfrmCreator
           Align = alTop
           Enabled = False
           TabOrder = 1
-          Text = 'Website of the application'
         end
         object edtAppMail: TEdit
           AlignWithMargins = True
@@ -299,19 +303,18 @@ object frmCreator: TfrmCreator
           Align = alTop
           Enabled = False
           TabOrder = 2
-          Text = 'Mail of the application'#39's author'
         end
       end
       object memAuthorHelp: TMemo
         AlignWithMargins = True
         Left = 4
-        Top = 138
+        Top = 161
         Width = 494
-        Height = 43
+        Height = 28
         Margins.Left = 4
         Margins.Top = 6
         Margins.Right = 4
-        Margins.Bottom = 0
+        Margins.Bottom = 4
         Align = alTop
         BevelInner = bvNone
         BevelOuter = bvNone
@@ -322,22 +325,43 @@ object frmCreator: TfrmCreator
           
             'If you are not the original author of this application and porte' +
             'd it, tick the check-box and enter the '
-          'details of the original author in the boxes below that.'
-          
-            'If you are the original author, just ignore those following fiel' +
-            'ds.')
+          'details of the original author in the boxes below that.')
         ReadOnly = True
         TabOrder = 3
+        ExplicitTop = 160
       end
       object cbxPort: TCheckBox
         AlignWithMargins = True
         Left = 18
-        Top = 178
+        Top = 189
         Width = 86
         Height = 17
         Caption = 'This is a port'
         TabOrder = 4
         OnClick = cbxPortClick
+      end
+      object Memo2: TMemo
+        AlignWithMargins = True
+        Left = 4
+        Top = 6
+        Width = 494
+        Height = 13
+        Margins.Left = 4
+        Margins.Top = 6
+        Margins.Right = 4
+        Margins.Bottom = 4
+        Align = alTop
+        BevelInner = bvNone
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        Color = clBtnFace
+        Enabled = False
+        Lines.Strings = (
+          
+            'Enter your details below (no matter whether you created or porte' +
+            'd the application).')
+        ReadOnly = True
+        TabOrder = 6
       end
     end
     object pgcMain3: TTabSheet
@@ -401,7 +425,6 @@ object frmCreator: TfrmCreator
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitTop = 321
         ExplicitWidth = 62
       end
       object lblSubcategory: TLabel
@@ -487,7 +510,6 @@ object frmCreator: TfrmCreator
         Margins.Bottom = 4
         Align = alTop
         TabOrder = 0
-        Text = 'Application title'
       end
       object memDescription: TMemo
         AlignWithMargins = True
@@ -505,7 +527,6 @@ object frmCreator: TfrmCreator
           'Use multiple lines if you really have to')
         ScrollBars = ssVertical
         TabOrder = 1
-        ExplicitHeight = 252
       end
       object pnlExe: TPanel
         AlignWithMargins = True
@@ -520,7 +541,6 @@ object frmCreator: TfrmCreator
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 2
-        ExplicitTop = 338
         object edtExe: TEdit
           Left = 0
           Top = 0
@@ -555,7 +575,6 @@ object frmCreator: TfrmCreator
         Margins.Bottom = 4
         Align = alBottom
         TabOrder = 5
-        ExplicitTop = 284
         object lblStartdir: TLabel
           AlignWithMargins = True
           Left = 6
@@ -596,7 +615,7 @@ object frmCreator: TfrmCreator
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
           ParentFont = False
-          ExplicitLeft = 8
+          ExplicitWidth = 115
         end
         object edtStartdir: TEdit
           AlignWithMargins = True
@@ -611,9 +630,6 @@ object frmCreator: TfrmCreator
           Align = alTop
           Enabled = False
           TabOrder = 1
-          ExplicitLeft = 4
-          ExplicitTop = 19
-          ExplicitWidth = 494
         end
         object edtArguments: TEdit
           AlignWithMargins = True
@@ -628,9 +644,6 @@ object frmCreator: TfrmCreator
           Align = alTop
           Enabled = False
           TabOrder = 0
-          ExplicitLeft = 4
-          ExplicitTop = 19
-          ExplicitWidth = 494
         end
       end
       object cbxExeSettings: TCheckBox
@@ -661,9 +674,6 @@ object frmCreator: TfrmCreator
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 7
-        ExplicitLeft = 0
-        ExplicitTop = 359
-        ExplicitWidth = 502
         object pnlVMajor: TPanel
           AlignWithMargins = True
           Left = 6
@@ -677,7 +687,6 @@ object frmCreator: TfrmCreator
           Align = alLeft
           BevelOuter = bvNone
           TabOrder = 0
-          ExplicitLeft = 0
           object lblVMajor: TLabel
             AlignWithMargins = True
             Left = 0
@@ -727,7 +736,6 @@ object frmCreator: TfrmCreator
               800000808000008080000080800000808000}
             OnDownClick = spbVMajorDownClick
             OnUpClick = spbVMajorUpClick
-            ExplicitHeight = 71
           end
           object edtVMajor: TEdit
             Left = 0
@@ -743,6 +751,7 @@ object frmCreator: TfrmCreator
             ParentFont = False
             TabOrder = 1
             Text = '1'
+            ExplicitHeight = 21
           end
         end
         object pnlVMinor: TPanel
@@ -758,7 +767,6 @@ object frmCreator: TfrmCreator
           Align = alLeft
           BevelOuter = bvNone
           TabOrder = 1
-          ExplicitLeft = 0
           object lblVMinor: TLabel
             AlignWithMargins = True
             Left = 0
@@ -808,7 +816,6 @@ object frmCreator: TfrmCreator
               800000808000008080000080800000808000}
             OnDownClick = spbVMajorDownClick
             OnUpClick = spbVMajorUpClick
-            ExplicitHeight = 71
           end
           object edtVMinor: TEdit
             Left = 0
@@ -824,6 +831,7 @@ object frmCreator: TfrmCreator
             ParentFont = False
             TabOrder = 1
             Text = '0'
+            ExplicitHeight = 21
           end
         end
         object pnlVRelease: TPanel
@@ -839,7 +847,6 @@ object frmCreator: TfrmCreator
           Align = alLeft
           BevelOuter = bvNone
           TabOrder = 2
-          ExplicitLeft = 0
           object lblVRelease: TLabel
             AlignWithMargins = True
             Left = 0
@@ -889,7 +896,6 @@ object frmCreator: TfrmCreator
               800000808000008080000080800000808000}
             OnDownClick = spbVMajorDownClick
             OnUpClick = spbVMajorUpClick
-            ExplicitHeight = 71
           end
           object edtVRelease: TEdit
             Left = 0
@@ -905,6 +911,7 @@ object frmCreator: TfrmCreator
             ParentFont = False
             TabOrder = 1
             Text = '0'
+            ExplicitHeight = 21
           end
         end
         object pnlVBuild: TPanel
@@ -920,7 +927,6 @@ object frmCreator: TfrmCreator
           Align = alLeft
           BevelOuter = bvNone
           TabOrder = 3
-          ExplicitLeft = 0
           object lblVBuild: TLabel
             AlignWithMargins = True
             Left = 0
@@ -970,7 +976,6 @@ object frmCreator: TfrmCreator
               800000808000008080000080800000808000}
             OnDownClick = spbVMajorDownClick
             OnUpClick = spbVMajorUpClick
-            ExplicitHeight = 71
           end
           object edtVBuild: TEdit
             Left = 0
@@ -986,6 +991,7 @@ object frmCreator: TfrmCreator
             ParentFont = False
             TabOrder = 1
             Text = '0'
+            ExplicitHeight = 21
           end
         end
         object pnlVType: TPanel
@@ -1000,8 +1006,6 @@ object frmCreator: TfrmCreator
           Align = alLeft
           BevelOuter = bvNone
           TabOrder = 4
-          ExplicitLeft = 236
-          ExplicitTop = 15
           object lblVType: TLabel
             AlignWithMargins = True
             Left = 0
@@ -1079,7 +1083,7 @@ object frmCreator: TfrmCreator
           Left = 6
           Top = 19
           Width = 490
-          Height = 43
+          Height = 70
           Margins.Left = 4
           Margins.Top = 4
           Margins.Right = 4
@@ -1100,7 +1104,11 @@ object frmCreator: TfrmCreator
             
               'Try to supply shots of different parts of the application, to ge' +
               't people interested (not just the title '
-            'screen for example).')
+            'screen for example).'
+            
+              'Put the most representive shot top in the list, it will be displ' +
+              'ayed first (or only) by applications like '
+            'PNDManager or PND websites.')
           ParentFont = False
           ReadOnly = True
           TabOrder = 0
@@ -1108,9 +1116,9 @@ object frmCreator: TfrmCreator
         object scbScreenshots: TScrollBox
           AlignWithMargins = True
           Left = 6
-          Top = 86
+          Top = 113
           Width = 490
-          Height = 311
+          Height = 284
           Margins.Left = 4
           Margins.Top = 4
           Margins.Right = 4
@@ -1120,15 +1128,17 @@ object frmCreator: TfrmCreator
           VertScrollBar.Tracking = True
           Align = alClient
           TabOrder = 1
+          ExplicitLeft = 8
         end
         object pnlScreenButtons: TPanel
           Left = 2
-          Top = 62
+          Top = 89
           Width = 498
           Height = 20
           Align = alTop
           BevelOuter = bvNone
           TabOrder = 2
+          ExplicitTop = 62
           object btnScreenAdd: TButton
             AlignWithMargins = True
             Left = 417
@@ -1319,7 +1329,7 @@ object frmCreator: TfrmCreator
         Left = 0
         Top = 0
         Width = 502
-        Height = 252
+        Height = 237
         Align = alTop
         Caption = '   License   '
         Font.Charset = DEFAULT_CHARSET
@@ -1407,7 +1417,6 @@ object frmCreator: TfrmCreator
           Font.Style = []
           ParentFont = False
           TabOrder = 1
-          Text = 'URL to a site describing the license'
         end
         object edtSourceURL: TEdit
           AlignWithMargins = True
@@ -1427,18 +1436,17 @@ object frmCreator: TfrmCreator
           Font.Style = []
           ParentFont = False
           TabOrder = 2
-          Text = 'URL to a repo or file containing the source'
         end
         object memLicenseHelp: TMemo
           AlignWithMargins = True
           Left = 6
           Top = 149
           Width = 490
-          Height = 101
+          Height = 82
           Margins.Left = 4
           Margins.Top = 2
           Margins.Right = 4
-          Margins.Bottom = 0
+          Margins.Bottom = 4
           Align = alClient
           BevelInner = bvNone
           BevelOuter = bvNone
@@ -1453,20 +1461,22 @@ object frmCreator: TfrmCreator
           Lines.Strings = (
             'You may enter any license or choose one of the presets.'
             
-              'If the game is not open-source, enter "none" or "other" as the n' +
-              'ame and leave the other fields '
-            'blank.'
+              'If the game is not open-source, enter "none" as the name and lea' +
+              've the other fields blank.'
             
-              'Additionally for commercial applications enter "commercial" as t' +
-              'he name.'
+              'Additionally for commercial applications do the same, but use "c' +
+              'ommercial" as the name.'
             'Both URL-fields are optional, but recommended (if applicable).'
             
-              'Consider packaging your code with the PND, too, in case online h' +
-              'osting becomes unavailable at one '
-            'point.')
+              'The Source-code URL should point to a VCS repo or a download lin' +
+              'k of a zip for example.'
+            
+              'Consider packing your code into the PND, too - online hosting ma' +
+              'y become unavailable.')
           ParentFont = False
           ReadOnly = True
           TabOrder = 3
+          ExplicitHeight = 101
         end
         object cobLicense: TComboBox
           AlignWithMargins = True
@@ -1493,14 +1503,14 @@ object frmCreator: TfrmCreator
       object grbAdvanced: TGroupBox
         AlignWithMargins = True
         Left = 0
-        Top = 256
+        Top = 241
         Width = 502
-        Height = 252
+        Height = 242
         Margins.Left = 0
         Margins.Top = 4
         Margins.Right = 0
         Margins.Bottom = 0
-        Align = alClient
+        Align = alTop
         Caption = '   Advanced   '
         Constraints.MaxHeight = 256
         Constraints.MinHeight = 18
@@ -1680,7 +1690,7 @@ object frmCreator: TfrmCreator
           Left = 6
           Top = 207
           Width = 490
-          Height = 43
+          Height = 33
           Margins.Left = 4
           Margins.Top = 2
           Margins.Right = 4
@@ -1706,6 +1716,8 @@ object frmCreator: TfrmCreator
           ParentFont = False
           ReadOnly = True
           TabOrder = 5
+          ExplicitLeft = 8
+          ExplicitHeight = 31
         end
       end
     end
