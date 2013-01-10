@@ -1,3 +1,4 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <PXML xmlns="http://openpandora.org/namespaces/PXML">
   <package id="required,string,id">
     <author name="required,string" website="optional,string,website" email="optional,string,email"/>
@@ -15,7 +16,6 @@
     <exec command="required,string,path" arguments="optional,string" startdir="optional,string,dir" standalone="optional,boolean" background="optional,boolean" x11="optional,set,req,stop,ignore"/>
     <author name="required,string" website="optional,string,website" email="optional,string,email"/>
     <version major="required,string,version" minor="required,string,version" release="required,string,version" build="required,string,version" type="optional,set,alpha,beta,release"/>
-    <osversion major="required,string,version" minor="required,string,version" release="required,string,version" build="required,string,version"/>
     <titles>
       <title lang="required,string,language">CONTENT</title>
     </titles>
@@ -37,9 +37,5 @@
         <subcategory name="required,subcategory"/>
       </category>
     </categories>
-    <associations>
-      <association name="required,string" filetype="required,string,mime" exec="required,string"/>
-    </associations>
-    <clockspeed frequency="required,string,integer"/>
   </application>
 </PXML>

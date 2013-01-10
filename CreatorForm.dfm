@@ -1036,11 +1036,10 @@ object frmCreator: TfrmCreator
             Font.Name = 'Tahoma'
             Font.Style = []
             ItemHeight = 13
-            ItemIndex = 2
             ParentFont = False
             TabOrder = 0
-            Text = 'release'
             Items.Strings = (
+              ''
               'alpha'
               'beta'
               'release')
@@ -1711,7 +1710,7 @@ object frmCreator: TfrmCreator
     object pgcMain6: TTabSheet
       Caption = '6 - Finish...'
       ImageIndex = 5
-      object Label1: TLabel
+      object lblErrors: TLabel
         AlignWithMargins = True
         Left = 4
         Top = 6
@@ -1744,6 +1743,15 @@ object frmCreator: TfrmCreator
           'All valid, good job!')
         ReadOnly = True
         TabOrder = 0
+      end
+      object Button1: TButton
+        Left = 224
+        Top = 245
+        Width = 75
+        Height = 25
+        Caption = 'Button1'
+        TabOrder = 1
+        OnClick = Button1Click
       end
     end
   end

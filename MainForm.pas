@@ -178,6 +178,7 @@ uses
     {$Ifdef Win32}
     VSTDragDrop_win, VSTIcons_win, ShellStuff_win, ControlHideFix;
     {$Else}
+    {These files have yet to be created and the Windows code ported over}
     VSTDragDrop_lin, VSTIcons_lin, ShellStuff_lin;
     {$Endif}
 

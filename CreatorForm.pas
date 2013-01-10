@@ -4,7 +4,7 @@ interface
 
 uses
   Messages, Classes, Graphics, Controls, Forms, Dialogs, Spin, ComCtrls,
-  StdCtrls, ExtCtrls, SysUtils, GraphicEx, Types, XMLDoc, XMLIntf, StrUtils,
+  StdCtrls, ExtCtrls, GraphicEx, Types, XMLDoc, XMLIntf,
   InputFilterFunctions;
 
 type
@@ -60,7 +60,7 @@ type
     btnCancel: TButton;
     cbxPort: TCheckBox;
     memHello: TMemo;
-    Label1: TLabel;
+    lblErrors: TLabel;
     redErrors: TRichEdit;
     grbScreenshots: TGroupBox;
     grbIcon: TGroupBox;
@@ -110,6 +110,8 @@ type
     cobVType: TComboBox;
     sadPXML: TSaveDialog;
     memDetailsHelp: TMemo;
+    Button1: TButton;
+    procedure Button1Click(Sender: TObject);
     procedure cbxExeSettingsClick(Sender: TObject);
     procedure btnScreenAddClick(Sender: TObject);
     procedure btnPrevClick(Sender: TObject);
@@ -163,12 +165,15 @@ const
     LOG_SUCCESS_COLOR : TColor     = clGreen;
     CATEGORIES_FILE : String       = 'tools\Categories.txt';
     LICENSES_FILE   : String       = 'tools\Licenses.txt';
+    PXML_FRAMEWORK_FILE : String   = 'tools\PXML_default_creator.xml';
 
 var
   frmCreator: TfrmCreator;
   InputFilter: TInputFilters;
 
 implementation
+
+uses {$Ifdef Win32}ControlHideFix,{$Endif} MainForm, StrUtils, SysUtils;
 
 {$R *.dfm}
 
@@ -200,13 +205,12 @@ procedure TfrmCreator.CheckForErrors;
 begin         
     redErrors.Clear;
     // Page 2
-    if (Length(edtName.Text) = 0) OR (edtName.Text = 'Your name') then
+    if (Length(edtName.Text) = 0) then
         AddError('Invalid or no author name specified!',LOG_ERROR_COLOR);
-    if (cbxPort.Checked) AND ((Length(edtAppAuthor.Text) = 0) OR
-        (edtAppAuthor.Text = 'The application author''s name')) then
+    if (cbxPort.Checked) AND (Length(edtAppAuthor.Text) = 0) then
         AddError('Invalid or no name for the application author entered!',LOG_ERROR_COLOR);   
     // Page 3
-    if (Length(edtTitle.Text) = 0) OR (edtTitle.Text = 'Application title') then
+    if (Length(edtTitle.Text) = 0) then
         AddError('Invalid or no title set!',LOG_ERROR_COLOR);  
     if Length(edtExe.Text) = 0 then
         AddError('No executable specified!',LOG_ERROR_COLOR)
@@ -235,20 +239,91 @@ begin
 
     if redErrors.Lines.Count = 0 then
     begin
-        AddError('All valid, good job!',LOG_SUCCESS_COLOR);      
+        AddError('All valid, good job!',LOG_SUCCESS_COLOR);
         btnNext.Enabled := true;
     end else
         btnNext.Enabled := false;
 end;
 
 procedure TfrmCreator.SavePXMLFile(const Filename: string);
+var Doc : IXMLDocument;
+    packNode, appNode, temp : IXMLNode;
+    tempEdit : TCustomEdit;
 begin
-    //
+    try
+        Doc := LoadXMLDocument(PXML_FRAMEWORK_FILE);
+        if Doc.Active then
+        begin
+            temp := Doc.ChildNodes.FindNode('PXML');
+            packNode := temp.ChildNodes.FindNode('package');
+            appNode := temp.ChildNodes.FindNode('application');
+            if (packNode = nil) OR (appNode = nil) then
+            begin
+                raise EInOutError.Create('The default PXML framework file is broken, ' +
+                    'please reinstall the program.');
+            end;
+
+            // author
+            temp := packNode.ChildNodes.FindNode('author');
+            temp.Attributes['name'] := edtName.Text;
+            if Length(edtWebsite.Text) > 0 then
+                temp.Attributes['website'] := edtWebsite.Text;
+            if Length(edtMail.Text) > 0 then
+                temp.Attributes['email'] := edtMail.Text;
+            temp := appNode.GetChildNodes.FindNode('author');
+            if cbxPort.Checked then
+            begin
+                temp.Attributes['name'] := edtAppAuthor.Text;
+                if Length(edtAppWebsite.Text) > 0 then
+                    temp.Attributes['website'] := edtAppWebsite.Text;
+                if Length(edtAppMail.Text) > 0 then
+                    temp.Attributes['email'] := edtAppMail.Text;
+            end else
+            begin
+                temp.Attributes['name'] := edtName.Text;
+                if Length(edtWebsite.Text) > 0 then
+                    temp.Attributes['website'] := edtWebsite.Text;
+                if Length(edtMail.Text) > 0 then
+                    temp.Attributes['email'] := edtMail.Text;
+            end;
+            // version
+            temp := packNode.ChildNodes.FindNode('version');
+            temp.Attributes['major'] := edtVMajor.Text;
+            temp.Attributes['minor'] := edtVMinor.Text;
+            temp.Attributes['release'] := edtVRelease.Text;
+            temp.Attributes['build'] := edtVBuild.Text;
+            if Length(cobVType.Text) > 0 then
+                temp.Attributes['type'] := cobVType.Text;   
+            temp := appNode.ChildNodes.FindNode('version');
+            temp.Attributes['major'] := edtVMajor.Text;
+            temp.Attributes['minor'] := edtVMinor.Text;
+            temp.Attributes['release'] := edtVRelease.Text;
+            temp.Attributes['build'] := edtVBuild.Text;
+            if Length(cobVType.Text) > 0 then
+                temp.Attributes['type'] := cobVType.Text;
+            // title
+            temp := packNode.ChildNodes.FindNode('titles').ChildNodes.FindNode('title');
+            temp.NodeValue := edtTitle.Text;
+
+            Doc.SaveToFile(Filename);    
+            Doc.Active := false;
+        end else
+            raise EReadError.Create('Failed loading the default PXML framework file, ' +
+                'please reinstall the program.');
+    except
+        on E : Exception do
+        begin
+            frmMain.LogLine('Error creating the PXML file: ' + E.ClassName + ' - ' +
+                E.ClassName, LOG_ERROR_COLOR);   
+            Doc.Active := false;
+        end;
+    end;
 end;
 
 // --- Form --------------------------------------------------------------------
 
 procedure TfrmCreator.FormCreate(Sender: TObject);
+var dummy : TButtonEvent;
 begin
     edtMail.OnKeyPress := InputFilter.EmailKeyPress;
     edtAppMail.OnKeyPress := InputFilter.EmailKeyPress;
@@ -258,6 +333,10 @@ begin
     edtVRelease.OnKeyPress := InputFilter.VersionKeyPress;
     edtVBuild.OnKeyPress := InputFilter.VersionKeyPress;
     edtAppdata.OnKeyPress := InputFilter.FolderKeyPress;
+    {$Ifdef Win32}  
+    KeyPreview := true;
+    OnKeyDown := dummy.KeyDown;
+    {$Endif}
 end;
 
 procedure TfrmCreator.FormShow(Sender: TObject);
@@ -344,6 +423,11 @@ var temp : TScreenshotPanel;
 begin
     if opdIcon.Execute then
         temp := TScreenshotPanel.Create(opdIcon.FileName);
+end;
+
+procedure TfrmCreator.Button1Click(Sender: TObject);
+begin
+    SavePXMLFile('test.xml');
 end;
 
 // --- Checkboxes --------------------------------------------------------------
