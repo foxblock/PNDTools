@@ -110,8 +110,7 @@ type
     cobVType: TComboBox;
     sadPXML: TSaveDialog;
     memDetailsHelp: TMemo;
-    Button1: TButton;
-    procedure Button1Click(Sender: TObject);
+    procedure btnRemoveClick(Sender: TObject);
     procedure cbxExeSettingsClick(Sender: TObject);
     procedure btnScreenAddClick(Sender: TObject);
     procedure btnPrevClick(Sender: TObject);
@@ -148,10 +147,13 @@ type
     btnMoveDown: TButton;
     procedure btnRemoveClick(Sender: TObject);
     procedure btnMoveUpClick(Sender: TObject);
-    procedure btnMoveDownClick(Sender: TObject);
+    procedure btnMoveDownClick(Sender: TObject); 
+  private
+    pFilepath : String;
   public
     constructor Create(AOwner : TComponent); overload;
     constructor Create(const Filepath: String); overload;
+    property Filepath : String read pFilepath;
   end;
 
   TStringPair = class
@@ -166,6 +168,7 @@ const
     CATEGORIES_FILE : String       = 'tools\Categories.txt';
     LICENSES_FILE   : String       = 'tools\Licenses.txt';
     PXML_FRAMEWORK_FILE : String   = 'tools\PXML_default_creator.xml';
+    PXML_NAMESPACE : String        = 'http://openpandora.org/namespaces/PXML';
 
 var
   frmCreator: TfrmCreator;
@@ -246,66 +249,119 @@ begin
 end;
 
 procedure TfrmCreator.SavePXMLFile(const Filename: string);
+
+    function CreateNode(Name : String; Parent : IXMLNode) : IXMLNode;
+    begin
+        Result := Parent.AddChild(Name,PXML_NAMESPACE);
+    end;
+
+    // A few "makros" for data used in both package and application nodes
+    procedure SetAuthorInfo(Node : IXMLNode; const Name, Website, Mail : TCustomEdit);
+    begin
+        Node.Attributes['name'] := Name.Text;
+        if Length(Website.Text) > 0 then
+            Node.Attributes['website'] := Website.Text;
+        if Length(Mail.Text) > 0 then
+            Node.Attributes['email'] := Mail.Text;
+    end;
+    procedure SetVersionInfo(Node : IXMLNode);
+    begin
+        Node.Attributes['major'] := edtVMajor.Text;
+        Node.Attributes['minor'] := edtVMinor.Text;
+        Node.Attributes['release'] := edtVRelease.Text;
+        Node.Attributes['build'] := edtVBuild.Text;
+        if Length(cobVType.Text) > 0 then
+            Node.Attributes['type'] := cobVType.Text;
+    end;
+    procedure SetTitleDescrInfo(Node : IXMLNode);
+    var temp : IXMLNode;
+    begin
+        temp := CreateNode('title',CreateNode('titles',Node));
+        temp.Attributes['lang'] := 'en_EN';
+        temp.NodeValue := edtTitle.Text;
+        temp := CreateNode('description',CreateNode('descriptions',Node));
+        temp.Attributes['lang'] := 'en_EN';
+        temp.NodeValue := memDescription.Text;
+    end;
+
 var Doc : IXMLDocument;
-    packNode, appNode, temp : IXMLNode;
+    temp, packNode, appNode, pxmlNode : IXMLNode;
     tempEdit : TCustomEdit;
+    I : Integer;
 begin
     try
-        Doc := LoadXMLDocument(PXML_FRAMEWORK_FILE);
+        Doc := NewXMLDocument('1.0');
         if Doc.Active then
-        begin
-            temp := Doc.ChildNodes.FindNode('PXML');
-            packNode := temp.ChildNodes.FindNode('package');
-            appNode := temp.ChildNodes.FindNode('application');
-            if (packNode = nil) OR (appNode = nil) then
-            begin
-                raise EInOutError.Create('The default PXML framework file is broken, ' +
-                    'please reinstall the program.');
-            end;
+        begin     
+            Doc.Encoding := 'UTF-8';
+            Doc.Options := [doNodeAutoCreate,doNodeAutoIndent];
+            pxmlNode := Doc.AddChild('PXML',PXML_NAMESPACE);
 
-            // author
-            temp := packNode.ChildNodes.FindNode('author');
-            temp.Attributes['name'] := edtName.Text;
-            if Length(edtWebsite.Text) > 0 then
-                temp.Attributes['website'] := edtWebsite.Text;
-            if Length(edtMail.Text) > 0 then
-                temp.Attributes['email'] := edtMail.Text;
-            temp := appNode.GetChildNodes.FindNode('author');
+            // package
+            packNode := CreateNode('package',pxmlNode);
+            packNode.Attributes['id'] := edtID.Text;
+
+            SetAuthorInfo(CreateNode('author',packNode),edtName,edtWebsite,edtMail);
+            SetVersionInfo(CreateNode('version',packNode));
+            SetTitleDescrInfo(packNode);
+            temp := CreateNode('icon',packNode);
+            temp.Attributes['src'] := edtIcon.Text;
+
+            // application
+            appNode := CreateNode('application',pxmlNode);
+            appNode.Attributes['id'] := edtID.Text;
+            if Length(edtAppdata.Text) > 0 then
+                appNode.Attributes['appdata'] := edtAppdata.Text;
+            temp := CreateNode('exec',appNode);
+            temp.Attributes['command'] := edtExe.Text;
+            if cbxExeSettings.Checked then
+            begin
+                if Length(edtArguments.Text) > 0 then
+                    temp.Attributes['arguments'] := edtArguments.Text;
+                if Length(edtStartdir.Text) > 0 then
+                    temp.Attributes['startdir'] := edtStartdir.Text;
+            end;
+            temp := CreateNode('author',appNode);
             if cbxPort.Checked then
             begin
-                temp.Attributes['name'] := edtAppAuthor.Text;
-                if Length(edtAppWebsite.Text) > 0 then
-                    temp.Attributes['website'] := edtAppWebsite.Text;
-                if Length(edtAppMail.Text) > 0 then
-                    temp.Attributes['email'] := edtAppMail.Text;
+                SetAuthorInfo(temp,edtAppAuthor,edtAppWebsite,edtAppMail);
             end else
             begin
-                temp.Attributes['name'] := edtName.Text;
-                if Length(edtWebsite.Text) > 0 then
-                    temp.Attributes['website'] := edtWebsite.Text;
-                if Length(edtMail.Text) > 0 then
-                    temp.Attributes['email'] := edtMail.Text;
+                SetAuthorInfo(temp,edtName,edtWebsite,edtMail);
             end;
-            // version
-            temp := packNode.ChildNodes.FindNode('version');
-            temp.Attributes['major'] := edtVMajor.Text;
-            temp.Attributes['minor'] := edtVMinor.Text;
-            temp.Attributes['release'] := edtVRelease.Text;
-            temp.Attributes['build'] := edtVBuild.Text;
-            if Length(cobVType.Text) > 0 then
-                temp.Attributes['type'] := cobVType.Text;   
-            temp := appNode.ChildNodes.FindNode('version');
-            temp.Attributes['major'] := edtVMajor.Text;
-            temp.Attributes['minor'] := edtVMinor.Text;
-            temp.Attributes['release'] := edtVRelease.Text;
-            temp.Attributes['build'] := edtVBuild.Text;
-            if Length(cobVType.Text) > 0 then
-                temp.Attributes['type'] := cobVType.Text;
-            // title
-            temp := packNode.ChildNodes.FindNode('titles').ChildNodes.FindNode('title');
+            SetVersionInfo(CreateNode('version',appNode));
+            SetTitleDescrInfo(appNode);
+            temp := Doc.CreateNode('Extra block for compatibility with OS versions before HF6',ntComment);
+            appNode.ChildNodes.Add(temp);
+            temp := CreateNode('title',appNode);
+            temp.Attributes['lang'] := 'en_EN';
             temp.NodeValue := edtTitle.Text;
+            temp := CreateNode('description',appNode);
+            temp.Attributes['lang'] := 'en_EN';
+            temp.NodeValue := memDescription.Text;  
+            temp := Doc.CreateNode('END Extra block',ntComment);
+            appNode.ChildNodes.Add(temp);
+            temp := CreateNode('icon',appNode);
+            temp.Attributes['src'] := edtIcon.Text;
+            temp := CreateNode('license',CreateNode('licenses',appNode));
+            temp.Attributes['name'] := cobLicense.Text;
+            if Length(edtLicenseURL.Text) > 0 then
+                temp.Attributes['url'] := edtLicenseURL.Text;
+            if Length(edtSourceURL.Text) > 0 then
+                temp.Attributes['sourcecodeurl'] := edtSourceURL.Text;
+            temp := CreateNode('previewpics',appNode);
+            // TODO: Implement datastructure for ordered previewpics
+            for I := 0 to scbScreenshots.ControlCount - 1 do
+                CreateNode('previewpix',temp).Attributes['src'] :=
+                    (scbScreenshots.Controls[I] as TScreenshotPanel).Filepath;
+            temp := CreateNode('info',appNode);
+            // TODO: Implement UI elements for info node
+            temp := CreateNode('category',CreateNode('categories',appNode));
+            temp.Attributes['name'] := cobCategory.Text;
+            temp := CreateNode('subcategory',temp);
+            temp.Attributes['name'] := cobSubcategory.Text;
 
-            Doc.SaveToFile(Filename);    
+            Doc.SaveToFile(Filename);
             Doc.Active := false;
         end else
             raise EReadError.Create('Failed loading the default PXML framework file, ' +
@@ -314,7 +370,7 @@ begin
         on E : Exception do
         begin
             frmMain.LogLine('Error creating the PXML file: ' + E.ClassName + ' - ' +
-                E.ClassName, LOG_ERROR_COLOR);   
+                E.Message, LOG_ERROR_COLOR);   
             Doc.Active := false;
         end;
     end;
@@ -418,16 +474,23 @@ begin
     end;
 end;
 
+procedure TfrmCreator.btnRemoveClick(Sender: TObject);
+begin
+    while scbScreenshots.ControlCount > 0 do
+    begin
+        (scbScreenshots.Controls[0] as TScreenshotPanel).Free;
+    end;
+    btnRemove.Enabled := false;
+end;
+
 procedure TfrmCreator.btnScreenAddClick(Sender: TObject);
 var temp : TScreenshotPanel;
 begin
     if opdIcon.Execute then
+    begin
         temp := TScreenshotPanel.Create(opdIcon.FileName);
-end;
-
-procedure TfrmCreator.Button1Click(Sender: TObject);
-begin
-    SavePXMLFile('test.xml');
+        btnRemove.Enabled := true;
+    end;
 end;
 
 // --- Checkboxes --------------------------------------------------------------
@@ -464,19 +527,19 @@ end;
 
 procedure TfrmCreator.pgcMainChange(Sender: TObject);
 
-function IDFormatString(const S : String) : String;
-var I : Integer;
-begin
-    Result := S;
-    I := 1;
-    while I <= Length(Result) do
+    function IDFormatString(const S : String) : String;
+    var I : Integer;
     begin
-        if NOT (Result[I] in ['a'..'z','A'..'Z','0'..'9','-','.','/']) then
-            Result := LeftStr(Result,I-1) + RightStr(Result,Length(Result)-I)
-        else
-            Inc(I);
+        Result := S;
+        I := 1;
+        while I <= Length(Result) do
+        begin
+            if NOT (Result[I] in ['a'..'z','A'..'Z','0'..'9','-','.','/']) then
+                Result := LeftStr(Result,I-1) + RightStr(Result,Length(Result)-I)
+            else
+                Inc(I);
+        end;
     end;
-end;
 
 begin
     if pgcMain.ActivePageIndex = 0 then
@@ -586,6 +649,7 @@ constructor TScreenshotPanel.Create(const Filepath: String);
 var temp : TPicture;
 begin
     Create(frmCreator);
+    pFilepath := Filepath;
     Parent := frmCreator.scbScreenshots;
     Align := alTop;
     Height := 100;
@@ -739,6 +803,8 @@ end;
 
 procedure TScreenshotPanel.btnRemoveClick(Sender: TObject);
 begin
+    if frmCreator.scbScreenshots.ControlCount = 1 then
+        frmCreator.btnRemove.Enabled := false;
     Self.Free;
 end;
 
