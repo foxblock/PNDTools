@@ -59,7 +59,7 @@
     <previewpics elemdesc="descriptions\previewpics.rtf" min="0">
       <pic src="required,string,path" elemdesc="descriptions\previewpics.rtf" max="0"/>
     </previewpics> 
-    <info name="required,string" type="required,set,test/html,text/plain" src="required,string,path" elemdesc="descriptions\info.rtf" min="0"/>
+    <info name="required,string" type="required,set,text/html,text/plain" src="required,string,path" elemdesc="descriptions\info.rtf" min="0"/>
     <categories elemdesc="descriptions\category.rtf">
       <category name="required,category" elemdesc="descriptions\category.rtf" max="0">
         <subcategory name="required,subcategory" elemdesc="descriptions\category.rtf"/>
