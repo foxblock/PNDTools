@@ -371,7 +371,7 @@ begin
             if (Length(edtInfoFile.Text) > 0) AND (Length(edtInfoName.Text) > 0) then
             begin
                 temp := CreateNode('info',appNode);
-                temp.Attributes['name'] := edtInfoName.Text;
+                temp.Attributes['name'] := StringReplace(edtInfoName.Text,'<yourapptitlehere>',edtTitle.Text,[]);
                 if (ExtractFileExt(edtInfoFile.Text) = '.htm') OR (ExtractFileExt(edtInfoFile.Text) = '.html') then
                     temp.Attributes['type'] := 'text/html'
                 else
@@ -561,7 +561,7 @@ procedure TfrmCreator.pgcMainChange(Sender: TObject);
         I := 1;
         while I <= Length(Result) do
         begin
-            if NOT (Result[I] in ['a'..'z','A'..'Z','0'..'9','-','.','/']) then
+            if NOT (Result[I] in ['a'..'z','A'..'Z','0'..'9','.','_','!','-','+']) then
                 Result := LeftStr(Result,I-1) + RightStr(Result,Length(Result)-I)
             else
                 Inc(I);
