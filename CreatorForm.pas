@@ -50,11 +50,6 @@ type
     edtSourceURL: TEdit;
     memLicenseHelp: TMemo;
     cobLicense: TComboBox;
-    grbAdvanced: TGroupBox;
-    lblID: TLabel;
-    edtID: TEdit;
-    memAdvancedHelp: TMemo;
-    cbxAdvanced: TCheckBox;
     pnlButtons: TPanel;
     btnNext: TButton;
     btnCancel: TButton;
@@ -64,7 +59,6 @@ type
     redErrors: TRichEdit;
     grbScreenshots: TGroupBox;
     grbIcon: TGroupBox;
-    memIDHelp: TMemo;
     pnlIcon: TPanel;
     lblIcon: TLabel;
     pnlIconPath: TPanel;
@@ -72,9 +66,6 @@ type
     btnIcon: TButton;
     lblIconInfo: TLabel;
     memScreenshotsHelp: TMemo;
-    edtAppdata: TEdit;
-    lblAppdata: TLabel;
-    memAppdataHelp: TMemo;
     opdIcon: TOpenDialog;
     scbScreenshots: TScrollBox;
     pnlScreenButtons: TPanel;
@@ -85,7 +76,6 @@ type
     grbExeSettings: TGroupBox;
     cbxExeSettings: TCheckBox;
     lblStartdir: TLabel;
-    edtStartdir: TEdit;
     edtArguments: TEdit;
     lblArguments: TLabel;
     grbVersion: TGroupBox;
@@ -110,6 +100,27 @@ type
     cobVType: TComboBox;
     sadPXML: TSaveDialog;
     memDetailsHelp: TMemo;
+    grbInfo: TGroupBox;
+    lblInfoFile: TLabel;
+    Panel1: TPanel;
+    edtInfoFile: TEdit;
+    btnInfoFile: TButton;
+    lblInfoName: TLabel;
+    edtInfoName: TEdit;
+    grbAdvanced: TGroupBox;
+    lblID: TLabel;
+    lblAppdata: TLabel;
+    edtID: TEdit;
+    memAdvancedHelp: TMemo;
+    cbxAdvanced: TCheckBox;
+    memIDHelp: TMemo;
+    edtAppdata: TEdit;
+    memAppdataHelp: TMemo;
+    memInfo: TMemo;
+    pnlStartdir: TPanel;
+    edtStartdir: TEdit;
+    btnStartdir: TButton;
+    procedure btnStartdirClick(Sender: TObject);
     procedure btnRemoveClick(Sender: TObject);
     procedure cbxExeSettingsClick(Sender: TObject);
     procedure btnScreenAddClick(Sender: TObject);
@@ -167,7 +178,6 @@ const
     LOG_SUCCESS_COLOR : TColor     = clGreen;
     CATEGORIES_FILE : String       = 'tools\Categories.txt';
     LICENSES_FILE   : String       = 'tools\Licenses.txt';
-    PXML_FRAMEWORK_FILE : String   = 'tools\PXML_default_creator.xml';
     PXML_NAMESPACE : String        = 'http://openpandora.org/namespaces/PXML';
 
 var
@@ -202,6 +212,7 @@ begin
     redErrors.SelStart := count;
     redErrors.SelLength := Length(redErrors.Text) - redErrors.SelStart;
     redErrors.SelAttributes.Color := Color;
+    redErrors.ClearSelection;
 end;
 
 procedure TfrmCreator.CheckForErrors;
@@ -211,7 +222,7 @@ begin
     if (Length(edtName.Text) = 0) then
         AddError('Invalid or no author name specified!',LOG_ERROR_COLOR);
     if (cbxPort.Checked) AND (Length(edtAppAuthor.Text) = 0) then
-        AddError('Invalid or no name for the application author entered!',LOG_ERROR_COLOR);   
+        AddError('Invalid or no name for the application author entered!',LOG_ERROR_COLOR);
     // Page 3
     if (Length(edtTitle.Text) = 0) then
         AddError('Invalid or no title set!',LOG_ERROR_COLOR);  
@@ -242,10 +253,13 @@ begin
 
     if redErrors.Lines.Count = 0 then
     begin
-        AddError('All valid, good job!',LOG_SUCCESS_COLOR);
+        AddError('All valid, good job! The PXML can now be created by pressing the ''Finish'' button at the bottom.',LOG_SUCCESS_COLOR);
         btnNext.Enabled := true;
     end else
+    begin  
+        AddError('You need to go back and fix these errors before the PXML can be created.',LOG_ERROR_COLOR);
         btnNext.Enabled := false;
+    end;
 end;
 
 procedure TfrmCreator.SavePXMLFile(const Filename: string);
@@ -354,8 +368,16 @@ begin
             for I := 0 to scbScreenshots.ControlCount - 1 do
                 CreateNode('previewpix',temp).Attributes['src'] :=
                     (scbScreenshots.Controls[I] as TScreenshotPanel).Filepath;
-            temp := CreateNode('info',appNode);
-            // TODO: Implement UI elements for info node
+            if (Length(edtInfoFile.Text) > 0) AND (Length(edtInfoName.Text) > 0) then
+            begin
+                temp := CreateNode('info',appNode);
+                temp.Attributes['name'] := edtInfoName.Text;
+                if (ExtractFileExt(edtInfoFile.Text) = '.htm') OR (ExtractFileExt(edtInfoFile.Text) = '.html') then
+                    temp.Attributes['type'] := 'text/html'
+                else
+                    temp.Attributes['type'] := 'text/plain';
+                temp.Attributes['src'] := edtInfoFile.Text;
+            end;
             temp := CreateNode('category',CreateNode('categories',appNode));
             temp.Attributes['name'] := cobCategory.Text;
             temp := CreateNode('subcategory',temp);
@@ -493,6 +515,11 @@ begin
     end;
 end;
 
+procedure TfrmCreator.btnStartdirClick(Sender: TObject);
+begin
+
+end;
+
 // --- Checkboxes --------------------------------------------------------------
 
 procedure TfrmCreator.cbxAdvancedClick(Sender: TObject);
@@ -546,7 +573,7 @@ begin
         btnPrev.Enabled := false
     else
         btnPrev.Enabled := true;
-    if pgcMain.ActivePageIndex = 4 then
+    if pgcMain.ActivePageIndex = 5 then
     begin
         if (Length(edtTitle.Text) > 0) AND (Length(edtName.Text) > 0) AND NOT cbxAdvanced.Checked then
         begin

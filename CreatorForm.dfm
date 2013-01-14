@@ -3,10 +3,10 @@ object frmCreator: TfrmCreator
   Top = 145
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'PXML Creation Utility'
-  ClientHeight = 572
+  ClientHeight = 542
   ClientWidth = 510
   Color = clBtnFace
-  Constraints.MinHeight = 610
+  Constraints.MinHeight = 560
   Constraints.MinWidth = 526
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -24,20 +24,22 @@ object frmCreator: TfrmCreator
     Left = 0
     Top = 0
     Width = 510
-    Height = 539
+    Height = 509
     Margins.Left = 5
     Margins.Top = 0
     Margins.Right = 0
     Margins.Bottom = 0
-    ActivePage = pgcMain1
+    ActivePage = pgcMain5
     Align = alClient
     MultiLine = True
     Style = tsFlatButtons
     TabOrder = 0
     OnChange = pgcMainChange
+    ExplicitHeight = 539
     object pgcMain1: TTabSheet
       Caption = '1 - Hello...'
       ImageIndex = 4
+      ExplicitHeight = 508
       object memHello: TMemo
         AlignWithMargins = True
         Left = 4
@@ -81,6 +83,7 @@ object frmCreator: TfrmCreator
     end
     object pgcMain2: TTabSheet
       Caption = '2 - Author...'
+      ExplicitHeight = 508
       object lblMail: TLabel
         AlignWithMargins = True
         Left = 4
@@ -326,9 +329,15 @@ object frmCreator: TfrmCreator
         AlignWithMargins = True
         Left = 18
         Top = 189
-        Width = 86
+        Width = 97
         Height = 17
         Caption = 'This is a port'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
         TabOrder = 5
         OnClick = cbxPortClick
       end
@@ -359,10 +368,11 @@ object frmCreator: TfrmCreator
     object pgcMain3: TTabSheet
       Caption = '3 - Application...'
       ImageIndex = 1
+      ExplicitHeight = 508
       object lblCategory: TLabel
         AlignWithMargins = True
         Left = 4
-        Top = 422
+        Top = 392
         Width = 494
         Height = 13
         Margins.Left = 4
@@ -377,6 +387,7 @@ object frmCreator: TfrmCreator
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitTop = 422
         ExplicitWidth = 52
       end
       object lblDescription: TLabel
@@ -402,7 +413,7 @@ object frmCreator: TfrmCreator
       object lblExe: TLabel
         AlignWithMargins = True
         Left = 4
-        Top = 195
+        Top = 165
         Width = 494
         Height = 13
         Margins.Left = 4
@@ -417,12 +428,13 @@ object frmCreator: TfrmCreator
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitTop = 195
         ExplicitWidth = 62
       end
       object lblSubcategory: TLabel
         AlignWithMargins = True
         Left = 4
-        Top = 466
+        Top = 436
         Width = 494
         Height = 13
         Margins.Left = 4
@@ -437,6 +449,7 @@ object frmCreator: TfrmCreator
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitTop = 466
         ExplicitWidth = 77
       end
       object lblTitle: TLabel
@@ -462,7 +475,7 @@ object frmCreator: TfrmCreator
       object cobCategory: TComboBox
         AlignWithMargins = True
         Left = 4
-        Top = 439
+        Top = 409
         Width = 494
         Height = 21
         Margins.Left = 4
@@ -474,11 +487,12 @@ object frmCreator: TfrmCreator
         ItemHeight = 13
         TabOrder = 3
         OnChange = cobCategoryChange
+        ExplicitTop = 439
       end
       object cobSubcategory: TComboBox
         AlignWithMargins = True
         Left = 4
-        Top = 483
+        Top = 453
         Width = 494
         Height = 21
         Margins.Left = 4
@@ -489,6 +503,7 @@ object frmCreator: TfrmCreator
         Style = csDropDownList
         ItemHeight = 13
         TabOrder = 4
+        ExplicitTop = 483
       end
       object edtTitle: TEdit
         AlignWithMargins = True
@@ -508,7 +523,7 @@ object frmCreator: TfrmCreator
         Left = 4
         Top = 63
         Width = 494
-        Height = 126
+        Height = 96
         Margins.Left = 4
         Margins.Top = 4
         Margins.Right = 4
@@ -519,11 +534,12 @@ object frmCreator: TfrmCreator
           'Use multiple lines if you really have to')
         ScrollBars = ssVertical
         TabOrder = 1
+        ExplicitHeight = 126
       end
       object pnlExe: TPanel
         AlignWithMargins = True
         Left = 4
-        Top = 212
+        Top = 182
         Width = 494
         Height = 21
         Margins.Left = 4
@@ -533,6 +549,7 @@ object frmCreator: TfrmCreator
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 2
+        ExplicitTop = 212
         object edtExe: TEdit
           Left = 0
           Top = 0
@@ -558,7 +575,7 @@ object frmCreator: TfrmCreator
       object grbExeSettings: TGroupBox
         AlignWithMargins = True
         Left = 4
-        Top = 241
+        Top = 211
         Width = 494
         Height = 109
         Margins.Left = 4
@@ -567,6 +584,7 @@ object frmCreator: TfrmCreator
         Margins.Bottom = 4
         Align = alBottom
         TabOrder = 5
+        ExplicitTop = 241
         object lblStartdir: TLabel
           AlignWithMargins = True
           Left = 6
@@ -609,20 +627,6 @@ object frmCreator: TfrmCreator
           ParentFont = False
           ExplicitWidth = 115
         end
-        object edtStartdir: TEdit
-          AlignWithMargins = True
-          Left = 6
-          Top = 78
-          Width = 482
-          Height = 21
-          Margins.Left = 4
-          Margins.Top = 4
-          Margins.Right = 4
-          Margins.Bottom = 4
-          Align = alTop
-          Enabled = False
-          TabOrder = 1
-        end
         object edtArguments: TEdit
           AlignWithMargins = True
           Left = 6
@@ -637,20 +641,65 @@ object frmCreator: TfrmCreator
           Enabled = False
           TabOrder = 0
         end
+        object pnlStartdir: TPanel
+          AlignWithMargins = True
+          Left = 6
+          Top = 78
+          Width = 482
+          Height = 21
+          Margins.Left = 4
+          Margins.Top = 4
+          Margins.Right = 4
+          Margins.Bottom = 4
+          Align = alTop
+          BevelOuter = bvNone
+          TabOrder = 1
+          ExplicitLeft = 4
+          ExplicitTop = 212
+          ExplicitWidth = 494
+          object edtStartdir: TEdit
+            Left = 0
+            Top = 0
+            Width = 461
+            Height = 21
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
+            Align = alClient
+            TabOrder = 0
+          end
+          object btnStartdir: TButton
+            Left = 461
+            Top = 0
+            Width = 21
+            Height = 21
+            Align = alRight
+            Caption = '...'
+            TabOrder = 1
+            OnClick = btnStartdirClick
+          end
+        end
       end
       object cbxExeSettings: TCheckBox
         Left = 18
-        Top = 236
-        Width = 172
+        Top = 205
+        Width = 197
         Height = 17
         Caption = 'Advanced Executable Settings'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
         TabOrder = 6
         OnClick = cbxExeSettingsClick
       end
       object grbVersion: TGroupBox
         AlignWithMargins = True
         Left = 4
-        Top = 358
+        Top = 328
         Width = 494
         Height = 58
         Margins.Left = 4
@@ -666,6 +715,7 @@ object frmCreator: TfrmCreator
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 7
+        ExplicitTop = 358
         object pnlVMajor: TPanel
           AlignWithMargins = True
           Left = 6
@@ -1050,12 +1100,13 @@ object frmCreator: TfrmCreator
     object pgcMain4: TTabSheet
       Caption = '4 - Images...'
       ImageIndex = 2
+      ExplicitHeight = 508
       object grbScreenshots: TGroupBox
         AlignWithMargins = True
         Left = 0
         Top = 105
         Width = 502
-        Height = 403
+        Height = 373
         Margins.Left = 0
         Margins.Top = 4
         Margins.Right = 0
@@ -1069,6 +1120,7 @@ object frmCreator: TfrmCreator
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 1
+        ExplicitHeight = 403
         object memScreenshotsHelp: TMemo
           AlignWithMargins = True
           Left = 6
@@ -1109,7 +1161,7 @@ object frmCreator: TfrmCreator
           Left = 6
           Top = 113
           Width = 490
-          Height = 284
+          Height = 254
           Margins.Left = 4
           Margins.Top = 4
           Margins.Right = 4
@@ -1119,6 +1171,7 @@ object frmCreator: TfrmCreator
           VertScrollBar.Tracking = True
           Align = alClient
           TabOrder = 2
+          ExplicitHeight = 284
         end
         object pnlScreenButtons: TPanel
           Left = 2
@@ -1232,14 +1285,14 @@ object frmCreator: TfrmCreator
             Margins.Right = 4
             Margins.Bottom = 0
             Align = alTop
-            Caption = 'Path'
+            Caption = 'File'
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -11
             Font.Name = 'Tahoma'
             Font.Style = [fsBold]
             ParentFont = False
-            ExplicitWidth = 26
+            ExplicitWidth = 19
           end
           object lblIconInfo: TLabel
             AlignWithMargins = True
@@ -1315,9 +1368,10 @@ object frmCreator: TfrmCreator
     object pgcMain5: TTabSheet
       Caption = '5 - Additional...'
       ImageIndex = 5
+      ExplicitHeight = 508
       object grbLicense: TGroupBox
         Left = 0
-        Top = 0
+        Top = 178
         Width = 502
         Height = 237
         Align = alTop
@@ -1328,7 +1382,8 @@ object frmCreator: TfrmCreator
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         ParentFont = False
-        TabOrder = 0
+        TabOrder = 1
+        ExplicitTop = 0
         object lblLicense: TLabel
           AlignWithMargins = True
           Left = 6
@@ -1489,14 +1544,225 @@ object frmCreator: TfrmCreator
           OnChange = cobLicenseChange
         end
       end
-      object grbAdvanced: TGroupBox
-        AlignWithMargins = True
+      object grbInfo: TGroupBox
         Left = 0
-        Top = 241
+        Top = 0
+        Width = 502
+        Height = 178
+        Align = alTop
+        Caption = '   Info (optional)   '
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 0
+        object lblInfoFile: TLabel
+          AlignWithMargins = True
+          Left = 6
+          Top = 17
+          Width = 490
+          Height = 13
+          Margins.Left = 4
+          Margins.Top = 2
+          Margins.Right = 4
+          Margins.Bottom = 0
+          Align = alTop
+          Caption = 'File'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          ParentFont = False
+          ExplicitWidth = 19
+        end
+        object lblInfoName: TLabel
+          AlignWithMargins = True
+          Left = 6
+          Top = 61
+          Width = 490
+          Height = 13
+          Margins.Left = 4
+          Margins.Top = 2
+          Margins.Right = 4
+          Margins.Bottom = 0
+          Align = alTop
+          Caption = 'Name'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          ParentFont = False
+          ExplicitWidth = 32
+        end
+        object Panel1: TPanel
+          AlignWithMargins = True
+          Left = 6
+          Top = 34
+          Width = 490
+          Height = 21
+          Margins.Left = 4
+          Margins.Top = 4
+          Margins.Right = 4
+          Margins.Bottom = 4
+          Align = alTop
+          BevelOuter = bvNone
+          TabOrder = 0
+          ExplicitLeft = 4
+          ExplicitTop = 212
+          ExplicitWidth = 494
+          object edtInfoFile: TEdit
+            Left = 0
+            Top = 0
+            Width = 469
+            Height = 21
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
+            Align = alClient
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 0
+          end
+          object btnInfoFile: TButton
+            Left = 469
+            Top = 0
+            Width = 21
+            Height = 21
+            Align = alRight
+            Caption = '...'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 1
+          end
+        end
+        object edtInfoName: TEdit
+          AlignWithMargins = True
+          Left = 6
+          Top = 78
+          Width = 490
+          Height = 21
+          Margins.Left = 4
+          Margins.Top = 4
+          Margins.Right = 4
+          Margins.Bottom = 4
+          Align = alTop
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 1
+        end
+        object memInfo: TMemo
+          AlignWithMargins = True
+          Left = 6
+          Top = 105
+          Width = 490
+          Height = 67
+          Margins.Left = 4
+          Margins.Top = 2
+          Margins.Right = 4
+          Margins.Bottom = 4
+          Align = alClient
+          BevelInner = bvNone
+          BevelOuter = bvNone
+          BorderStyle = bsNone
+          Color = clBtnFace
+          Enabled = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Lines.Strings = (
+            
+              'This is the readme/documentation for your app, it can be a simpl' +
+              'e text or a html file.'
+            
+              'It will show up as the '#39'name'#39' above in the '#39'documentation'#39' menu ' +
+              'on the Pandora.'
+            
+              'Therefore don'#39't enter a generic name such as '#39'Readme'#39', rather in' +
+              'clude the title of your app for '
+            'example ('#39'<yourapptitlehere> Readme'#39' works fine).'
+            'It is entirely optional, but highly recommended.')
+          ParentFont = False
+          ReadOnly = True
+          TabOrder = 2
+          ExplicitLeft = 8
+          ExplicitTop = 107
+          ExplicitHeight = 55
+        end
+      end
+    end
+    object pgcMain6: TTabSheet
+      Caption = '6 - Finish...'
+      ImageIndex = 5
+      ExplicitHeight = 508
+      object lblErrors: TLabel
+        AlignWithMargins = True
+        Left = 4
+        Top = 262
+        Width = 494
+        Height = 13
+        Margins.Left = 4
+        Margins.Top = 20
+        Margins.Right = 4
+        Margins.Bottom = 6
+        Align = alTop
+        Caption = 'The following errors or warnings have occured:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitTop = 254
+        ExplicitWidth = 263
+      end
+      object redErrors: TRichEdit
+        AlignWithMargins = True
+        Left = 10
+        Top = 281
+        Width = 488
+        Height = 193
+        Margins.Left = 10
+        Margins.Top = 0
+        Margins.Right = 4
+        Margins.Bottom = 4
+        Align = alClient
+        BevelInner = bvNone
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        Color = clBtnFace
+        Lines.Strings = (
+          'All valid, good job!')
+        ReadOnly = True
+        TabOrder = 0
+        ExplicitTop = 25
+        ExplicitHeight = 479
+      end
+      object grbAdvanced: TGroupBox
+        Left = 0
+        Top = 0
         Width = 502
         Height = 242
         Margins.Left = 0
-        Margins.Top = 4
+        Margins.Top = 0
         Margins.Right = 0
         Margins.Bottom = 0
         Align = alTop
@@ -1510,6 +1776,7 @@ object frmCreator: TfrmCreator
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 1
+        ExplicitTop = 241
         object lblID: TLabel
           AlignWithMargins = True
           Left = 6
@@ -1708,53 +1975,16 @@ object frmCreator: TfrmCreator
         end
       end
     end
-    object pgcMain6: TTabSheet
-      Caption = '6 - Finish...'
-      ImageIndex = 5
-      object lblErrors: TLabel
-        AlignWithMargins = True
-        Left = 4
-        Top = 6
-        Width = 494
-        Height = 13
-        Margins.Left = 4
-        Margins.Top = 6
-        Margins.Right = 4
-        Margins.Bottom = 6
-        Align = alTop
-        Caption = 'The following errors or warnings have occured:'
-        ExplicitWidth = 226
-      end
-      object redErrors: TRichEdit
-        AlignWithMargins = True
-        Left = 10
-        Top = 25
-        Width = 488
-        Height = 479
-        Margins.Left = 10
-        Margins.Top = 0
-        Margins.Right = 4
-        Margins.Bottom = 4
-        Align = alClient
-        BevelInner = bvNone
-        BevelOuter = bvNone
-        BorderStyle = bsNone
-        Color = clBtnFace
-        Lines.Strings = (
-          'All valid, good job!')
-        ReadOnly = True
-        TabOrder = 0
-      end
-    end
   end
   object pnlButtons: TPanel
     Left = 0
-    Top = 539
+    Top = 509
     Width = 510
     Height = 33
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitTop = 539
     object btnNext: TButton
       AlignWithMargins = True
       Left = 348
@@ -1809,13 +2039,14 @@ object frmCreator: TfrmCreator
     FilterIndex = 0
     Options = [ofHideReadOnly, ofPathMustExist, ofFileMustExist, ofEnableSizing]
     Title = 'Select icon for the PND'
-    Top = 544
+    Left = 8
+    Top = 512
   end
   object sadPXML: TSaveDialog
     Filter = 'PXML file (*.xml)'
     Options = [ofOverwritePrompt, ofHideReadOnly, ofPathMustExist, ofCreatePrompt, ofEnableSizing]
     Title = 'Select a destination for the PXML file'
-    Left = 32
-    Top = 544
+    Left = 40
+    Top = 512
   end
 end
