@@ -13,7 +13,8 @@ uses
   ControlHideFix in 'ControlHideFix.pas',
   PXMLForm in 'PXMLForm.pas' {frmPXML},
   CreatorForm in 'CreatorForm.pas' {frmCreator},
-  InputFilterFunctions in 'InputFilterFunctions.pas';
+  InputFilterFunctions in 'InputFilterFunctions.pas',
+  FileSelectForm in 'FileSelectForm.pas' {frmFileSelect};
 
 {$R *.res}
 
@@ -24,5 +25,6 @@ begin
   Application.CreateForm(TfrmPXML, frmPXML);
   Application.CreateForm(TfrmPXML, frmPXML);
   Application.CreateForm(TfrmCreator, frmCreator);
+  Application.CreateForm(TfrmFileSelect, frmFileSelect);
   Application.Run;
 end.

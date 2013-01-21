@@ -120,6 +120,7 @@ type
     pnlStartdir: TPanel;
     edtStartdir: TEdit;
     btnStartdir: TButton;
+    procedure btnExeClick(Sender: TObject);
     procedure btnStartdirClick(Sender: TObject);
     procedure btnRemoveClick(Sender: TObject);
     procedure cbxExeSettingsClick(Sender: TObject);
@@ -186,7 +187,8 @@ var
 
 implementation
 
-uses {$Ifdef Win32}ControlHideFix,{$Endif} MainForm, StrUtils, SysUtils;
+uses {$Ifdef Win32}ControlHideFix,{$Endif} MainForm, FileSelectForm, StrUtils,
+    SysUtils;
 
 {$R *.dfm}
 
@@ -212,7 +214,7 @@ begin
     redErrors.SelStart := count;
     redErrors.SelLength := Length(redErrors.Text) - redErrors.SelStart;
     redErrors.SelAttributes.Color := Color;
-    redErrors.ClearSelection;
+    redErrors.SelLength := 0;
 end;
 
 procedure TfrmCreator.CheckForErrors;
@@ -463,6 +465,12 @@ end;
 procedure TfrmCreator.btnCancelClick(Sender: TObject);
 begin
     Close;
+end;
+
+procedure TfrmCreator.btnExeClick(Sender: TObject);
+begin
+    frmFileSelect.CopyTreeData(frmMain.vstFiles,frmMain.Settings.ShowIcons);  
+    frmFileSelect.Execute;
 end;
 
 procedure TfrmCreator.btnIconClick(Sender: TObject);

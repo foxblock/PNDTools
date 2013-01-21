@@ -29,7 +29,7 @@ object frmCreator: TfrmCreator
     Margins.Top = 0
     Margins.Right = 0
     Margins.Bottom = 0
-    ActivePage = pgcMain6
+    ActivePage = pgcMain3
     Align = alClient
     MultiLine = True
     Style = tsFlatButtons
@@ -559,6 +559,7 @@ object frmCreator: TfrmCreator
           Align = alRight
           Caption = '...'
           TabOrder = 1
+          OnClick = btnExeClick
         end
       end
       object grbExeSettings: TGroupBox
@@ -1339,6 +1340,12 @@ object frmCreator: TfrmCreator
               Margins.Bottom = 0
               Align = alRight
               Caption = '...'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
               TabOrder = 1
               OnClick = btnIconClick
             end

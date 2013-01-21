@@ -277,7 +277,8 @@ begin
     redLog.Lines.Add(TextToAdd);
     redLog.SelStart := count;
     redLog.SelLength := Length(redLog.Text) - redLog.SelStart;
-    redLog.SelAttributes.Color := Color;
+    redLog.SelAttributes.Color := Color; 
+    redLog.SelLength := 0;
 end;
 
 procedure TfrmMain.OpenPND(const FileName: string);   

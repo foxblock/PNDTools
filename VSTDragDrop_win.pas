@@ -67,7 +67,7 @@ begin
                     dmNowhere: Sender.ProcessDrop(DataObject,nil,Effect,amAddChildLast);
                     dmAbove: Sender.ProcessDrop(DataObject,Sender.DropTargetNode,Effect,amInsertBefore);
                     dmOnNode:
-                    begin;
+                    begin
                         if not IsFile(Sender,Sender.DropTargetNode) then
                             Sender.ProcessDrop(DataObject,Sender.DropTargetNode,Effect,amAddChildLast);
                     end;
