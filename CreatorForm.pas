@@ -302,7 +302,6 @@ procedure TfrmCreator.SavePXMLFile(const Filename: string);
 
 var Doc : IXMLDocument;
     temp, packNode, appNode, pxmlNode : IXMLNode;
-    tempEdit : TCustomEdit;
     I : Integer;
 begin
     try
@@ -468,8 +467,9 @@ begin
 end;
 
 procedure TfrmCreator.btnExeClick(Sender: TObject);
-begin
-    frmFileSelect.CopyTreeData(frmMain.vstFiles,frmMain.Settings.ShowIcons);  
+begin            
+    frmFileSelect.SetFilter('.txt;.png','Some files');  
+    frmFileSelect.CopyTreeData(frmMain.vstFiles,frmMain.Settings.ShowIcons);
     frmFileSelect.Execute;
 end;
 

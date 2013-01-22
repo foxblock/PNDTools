@@ -1,7 +1,7 @@
 object frmFileSelect: TfrmFileSelect
   Left = 0
   Top = 0
-  Caption = 'frmFileSelect'
+  Caption = 'Select file from PND contents...'
   ClientHeight = 344
   ClientWidth = 358
   Color = clBtnFace
@@ -20,7 +20,7 @@ object frmFileSelect: TfrmFileSelect
     Left = 4
     Top = 4
     Width = 350
-    Height = 307
+    Height = 286
     Margins.Left = 4
     Margins.Top = 4
     Margins.Right = 4
@@ -44,12 +44,13 @@ object frmFileSelect: TfrmFileSelect
     TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScroll, toAutoScrollOnExpand, toAutoTristateTracking, toAutoDeleteMovedNodes]
     TreeOptions.PaintOptions = [toShowButtons, toShowDropmark, toShowHorzGridLines, toShowRoot, toShowTreeLines, toShowVertGridLines, toThemeAware, toFullVertGridLines]
     TreeOptions.SelectionOptions = [toFullRowSelect]
+    OnChange = vstFilesChange
     OnCompareNodes = vstFilesCompareNodes
     OnGetText = vstFilesGetText
     OnGetImageIndex = vstFilesGetImageIndex
     OnHeaderClick = vstFilesHeaderClick
     OnInitNode = vstFilesInitNode
-    ExplicitLeft = -1
+    ExplicitHeight = 307
     Columns = <
       item
         Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
@@ -66,8 +67,6 @@ object frmFileSelect: TfrmFileSelect
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 454
-    ExplicitWidth = 644
     object btnCancel: TButton
       AlignWithMargins = True
       Left = 279
@@ -82,8 +81,6 @@ object frmFileSelect: TfrmFileSelect
       Caption = 'Cancel'
       TabOrder = 0
       OnClick = btnCancelClick
-      ExplicitLeft = 384
-      ExplicitTop = 24
     end
     object btnOK: TButton
       AlignWithMargins = True
@@ -97,10 +94,47 @@ object frmFileSelect: TfrmFileSelect
       Margins.Bottom = 4
       Align = alRight
       Caption = 'OK'
+      Enabled = False
       TabOrder = 1
       OnClick = btnOKClick
-      ExplicitLeft = 384
-      ExplicitTop = 24
+    end
+  end
+  object pnlFilter: TPanel
+    Left = 0
+    Top = 294
+    Width = 358
+    Height = 21
+    Align = alBottom
+    BevelOuter = bvNone
+    TabOrder = 2
+    object lblFilterLbl: TLabel
+      AlignWithMargins = True
+      Left = 8
+      Top = 4
+      Width = 32
+      Height = 13
+      Margins.Left = 8
+      Margins.Top = 4
+      Margins.Right = 0
+      Margins.Bottom = 4
+      Align = alLeft
+      Caption = 'Filter:'
+      ExplicitLeft = 4
+    end
+    object lblFilter: TLabel
+      AlignWithMargins = True
+      Left = 44
+      Top = 4
+      Width = 306
+      Height = 13
+      Margins.Left = 4
+      Margins.Top = 4
+      Margins.Right = 8
+      Margins.Bottom = 4
+      Align = alClient
+      Caption = 'Text files (*.txt)'
+      ExplicitLeft = 40
+      ExplicitWidth = 79
     end
   end
 end
