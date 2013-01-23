@@ -117,9 +117,8 @@ type
     edtAppdata: TEdit;
     memAppdataHelp: TMemo;
     memInfo: TMemo;
-    pnlStartdir: TPanel;
-    edtStartdir: TEdit;
     btnStartdir: TButton;
+    edtStartdir: TEdit;
     procedure btnExeClick(Sender: TObject);
     procedure btnStartdirClick(Sender: TObject);
     procedure btnRemoveClick(Sender: TObject);
@@ -144,6 +143,7 @@ type
     procedure AddError(const TextToAdd : String; const Color: TColor = clBlack);
     procedure CheckForErrors;
     procedure SavePXMLFile(const Filename : String);
+    procedure LoadIcon(const Filename : String);
   public
     { Public declarations }
   end;
@@ -161,10 +161,10 @@ type
     procedure btnMoveUpClick(Sender: TObject);
     procedure btnMoveDownClick(Sender: TObject); 
   private
-    pFilepath : String;
-  public
+    pFilepath : String; 
     constructor Create(AOwner : TComponent); overload;
-    constructor Create(const Filepath: String); overload;
+  public
+    constructor Create(const Filepath: String; const ImageFile : String); overload;
     property Filepath : String read pFilepath;
   end;
 
@@ -174,9 +174,6 @@ type
   end;
 
 const                   
-    LOG_ERROR_COLOR : TColor       = clRed;
-    LOG_WARNING_COLOR : TColor     = $0000AAFF;
-    LOG_SUCCESS_COLOR : TColor     = clGreen;
     CATEGORIES_FILE : String       = 'tools\Categories.txt';
     LICENSES_FILE   : String       = 'tools\Licenses.txt';
     PXML_NAMESPACE : String        = 'http://openpandora.org/namespaces/PXML';
@@ -188,7 +185,7 @@ var
 implementation
 
 uses {$Ifdef Win32}ControlHideFix,{$Endif} MainForm, FileSelectForm, StrUtils,
-    SysUtils;
+    SysUtils, VSTUtils, VirtualTrees;
 
 {$R *.dfm}
 
@@ -222,44 +219,44 @@ begin
     redErrors.Clear;
     // Page 2
     if (Length(edtName.Text) = 0) then
-        AddError('Invalid or no author name specified!',LOG_ERROR_COLOR);
+        AddError('Invalid or no author name specified!',frmMain.LOG_ERROR_COLOR);
     if (cbxPort.Checked) AND (Length(edtAppAuthor.Text) = 0) then
-        AddError('Invalid or no name for the application author entered!',LOG_ERROR_COLOR);
+        AddError('Invalid or no name for the application author entered!',frmMain.LOG_ERROR_COLOR);
     // Page 3
     if (Length(edtTitle.Text) = 0) then
-        AddError('Invalid or no title set!',LOG_ERROR_COLOR);  
+        AddError('Invalid or no title set!',frmMain.LOG_ERROR_COLOR);
     if Length(edtExe.Text) = 0 then
-        AddError('No executable specified!',LOG_ERROR_COLOR)
+        AddError('No executable specified!',frmMain.LOG_ERROR_COLOR)
     else if not FileExists(edtExe.Text) then
-        AddError('The selected executable does not exist!',LOG_ERROR_COLOR);
+        AddError('The selected executable does not exist!',frmMain.LOG_ERROR_COLOR);
     if Length(cobCategory.Text) = 0 then
-        AddError('No category specified!',LOG_ERROR_COLOR);
+        AddError('No category specified!',frmMain.LOG_ERROR_COLOR);
     if Length(cobSubcategory.Text) = 0 then
-        AddError('No sub-category set!',LOG_ERROR_COLOR);
+        AddError('No sub-category set!',frmMain.LOG_ERROR_COLOR);
     // Page 4
     if Length(edtIcon.Text) = 0 then
-        AddError('No icon specified!',LOG_ERROR_COLOR)
+        AddError('No icon specified!',frmMain.LOG_ERROR_COLOR)
     else if not FileExists(edtIcon.Text) then
-        AddError('The specified icon does not exist!',LOG_ERROR_COLOR); 
+        AddError('The specified icon does not exist!',frmMain.LOG_ERROR_COLOR);
     // Page 5
     if Length(cobLicense.Text) = 0 then
-        AddError('No license set!',LOG_ERROR_COLOR);
+        AddError('No license set!',frmMain.LOG_ERROR_COLOR);
     if cbxAdvanced.Checked then
     begin
         if Length(edtID.Text) = 0 then
-            AddError('Invalid ID entered!',LOG_ERROR_COLOR);
+            AddError('Invalid ID entered!',frmMain.LOG_ERROR_COLOR);
         if Length(edtAppdata.Text) = 0 then
-            AddError('Invalid appdata directory entered!',LOG_ERROR_COLOR);
+            AddError('Invalid appdata directory entered!',frmMain.LOG_ERROR_COLOR);
     end;
     
 
     if redErrors.Lines.Count = 0 then
     begin
-        AddError('All valid, good job! The PXML can now be created by pressing the ''Finish'' button at the bottom.',LOG_SUCCESS_COLOR);
+        AddError('All valid, good job! The PXML can now be created by pressing the ''Finish'' button at the bottom.',frmMain.LOG_SUCCESS_COLOR);
         btnNext.Enabled := true;
     end else
     begin  
-        AddError('You need to go back and fix these errors before the PXML can be created.',LOG_ERROR_COLOR);
+        AddError('You need to go back and fix these errors before the PXML can be created.',frmMain.LOG_ERROR_COLOR);
         btnNext.Enabled := false;
     end;
 end;
@@ -393,9 +390,25 @@ begin
         on E : Exception do
         begin
             frmMain.LogLine('Error creating the PXML file: ' + E.ClassName + ' - ' +
-                E.Message, LOG_ERROR_COLOR);   
+                E.Message, frmMain.LOG_ERROR_COLOR);
             Doc.Active := false;
         end;
+    end;
+end;
+
+procedure TfrmCreator.LoadIcon(const Filename: string);
+var temp : TPicture;
+begin
+    try
+        temp := TPicture.Create;
+        temp.LoadFromFile(Filename);
+        imgIcon.Canvas.StretchDraw(Rect(0,0,imgIcon.Width,imgIcon.Height),temp.Graphic);
+        lblIconInfo.Caption := UpperCase(ExtractFileExt(Filename)) + ', ' +
+                               IntToStr(temp.Width) + 'x' + IntToStr(temp.Height);
+        temp.Free;
+    except
+        lblIconInfo.Caption := 'No icon loaded';
+        temp.Free;
     end;
 end;
 
@@ -412,7 +425,8 @@ begin
     edtVRelease.OnKeyPress := InputFilter.VersionKeyPress;
     edtVBuild.OnKeyPress := InputFilter.VersionKeyPress;
     edtAppdata.OnKeyPress := InputFilter.FolderKeyPress;
-    {$Ifdef Win32}  
+    edtStartdir.OnKeyPress := InputFilter.FolderKeyPress;
+    {$Ifdef Win32}
     KeyPreview := true;
     OnKeyDown := dummy.KeyDown;
     {$Endif}
@@ -467,19 +481,27 @@ begin
 end;
 
 procedure TfrmCreator.btnExeClick(Sender: TObject);
-begin            
-    frmFileSelect.SetFilter('.txt;.png','Some files');  
+begin
+    frmFileSelect.SetFilter('.bin;;.sh','Executable files');
+    frmFileSelect.Caption := 'Select executable...';  
     frmFileSelect.CopyTreeData(frmMain.vstFiles,frmMain.Settings.ShowIcons);
+    frmFileSelect.MultiSelect := false;
     if frmFileSelect.Execute then
         edtExe.Text := frmFileSelect.Filename;
 end;
 
 procedure TfrmCreator.btnIconClick(Sender: TObject);
+var PData : PFileTreeData;
 begin
-    if opdIcon.Execute then
+    frmFileSelect.SetFilter('.png','PNG Image');
+    frmFileSelect.Caption := 'Select icon image...';  
+    frmFileSelect.CopyTreeData(frmMain.vstFiles,frmMain.Settings.ShowIcons);
+    frmFileSelect.MultiSelect := false;
+    if frmFileSelect.Execute then
     begin
-        edtIcon.Text := opdIcon.FileName;
-        edtIconExit(Sender);
+        edtIcon.Text := frmFileSelect.FileName;
+        PData := frmMain.vstFiles.GetNodeData(frmFileSelect.FileNode);
+        LoadIcon(PData.Name);
     end;
 end;
 
@@ -516,17 +538,32 @@ end;
 
 procedure TfrmCreator.btnScreenAddClick(Sender: TObject);
 var temp : TScreenshotPanel;
+    I : Integer;
+    PData : PFileTreeData;
 begin
-    if opdIcon.Execute then
+    frmFileSelect.SetFilter('.png;.jpg;.gif','Image files');
+    frmFileSelect.Caption := 'Select (multiple) screenshots...';  
+    frmFileSelect.CopyTreeData(frmMain.vstFiles,frmMain.Settings.ShowIcons);
+    frmFileSelect.MultiSelect := true;
+    if frmFileSelect.Execute then
     begin
-        temp := TScreenshotPanel.Create(opdIcon.FileName);
+        for I := 0 to frmFileSelect.FileList.Count - 1 do
+        begin
+            PData := frmMain.vstFiles.GetNodeData(frmFileSelect.NodeList[I]);
+            temp := TScreenshotPanel.Create(frmFileSelect.FileList[I],PData.Name);
+        end;
         btnRemove.Enabled := true;
     end;
 end;
 
 procedure TfrmCreator.btnStartdirClick(Sender: TObject);
-begin
-
+begin                
+    frmFileSelect.SetFilter(frmFileSelect.FOLDER_WILDCARD,'Folders');
+    frmFileSelect.Caption := 'Select starting directory...';  
+    frmFileSelect.CopyTreeData(frmMain.vstFiles,frmMain.Settings.ShowIcons);
+    frmFileSelect.MultiSelect := false;
+    if frmFileSelect.Execute then
+        edtStartdir.Text := frmFileSelect.Filename;
 end;
 
 // --- Checkboxes --------------------------------------------------------------
@@ -555,7 +592,7 @@ var I : Integer;
 begin
     for I := 0 to grbExeSettings.ControlCount - 1 do
     begin
-        grbExeSettings.Controls[I].Enabled := (Sender as TCheckBox).Checked;
+        grbExeSettings.Controls[I].Enabled := (Sender as TCheckBox).Checked;    
     end;
 end;
 
@@ -617,19 +654,19 @@ end;
 // --- Icon --------------------------------------------------------------------
 
 procedure TfrmCreator.edtIconExit(Sender: TObject);
-var temp : TPicture;
+var PData : PFileTreeData;
+    Node : PVirtualNode;
 begin
-    try
-        temp := TPicture.Create;
-        temp.LoadFromFile(edtIcon.Text);
-        imgIcon.Canvas.StretchDraw(Rect(0,0,imgIcon.Width,imgIcon.Height),temp.Graphic);
-        lblIconInfo.Caption := UpperCase(ExtractFileExt(edtIcon.Text)) + ', ' +
-                               IntToStr(temp.Width) + 'x' + IntToStr(temp.Height);
-        temp.Free;
-    except
-        lblIconInfo.Caption := 'No icon loaded';
-        temp.Free;
+    if Length(edtIcon.Text) = 0 then
+        Exit;
+    Node := CheckForExistance(frmMain.vstFiles,edtIcon.Text);
+    if Node = nil then
+    begin
+        frmMain.LogLine('Error loading icon file: ' + edtIcon.Text,frmMain.LOG_ERROR_COLOR);
+        Exit;
     end;
+    PData := frmMain.vstFiles.GetNodeData(Node);
+    LoadIcon(PData.Name);
 end;
 
 // --- Category ----------------------------------------------------------------
@@ -681,7 +718,7 @@ begin
     inherited;
 end;
 
-constructor TScreenshotPanel.Create(const Filepath: String);
+constructor TScreenshotPanel.Create(const Filepath: String; const ImageFile : String);
 var temp : TPicture;
 begin
     Create(frmCreator);
@@ -826,7 +863,7 @@ begin
 
     try
         temp := TPicture.Create;
-        temp.LoadFromFile(Filepath);
+        temp.LoadFromFile(ImageFile);
         imgScreenshot.Canvas.StretchDraw(Rect(0,0,imgScreenshot.Width,imgScreenshot.Height),temp.Graphic);
         lblSize.Caption := UpperCase(ExtractFileExt(Filepath)) + ', ' +
                             IntToStr(temp.Width) + 'x' + IntToStr(temp.Height);

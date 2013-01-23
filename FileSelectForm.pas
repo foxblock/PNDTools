@@ -34,18 +34,24 @@ type
       Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
   private       
     FFileList : TStrings;
+    FNodeList : TNodeArray;
     function GetOriginalNodeData(Tree : TBaseVirtualTree; Node : PVirtualNode) : PFileTreeData;
     function GetMultiSelect : Boolean;
     procedure SetMultiSelect(NewValue : Boolean);
     function GetFileName : String;
+    function GetFileNode : PVirtualNode;
     function FileExtInFilters(Data : PFileTreeData) : Boolean;
+    procedure ApplyFilter;
   public
     procedure CopyTreeData(Tree : TBaseVirtualTree; sShowIcons : Boolean);
     procedure SetFilter(const FilterStr : String; const Title : String);
     function Execute : Boolean;
     property MultiSelect : Boolean read GetMultiSelect write SetMultiSelect;
     property Filename : String read GetFilename;
+    property FileNode : PVirtualNode read GetFileNode;
     property FileList : TStrings read FFileList;
+    property NodeList : TNodeArray read FNodeList;
+    const FOLDER_WILDCARD : String = '[folder]';
   end;
 
   rFileMirrorTreeData = record
@@ -53,9 +59,6 @@ type
     IsFiltered : Boolean;
   end;
   PFileMirrorTreeData = ^rFileMirrorTreeData;
-
-const
-  FOLDER_WILDCARD : String = '[folder]';
 
 var
   frmFileSelect: TfrmFileSelect;
@@ -100,6 +103,14 @@ begin
         Result := '';
 end;
 
+function TfrmFileSelect.GetFileNode : PVirtualNode;
+begin
+    if Length(NodeList) > 0 then
+        Result := FNodeList[0]
+    else
+        Result := nil;
+end;
+
 function TfrmFileSelect.FileExtInFilters(Data : PFileTreeData) : Boolean;
 var Ext : String;
     I : Integer;
@@ -127,6 +138,31 @@ begin
                 Exit;
             end;
         end;
+    end;
+end;
+
+procedure TfrmFileSelect.ApplyFilter;
+var Node : PVirtualNode;
+    PData : PFileMirrorTreeData;
+    POrigData : PFileTreeData;
+begin
+    Node := vstFiles.GetFirst();
+    while Node <> nil do
+    begin
+        PData := vstFiles.GetNodeData(Node);
+        POrigData := GetOriginalNodeData(OriginalTree,Node);
+        if vstFiles.HasChildren[Node] OR FileExtInFilters(POrigData) then
+        begin
+            PData.IsFiltered := false; 
+            vstFiles.IsVisible[Node] := cbxFilter.Checked;
+            vstFiles.IsDisabled[Node] := NOT cbxFilter.Checked;
+        end else
+        begin
+            PData.IsFiltered := true;    
+            vstFiles.IsVisible[Node] := NOT cbxFilter.Checked;
+            vstFiles.IsDisabled[Node] := cbxFilter.Checked;
+        end;
+        Node := vstFiles.GetNext(Node);
     end;
 end;
 
@@ -198,8 +234,12 @@ begin
     end;
 end;
 
-function TfrmFileSelect.Execute;
+function TfrmFileSelect.Execute : Boolean;
 begin
+    Successful := false;
+    FFileList.Clear;
+    SetLength(FNodeList,0);
+    vstFiles.ClearSelection;
     ShowModal;
     Result := Successful;
 end;
@@ -216,12 +256,14 @@ procedure TfrmFileSelect.btnOKClick(Sender: TObject);
 var Node : PVirtualNode;
     PData : PFileMirrorTreeData;
 begin
-    FFileList.Clear;
+    // TODO: Fix multiple selection including folders, maybe make those not selectable at all 
     Node := vstFiles.GetFirstSelected();
     while Node <> nil do
     begin
         PData := vstFiles.GetNodeData(Node);
         FFileList.Add(GetFilepathInPND(OriginalTree,PData.OriginalNode));
+        SetLength(FNodeList,Length(FNodeList)+1);
+        FNodeList[High(FNodeList)] := PData.OriginalNode;
         Node := vstFiles.GetNextSelected(Node);
     end;    
     Successful := true;
@@ -264,20 +306,18 @@ end;
 procedure TfrmFileSelect.vstFilesChange(Sender: TBaseVirtualTree;
   Node: PVirtualNode);
 var PData : PFileTreeData;
+    ValidSelectionCount : Integer;
 begin
-    // TODO: Work on this when checkbox changes and with multiple selections
-    btnOK.Enabled := false;
+    Node := vstFiles.GetFirstSelected();
+    ValidSelectionCount := 0;
     while Node <> nil do
     begin
         PData := GetOriginalNodeData(OriginalTree,Node);
-        if (PData.Attr and faDirectory > 0) then
-        begin
-             if (Filters.Count > 1) AND (Filters[0] = FOLDER_WILDCARD) then
-                btnOK.Enabled := true;
-        end else
-            btnOk.Enabled := true;
+        if (PData.Attr and faDirectory = 0) OR ((Filters.Count >= 1) AND (Filters[0] = FOLDER_WILDCARD)) then
+            Inc(ValidSelectionCount);
         Node := vstFiles.GetNextSelected(Node);
     end;
+    btnOK.Enabled := (ValidSelectionCount > 0);
 end;
 
 procedure TfrmFileSelect.vstFilesCompareNodes(Sender: TBaseVirtualTree; Node1,

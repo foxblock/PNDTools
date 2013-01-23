@@ -23,8 +23,8 @@ begin
   Application.CreateForm(TfrmMain, frmMain);
   Application.CreateForm(TfrmOptions, frmOptions);
   Application.CreateForm(TfrmPXML, frmPXML);
-  Application.CreateForm(TfrmPXML, frmPXML);
-  Application.CreateForm(TfrmCreator, frmCreator);
+  Application.CreateForm(TfrmPXML, frmPXML); 
   Application.CreateForm(TfrmFileSelect, frmFileSelect);
+  Application.CreateForm(TfrmCreator, frmCreator);
   Application.Run;
 end.

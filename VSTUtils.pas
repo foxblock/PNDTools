@@ -65,7 +65,8 @@ type
       Case-sensitive check on Linux, in-sensitive on Windows
       Use to make sure no file-conflics will be produced when actually copying files }
     function CheckForExistance(Tree : TBaseVirtualTree; Node : PVirtualNode;
-        const Value : String) : PVirtualNode;
+        const Value : String) : PVirtualNode; overload;
+    function CheckForExistance(Tree : TBaseVirtualTree; const Value : String) : PVirtualNode; overload;
 
     { Summs all file-data (stored in PFileTreeData) of the tree and returns it }
     function CalculateTotalSize(Tree : TBaseVirtualTree) : Int64;
@@ -77,7 +78,9 @@ type
 
 implementation
 
-uses Dialogs, Controls, MainForm;
+uses Dialogs, Controls, MainForm, StrUtils;
+
+const LINUX_PATH_DELIMITER : String = '/';
 
 function IsFile(Sender : TBaseVirtualTree; Node: PVirtualNode) : Boolean;
 var
@@ -254,6 +257,26 @@ begin
     end;
 end;
 
+function CheckForExistance(Tree : TBaseVirtualTree; const Value : String) : PVirtualNode;
+var temp : String;
+begin
+    Result := nil;
+    if Length(Value) = 0 then
+        Exit;
+    temp := Trim(Value);
+    Result := Tree.RootNode;
+    if RightStr(temp,1) <> LINUX_PATH_DELIMITER then
+        temp := temp + LINUX_PATH_DELIMITER;
+    if LeftStr(temp,2) = './' then
+        temp := RightStr(temp,Length(temp)-2);
+    while (Pos(LINUX_PATH_DELIMITER,temp) <> 0) AND (Result <> nil) do
+    begin
+        Result := Tree.GetFirstChild(Result);
+        Result := CheckForExistance(Tree,Result,LeftStr(temp,Pos(LINUX_PATH_DELIMITER,temp)-1));
+        temp := RightStr(temp,Length(temp)-Pos(LINUX_PATH_DELIMITER,temp));
+    end;
+end;
+
 function CalculateTotalSize(Tree : TBaseVirtualTree) : Int64;
 var
     Node : PVirtualNode;
@@ -272,10 +295,11 @@ end;
 function GetFilepathInPND(Tree : TBaseVirtualTree; Node : PVirtualNode) : String;
 var PData : PFileTreeData;
 begin
+    Result := '';
     while (Node <> nil) AND (Node <> Tree.RootNode) do
     begin
         PData := Tree.GetNodeData(Node);
-        Result := '/' + ExtractFileName(PData.Name) + Result;
+        Result := LINUX_PATH_DELIMITER + ExtractFileName(PData.Name) + Result;
         Node := Node.Parent;
     end;
     Result := '.' + Result;

@@ -401,7 +401,7 @@ begin
     if SchemaNode = nil then
     begin
         frmMain.LogLine('Node not found in schema file (caused either by an ' +
-                        'outdated schema or invalid PXML file)',LOG_WARNING_COLOR);
+                        'outdated schema or invalid PXML file)',frmMain.LOG_WARNING_COLOR);
         // display all found attributes (as default string panels)
         for I := 0 to Data.Node.AttributeNodes.Count - 1 do
         begin
@@ -723,7 +723,6 @@ procedure TfrmPXML.GetElementNames(Node : IXMLNode; ParentElement : PPXMLElement
 var I,K : Integer;
     temp : PPXMLElement;
     IsRoot : Boolean;
-    tempBtn : TXMLGrpButtonItem;
 begin
     for I := 0 to Node.ChildNodes.Count - 1 do
     begin

@@ -1,6 +1,7 @@
 object frmFileSelect: TfrmFileSelect
   Left = 0
   Top = 0
+  BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Select file from PND contents...'
   ClientHeight = 344
   ClientWidth = 358
@@ -122,10 +123,6 @@ object frmFileSelect: TfrmFileSelect
       State = cbChecked
       TabOrder = 0
       OnClick = cbxFilterClick
-      ExplicitLeft = 64
-      ExplicitTop = 8
-      ExplicitWidth = 97
-      ExplicitHeight = 17
     end
   end
 end

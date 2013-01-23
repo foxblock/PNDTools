@@ -15,7 +15,6 @@ object frmCreator: TfrmCreator
   Font.Style = []
   OldCreateOrder = False
   Position = poDesigned
-  Visible = True
   OnCreate = FormCreate
   OnShow = FormShow
   PixelsPerInch = 96
@@ -29,7 +28,7 @@ object frmCreator: TfrmCreator
     Margins.Top = 0
     Margins.Right = 0
     Margins.Bottom = 0
-    ActivePage = pgcMain3
+    ActivePage = pgcMain4
     Align = alClient
     MultiLine = True
     Style = tsFlatButtons
@@ -630,41 +629,40 @@ object frmCreator: TfrmCreator
           Enabled = False
           TabOrder = 0
         end
-        object pnlStartdir: TPanel
+        object btnStartdir: TButton
+          AlignWithMargins = True
+          Left = 467
+          Top = 78
+          Width = 21
+          Height = 21
+          Margins.Left = 0
+          Margins.Top = 4
+          Margins.Right = 4
+          Margins.Bottom = 8
+          Align = alRight
+          Caption = '...'
+          Enabled = False
+          TabOrder = 1
+          OnClick = btnStartdirClick
+          ExplicitLeft = 474
+          ExplicitTop = 73
+          ExplicitHeight = 33
+        end
+        object edtStartdir: TEdit
           AlignWithMargins = True
           Left = 6
           Top = 78
-          Width = 482
+          Width = 461
           Height = 21
           Margins.Left = 4
           Margins.Top = 4
-          Margins.Right = 4
-          Margins.Bottom = 4
-          Align = alTop
-          BevelOuter = bvNone
-          TabOrder = 1
-          object edtStartdir: TEdit
-            Left = 0
-            Top = 0
-            Width = 461
-            Height = 21
-            Margins.Left = 4
-            Margins.Top = 4
-            Margins.Right = 4
-            Margins.Bottom = 4
-            Align = alClient
-            TabOrder = 0
-          end
-          object btnStartdir: TButton
-            Left = 461
-            Top = 0
-            Width = 21
-            Height = 21
-            Align = alRight
-            Caption = '...'
-            TabOrder = 1
-            OnClick = btnStartdirClick
-          end
+          Margins.Right = 0
+          Margins.Bottom = 8
+          Align = alClient
+          Enabled = False
+          TabOrder = 2
+          ExplicitLeft = 0
+          ExplicitTop = 0
         end
       end
       object cbxExeSettings: TCheckBox
@@ -1312,7 +1310,7 @@ object frmCreator: TfrmCreator
             object edtIcon: TEdit
               Left = 0
               Top = 0
-              Width = 385
+              Width = 389
               Height = 21
               Margins.Left = 4
               Margins.Top = 4
@@ -1327,6 +1325,7 @@ object frmCreator: TfrmCreator
               ParentFont = False
               TabOrder = 0
               OnExit = edtIconExit
+              ExplicitWidth = 385
             end
             object btnIcon: TButton
               AlignWithMargins = True
@@ -1334,7 +1333,7 @@ object frmCreator: TfrmCreator
               Top = 0
               Width = 21
               Height = 21
-              Margins.Left = 4
+              Margins.Left = 0
               Margins.Top = 0
               Margins.Right = 0
               Margins.Bottom = 0

@@ -70,6 +70,8 @@ type
     menMainFileExit: TMenuItem;   
     btnPXMLEdit: TButton;
     pomFilesDelete: TMenuItem;
+    Button1: TButton;
+    procedure Button1Click(Sender: TObject);
     procedure pomFilesDeleteClick(Sender: TObject);
     procedure edtPXMLChange(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -131,6 +133,9 @@ type
     const PXML_PATH : String = 'PXML.xml';
     const ICON_PATH : String = 'icon.png';
     const PND_EXT : String = '.pnd';
+    const LOG_ERROR_COLOR : TColor   = clRed;
+    const LOG_WARNING_COLOR : TColor = $0000AAFF;
+    const LOG_SUCCESS_COLOR : TColor = clGreen;
     procedure LogLine(const TextToAdd : String; const Color: TColor = clBlack);
     procedure OpenPND(const FileName : String);
     procedure SavePND(const FileName : String; const PXML : String;
@@ -142,9 +147,6 @@ type
 const
     VERSION : String           = '0.4.0';
     BUILD_DATE : String        = '26.11.2011';
-    LOG_ERROR_COLOR : TColor   = clRed;
-    LOG_WARNING_COLOR : TColor = $0000AAFF;
-    LOG_SUCCESS_COLOR : TColor = clGreen;  
     UNSQUASHFS_PATH : String   = 'tools\unsquashfs.exe';
     MKSQUASH_PATH : String     = 'tools\mksquashfs.exe'; // Path to mkquashfs
     CHMOD_PATH : String        = 'tools\chmod.exe';      // Path to cygwin's chmod
@@ -174,7 +176,7 @@ implementation
 
 
 uses
-    VSTUtils, FormatUtils, FileUtils, OptionsForm, PXMLForm,
+    VSTUtils, FormatUtils, FileUtils, OptionsForm, PXMLForm, CreatorForm,
     {$Ifdef Win32}
     VSTDragDrop_win, VSTIcons_win, ShellStuff_win, ControlHideFix;
     {$Else}
@@ -914,6 +916,11 @@ procedure TfrmMain.btnPXMLLoadClick(Sender: TObject);
 begin
     if opdPXML.Execute then
         edtPXML.Text := opdPXML.FileName;
+end;
+
+procedure TfrmMain.Button1Click(Sender: TObject);
+begin
+    frmCreator.Show;
 end;
 
 end.
