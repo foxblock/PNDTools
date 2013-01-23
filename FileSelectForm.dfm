@@ -106,33 +106,26 @@ object frmFileSelect: TfrmFileSelect
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
-    object lblFilterLbl: TLabel
+    object cbxFilter: TCheckBox
       AlignWithMargins = True
       Left = 8
       Top = 4
-      Width = 28
+      Width = 342
       Height = 13
       Margins.Left = 8
-      Margins.Top = 4
-      Margins.Right = 0
-      Margins.Bottom = 4
-      Align = alLeft
-      Caption = 'Filter:'
-    end
-    object lblFilter: TLabel
-      AlignWithMargins = True
-      Left = 40
-      Top = 4
-      Width = 310
-      Height = 13
-      Margins.Left = 4
       Margins.Top = 4
       Margins.Right = 8
       Margins.Bottom = 4
       Align = alClient
-      Caption = 'Text files (*.txt)'
-      ExplicitLeft = 44
-      ExplicitWidth = 79
+      Caption = 'Filter:   Some files (*.some)'
+      Checked = True
+      State = cbChecked
+      TabOrder = 0
+      OnClick = cbxFilterClick
+      ExplicitLeft = 64
+      ExplicitTop = 8
+      ExplicitWidth = 97
+      ExplicitHeight = 17
     end
   end
 end

@@ -13,8 +13,8 @@ type
     btnCancel: TButton;
     btnOK: TButton;
     pnlFilter: TPanel;
-    lblFilterLbl: TLabel;
-    lblFilter: TLabel;
+    cbxFilter: TCheckBox;
+    procedure cbxFilterClick(Sender: TObject);
     procedure vstFilesChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure FormShow(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -50,6 +50,7 @@ type
 
   rFileMirrorTreeData = record
     OriginalNode : PVirtualNode;
+    IsFiltered : Boolean;
   end;
   PFileMirrorTreeData = ^rFileMirrorTreeData;
 
@@ -141,15 +142,24 @@ procedure TfrmFileSelect.CopyTreeData(Tree : TBaseVirtualTree; sShowIcons : Bool
         while OriginalNode <> nil do
         begin
             POrigData := OriginalTree.GetNodeData(OriginalNode);
-            if Tree.HasChildren[OriginalNode] OR
-                FileExtInFilters(POrigData) then
+            Node := vstFiles.AddChild(Parent);
+            PData := vstFiles.GetNodeData(Node);
+            PData.OriginalNode := OriginalNode;
+            PData.IsFiltered := true;
+            if Tree.HasChildren[OriginalNode] then
             begin
-                Node := vstFiles.AddChild(Parent);
-                PData := vstFiles.GetNodeData(Node);
-                PData.OriginalNode := OriginalNode;
-                if Tree.HasChildren[OriginalNode] then
-                    CopyChildNodes(Tree,Node,OriginalNode);
-            end; 
+                PData.IsFiltered := false;
+                CopyChildNodes(Tree,Node,OriginalNode);
+            end else
+            begin
+                if FileExtInFilters(POrigData) then
+                    PData.IsFiltered := false;
+            end;
+            if PData.IsFiltered then
+            begin
+                vstFiles.IsVisible[Node] := NOT cbxFilter.Checked;
+                vstFiles.IsDisabled[Node] := cbxFilter.Checked;
+            end;
             OriginalNode := Tree.GetNextSibling(OriginalNode);
         end;
     end;
@@ -169,7 +179,7 @@ begin
     if FilterStr = FOLDER_WILDCARD then
     begin
         Filters.Add(FOLDER_WILDCARD);
-        lblFilter.Caption := Title;
+        cbxFilter.Caption := 'Filter:   ' + Title;
     end else
     begin
         temp := Trim(FilterStr);
@@ -184,7 +194,7 @@ begin
         for I := 0 to Filters.Count - 1 do
             S := S + '*' + Filters[I] + ';';
         S := LeftStr(S,Length(S)-1);
-        lblFilter.Caption := Title + ' (' + S + ')';
+        cbxFilter.Caption := 'Filter:   ' + Title + ' (' + S + ')';
     end;
 end;
 
@@ -218,6 +228,25 @@ begin
     Close;
 end;
 
+procedure TfrmFileSelect.cbxFilterClick(Sender: TObject);
+var Node : PVirtualNode;
+    PData : PFileMirrorTreeData;
+begin
+    Node := vstFiles.GetFirst();
+    while Node <> nil do
+    begin
+        PData := vstFiles.GetNodeData(Node);
+        if PData.IsFiltered then
+        begin
+            vstFiles.IsVisible[Node] := NOT cbxFilter.Checked;
+            vstFiles.IsDisabled[Node] := cbxFilter.Checked;
+            if cbxFilter.Checked AND vstFiles.Selected[Node] then
+                vstFiles.Selected[Node] := false;
+        end;
+        Node := vstFiles.GetNext(Node);
+    end;
+end;
+
 procedure TfrmFileSelect.FormCreate(Sender: TObject);
 begin
     vstFiles.NodeDataSize := sizeof(rFileMirrorTreeData);
@@ -236,6 +265,7 @@ procedure TfrmFileSelect.vstFilesChange(Sender: TBaseVirtualTree;
   Node: PVirtualNode);
 var PData : PFileTreeData;
 begin
+    // TODO: Work on this when checkbox changes and with multiple selections
     btnOK.Enabled := false;
     while Node <> nil do
     begin
