@@ -470,7 +470,8 @@ procedure TfrmCreator.btnExeClick(Sender: TObject);
 begin            
     frmFileSelect.SetFilter('.txt;.png','Some files');  
     frmFileSelect.CopyTreeData(frmMain.vstFiles,frmMain.Settings.ShowIcons);
-    frmFileSelect.Execute;
+    if frmFileSelect.Execute then
+        edtExe.Text := frmFileSelect.Filename;
 end;
 
 procedure TfrmCreator.btnIconClick(Sender: TObject);

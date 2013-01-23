@@ -203,7 +203,17 @@ begin
 end;
 
 procedure TfrmFileSelect.btnOKClick(Sender: TObject);
+var Node : PVirtualNode;
+    PData : PFileMirrorTreeData;
 begin
+    FFileList.Clear;
+    Node := vstFiles.GetFirstSelected();
+    while Node <> nil do
+    begin
+        PData := vstFiles.GetNodeData(Node);
+        FFileList.Add(GetFilepathInPND(OriginalTree,PData.OriginalNode));
+        Node := vstFiles.GetNextSelected(Node);
+    end;    
     Successful := true;
     Close;
 end;
@@ -212,6 +222,7 @@ procedure TfrmFileSelect.FormCreate(Sender: TObject);
 begin
     vstFiles.NodeDataSize := sizeof(rFileMirrorTreeData);
     Filters := TStringList.Create;
+    FFileList := TStringList.Create;
 end;
 
 procedure TfrmFileSelect.FormShow(Sender: TObject);
@@ -225,12 +236,17 @@ procedure TfrmFileSelect.vstFilesChange(Sender: TBaseVirtualTree;
   Node: PVirtualNode);
 var PData : PFileTreeData;
 begin
-    if MultiSelect then
+    btnOK.Enabled := false;
+    while Node <> nil do
     begin
-
-    end else
-    begin
-
+        PData := GetOriginalNodeData(OriginalTree,Node);
+        if (PData.Attr and faDirectory > 0) then
+        begin
+             if (Filters.Count > 1) AND (Filters[0] = FOLDER_WILDCARD) then
+                btnOK.Enabled := true;
+        end else
+            btnOk.Enabled := true;
+        Node := vstFiles.GetNextSelected(Node);
     end;
 end;
 

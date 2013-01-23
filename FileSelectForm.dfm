@@ -50,7 +50,6 @@ object frmFileSelect: TfrmFileSelect
     OnGetImageIndex = vstFilesGetImageIndex
     OnHeaderClick = vstFilesHeaderClick
     OnInitNode = vstFilesInitNode
-    ExplicitHeight = 307
     Columns = <
       item
         Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
@@ -111,7 +110,7 @@ object frmFileSelect: TfrmFileSelect
       AlignWithMargins = True
       Left = 8
       Top = 4
-      Width = 32
+      Width = 28
       Height = 13
       Margins.Left = 8
       Margins.Top = 4
@@ -119,13 +118,12 @@ object frmFileSelect: TfrmFileSelect
       Margins.Bottom = 4
       Align = alLeft
       Caption = 'Filter:'
-      ExplicitLeft = 4
     end
     object lblFilter: TLabel
       AlignWithMargins = True
-      Left = 44
+      Left = 40
       Top = 4
-      Width = 306
+      Width = 310
       Height = 13
       Margins.Left = 4
       Margins.Top = 4
@@ -133,7 +131,7 @@ object frmFileSelect: TfrmFileSelect
       Margins.Bottom = 4
       Align = alClient
       Caption = 'Text files (*.txt)'
-      ExplicitLeft = 40
+      ExplicitLeft = 44
       ExplicitWidth = 79
     end
   end

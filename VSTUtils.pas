@@ -63,12 +63,16 @@ type
       Only pass filenames (without path) for Value
       Returns a Node if one with the same filename is found, nil otherwise
       Case-sensitive check on Linux, in-sensitive on Windows
-      Use to make sure no file-conflics will be produces when actually copying files }
+      Use to make sure no file-conflics will be produced when actually copying files }
     function CheckForExistance(Tree : TBaseVirtualTree; Node : PVirtualNode;
         const Value : String) : PVirtualNode;
 
     { Summs all file-data (stored in PFileTreeData) of the tree and returns it }
     function CalculateTotalSize(Tree : TBaseVirtualTree) : Int64;
+
+    { Returns the filepath of the passed node relative from the root of the PND
+      The path will be Linux formatted (forward slashes) }
+    function GetFilepathInPND(Tree : TBaseVirtualTree; Node : PVirtualNode) : String;
 
 
 implementation
@@ -263,6 +267,18 @@ begin
         Result := Result + PData.Size;
         Node := Tree.GetNext(Node);
     end;
+end;
+
+function GetFilepathInPND(Tree : TBaseVirtualTree; Node : PVirtualNode) : String;
+var PData : PFileTreeData;
+begin
+    while (Node <> nil) AND (Node <> Tree.RootNode) do
+    begin
+        PData := Tree.GetNodeData(Node);
+        Result := '/' + ExtractFileName(PData.Name) + Result;
+        Node := Node.Parent;
+    end;
+    Result := '.' + Result;
 end;
 
 end.
