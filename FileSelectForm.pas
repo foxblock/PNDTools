@@ -256,14 +256,17 @@ procedure TfrmFileSelect.btnOKClick(Sender: TObject);
 var Node : PVirtualNode;
     PData : PFileMirrorTreeData;
 begin
-    // TODO: Fix multiple selection including folders, maybe make those not selectable at all 
     Node := vstFiles.GetFirstSelected();
     while Node <> nil do
     begin
         PData := vstFiles.GetNodeData(Node);
-        FFileList.Add(GetFilepathInPND(OriginalTree,PData.OriginalNode));
-        SetLength(FNodeList,Length(FNodeList)+1);
-        FNodeList[High(FNodeList)] := PData.OriginalNode;
+        if IsFile(OriginalTree,PData.OriginalNode) OR (Filters.Count = 0) OR
+            (Filters[0] = FOLDER_WILDCARD) then
+        begin
+            FFileList.Add(GetFilepathInPND(OriginalTree,PData.OriginalNode));
+            SetLength(FNodeList,Length(FNodeList)+1);
+            FNodeList[High(FNodeList)] := PData.OriginalNode;
+        end;         
         Node := vstFiles.GetNextSelected(Node);
     end;    
     Successful := true;
@@ -305,15 +308,15 @@ end;
 
 procedure TfrmFileSelect.vstFilesChange(Sender: TBaseVirtualTree;
   Node: PVirtualNode);
-var PData : PFileTreeData;
+var PData : PFileMirrorTreeData;
     ValidSelectionCount : Integer;
 begin
     Node := vstFiles.GetFirstSelected();
     ValidSelectionCount := 0;
     while Node <> nil do
     begin
-        PData := GetOriginalNodeData(OriginalTree,Node);
-        if (PData.Attr and faDirectory = 0) OR ((Filters.Count >= 1) AND (Filters[0] = FOLDER_WILDCARD)) then
+        PData := vstFiles.GetNodeData(Node);
+        if IsFile(OriginalTree,PData.OriginalNode) OR (Filters.Count = 0) OR (Filters[0] = FOLDER_WILDCARD) then
             Inc(ValidSelectionCount);
         Node := vstFiles.GetNextSelected(Node);
     end;

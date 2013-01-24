@@ -119,6 +119,7 @@ type
     memInfo: TMemo;
     btnStartdir: TButton;
     edtStartdir: TEdit;
+    lblDescrInfo: TLabel;
     procedure btnExeClick(Sender: TObject);
     procedure btnStartdirClick(Sender: TObject);
     procedure btnRemoveClick(Sender: TObject);
@@ -185,7 +186,7 @@ var
 implementation
 
 uses {$Ifdef Win32}ControlHideFix,{$Endif} MainForm, FileSelectForm, StrUtils,
-    SysUtils, VSTUtils, VirtualTrees;
+    SysUtils, VSTUtils, VirtualTrees, GraphicUtils;
 
 {$R *.dfm}
 
@@ -401,12 +402,24 @@ var temp : TPicture;
 begin
     try
         temp := TPicture.Create;
-        temp.LoadFromFile(Filename);
-        imgIcon.Canvas.StretchDraw(Rect(0,0,imgIcon.Width,imgIcon.Height),temp.Graphic);
+        temp.LoadFromFile(Filename); 
+        imgIcon.Canvas.Brush.Color := clBtnFace;
+        imgIcon.Canvas.FillRect(Rect(0,0,imgIcon.Width,imgIcon.Height));
+        imgIcon.Canvas.StretchDraw(GetStretchRect(temp.Width,temp.Height,
+            imgIcon.Width,imgIcon.Height),temp.Graphic);
         lblIconInfo.Caption := UpperCase(ExtractFileExt(Filename)) + ', ' +
                                IntToStr(temp.Width) + 'x' + IntToStr(temp.Height);
         temp.Free;
     except
+        // Drawn "missing" image
+        imgIcon.Canvas.Brush.Color := clWhite;
+        imgIcon.Canvas.Pen.Color := clBlack;
+        imgIcon.Canvas.Pen.Width := 2;
+        imgIcon.Canvas.Rectangle(0,0,imgIcon.Width,imgIcon.Height);
+        imgIcon.Canvas.MoveTo(0,0);
+        imgIcon.Canvas.LineTo(imgIcon.Width,imgIcon.Height);
+        imgIcon.Canvas.MoveTo(imgIcon.Width,0);
+        imgIcon.Canvas.LineTo(0,imgIcon.Height);
         lblIconInfo.Caption := 'No icon loaded';
         temp.Free;
     end;
@@ -471,6 +484,7 @@ begin
     finally
         CloseFile(F);
     end;
+    LoadIcon('');
 end;
 
 // --- Buttons -----------------------------------------------------------------
@@ -656,17 +670,24 @@ end;
 procedure TfrmCreator.edtIconExit(Sender: TObject);
 var PData : PFileTreeData;
     Node : PVirtualNode;
+
 begin
     if Length(edtIcon.Text) = 0 then
-        Exit;
-    Node := CheckForExistance(frmMain.vstFiles,edtIcon.Text);
-    if Node = nil then
     begin
-        frmMain.LogLine('Error loading icon file: ' + edtIcon.Text,frmMain.LOG_ERROR_COLOR);
-        Exit;
+        LoadIcon('');
+    end else
+    begin
+        Node := CheckForExistance(frmMain.vstFiles,edtIcon.Text);
+        if Node = nil then
+        begin
+            frmMain.LogLine('Error loading icon file: ' + edtIcon.Text,frmMain.LOG_ERROR_COLOR);
+            LoadIcon('');
+        end else
+        begin
+            PData := frmMain.vstFiles.GetNodeData(Node);
+            LoadIcon(PData.Name);
+        end;
     end;
-    PData := frmMain.vstFiles.GetNodeData(Node);
-    LoadIcon(PData.Name);
 end;
 
 // --- Category ----------------------------------------------------------------
@@ -863,8 +884,11 @@ begin
 
     try
         temp := TPicture.Create;
-        temp.LoadFromFile(ImageFile);
-        imgScreenshot.Canvas.StretchDraw(Rect(0,0,imgScreenshot.Width,imgScreenshot.Height),temp.Graphic);
+        temp.LoadFromFile(ImageFile);   
+        imgScreenshot.Canvas.Brush.Color := clBtnFace;
+        imgScreenshot.Canvas.FillRect(Rect(0,0,imgScreenshot.Width,imgScreenshot.Height));
+        imgScreenshot.Canvas.StretchDraw(GetStretchRect(temp.Width,temp.Height,
+            imgScreenshot.Width,imgScreenshot.Height),temp.Graphic);
         lblSize.Caption := UpperCase(ExtractFileExt(Filepath)) + ', ' +
                             IntToStr(temp.Width) + 'x' + IntToStr(temp.Height);
         temp.Free;

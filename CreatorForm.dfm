@@ -28,7 +28,7 @@ object frmCreator: TfrmCreator
     Margins.Top = 0
     Margins.Right = 0
     Margins.Bottom = 0
-    ActivePage = pgcMain4
+    ActivePage = pgcMain1
     Align = alClient
     MultiLine = True
     Style = tsFlatButtons
@@ -42,12 +42,12 @@ object frmCreator: TfrmCreator
         Left = 4
         Top = 6
         Width = 494
-        Height = 139
+        Height = 472
         Margins.Left = 4
         Margins.Top = 6
         Margins.Right = 4
         Margins.Bottom = 0
-        Align = alTop
+        Align = alClient
         BevelInner = bvNone
         BevelOuter = bvNone
         BorderStyle = bsNone
@@ -55,16 +55,17 @@ object frmCreator: TfrmCreator
         Enabled = False
         Lines.Strings = (
           'Hello and welcome to the PXML creation utility.'
+          ''
           
             'This little program will guide you through the process of creati' +
-            'on a valid and functional PXML file for '
+            'ng a valid and functional PXML file for '
           'your PND-ready application.'
           
-            'Only basic use-cases are covered here (no multi-app PNDs for exa' +
-            'mple), but you can manually adjust '
+            'Only the most common use-cases are covered here (no multi-app PN' +
+            'Ds for example), but you can '
           
-            'advanced settings afterwards using the full editor available fro' +
-            'm the main window.'
+            'manually adjust advanced settings afterwards using the full edit' +
+            'or available from the main window.'
           ''
           
             'Start on the following tab and enter your personal information, ' +
@@ -73,9 +74,22 @@ object frmCreator: TfrmCreator
           
             'Finally your data will be checked, any errors reported for you t' +
             'o fix and if  everything is valid you can '
-          'create the final file.')
+          'create the final file.'
+          ''
+          
+            'Fields marked as "optional" may be ignored, but filling them out' +
+            ' still is highly recommended.'
+          
+            'Advanced settings can also be left out and should only be touche' +
+            'd if you know what to put in there'
+          '(and therefore are disabled by default).'
+          
+            'Some fields don'#39't accept every character, you may hear a beeping' +
+            ' noise if you try to enter an'
+          'invalid character.')
         ReadOnly = True
         TabOrder = 0
+        ExplicitHeight = 139
       end
     end
     object pgcMain2: TTabSheet
@@ -464,6 +478,22 @@ object frmCreator: TfrmCreator
         ParentFont = False
         ExplicitWidth = 25
       end
+      object lblDescrInfo: TLabel
+        AlignWithMargins = True
+        Left = 4
+        Top = 61
+        Width = 494
+        Height = 13
+        Margins.Left = 4
+        Margins.Top = 2
+        Margins.Right = 4
+        Margins.Bottom = 0
+        Align = alTop
+        Caption = 
+          'Short description of the application. You may use multiple lines' +
+          ' if you really have to.'
+        ExplicitWidth = 401
+      end
       object cobCategory: TComboBox
         AlignWithMargins = True
         Left = 4
@@ -511,19 +541,18 @@ object frmCreator: TfrmCreator
       object memDescription: TMemo
         AlignWithMargins = True
         Left = 4
-        Top = 63
+        Top = 78
         Width = 494
-        Height = 96
+        Height = 81
         Margins.Left = 4
         Margins.Top = 4
         Margins.Right = 4
         Margins.Bottom = 4
         Align = alClient
-        Lines.Strings = (
-          'Short description of the application'
-          'Use multiple lines if you really have to')
         ScrollBars = ssVertical
         TabOrder = 1
+        ExplicitTop = 63
+        ExplicitHeight = 96
       end
       object pnlExe: TPanel
         AlignWithMargins = True
@@ -584,7 +613,7 @@ object frmCreator: TfrmCreator
           Margins.Right = 4
           Margins.Bottom = 0
           Align = alTop
-          Caption = 'Starting Directory'
+          Caption = 'Starting Directory (optional)'
           Enabled = False
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -592,7 +621,7 @@ object frmCreator: TfrmCreator
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
           ParentFont = False
-          ExplicitWidth = 102
+          ExplicitWidth = 161
         end
         object lblArguments: TLabel
           AlignWithMargins = True
@@ -605,7 +634,7 @@ object frmCreator: TfrmCreator
           Margins.Right = 4
           Margins.Bottom = 0
           Align = alTop
-          Caption = 'Program Arguments'
+          Caption = 'Program Arguments (optional)'
           Enabled = False
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -613,7 +642,7 @@ object frmCreator: TfrmCreator
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
           ParentFont = False
-          ExplicitWidth = 115
+          ExplicitWidth = 174
         end
         object edtArguments: TEdit
           AlignWithMargins = True
@@ -644,9 +673,6 @@ object frmCreator: TfrmCreator
           Enabled = False
           TabOrder = 1
           OnClick = btnStartdirClick
-          ExplicitLeft = 474
-          ExplicitTop = 73
-          ExplicitHeight = 33
         end
         object edtStartdir: TEdit
           AlignWithMargins = True
@@ -661,8 +687,6 @@ object frmCreator: TfrmCreator
           Align = alClient
           Enabled = False
           TabOrder = 2
-          ExplicitLeft = 0
-          ExplicitTop = 0
         end
       end
       object cbxExeSettings: TCheckBox
@@ -1042,14 +1066,14 @@ object frmCreator: TfrmCreator
             Margins.Right = 0
             Margins.Bottom = 2
             Align = alTop
-            Caption = 'Type'
+            Caption = 'Type (opt.)'
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -11
             Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
-            ExplicitWidth = 24
+            ExplicitWidth = 55
           end
           object cobVType: TComboBox
             AlignWithMargins = True
@@ -1325,7 +1349,6 @@ object frmCreator: TfrmCreator
               ParentFont = False
               TabOrder = 0
               OnExit = edtIconExit
-              ExplicitWidth = 385
             end
             object btnIcon: TButton
               AlignWithMargins = True
@@ -1400,14 +1423,14 @@ object frmCreator: TfrmCreator
           Margins.Right = 4
           Margins.Bottom = 0
           Align = alTop
-          Caption = 'License description URL'
+          Caption = 'License description URL (optional)'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
           ParentFont = False
-          ExplicitWidth = 133
+          ExplicitWidth = 192
         end
         object lblSourceURL: TLabel
           AlignWithMargins = True
@@ -1420,14 +1443,14 @@ object frmCreator: TfrmCreator
           Margins.Right = 4
           Margins.Bottom = 0
           Align = alTop
-          Caption = 'Source-code URL'
+          Caption = 'Source-code URL (optional)'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
           ParentFont = False
-          ExplicitWidth = 96
+          ExplicitWidth = 155
         end
         object edtLicenseURL: TEdit
           AlignWithMargins = True
@@ -1676,8 +1699,8 @@ object frmCreator: TfrmCreator
               'e text or a html file.'
             'It is entirely optional, but highly recommended.'
             
-              'It will show up as the '#39'name'#39' above in the '#39'documentation'#39' menu ' +
-              'on the Pandora.'
+              'It will show up as the '#39'name'#39' from above in the '#39'documentation'#39' ' +
+              'menu on the Pandora.'
             
               'Therefore don'#39't enter a generic name such as '#39'Readme'#39', rather in' +
               'clude the title of your app so it'#39's '
