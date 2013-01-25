@@ -9,7 +9,8 @@ interface
 uses
   VirtualTrees,
   Types, Messages, Classes, Graphics, Controls, Forms, SysUtils, IniFiles,
-  Dialogs, StdCtrls, ImgList, ExtCtrls, XPMan, FileCtrl, ComCtrls, Menus;
+  Dialogs, StdCtrls, ImgList, ExtCtrls, XPMan, {$Ifdef Win32}FileCtrl{$Endif},
+  ComCtrls, Menus;
 
 type
   rSettings = record
@@ -618,11 +619,15 @@ begin
         end;
     end;
 
-    vstFiles.NodeDataSize := sizeof(rFileTreeData);
-    vstFiles.OnDragDrop := dummy.VSTDragDrop;
-    {$Ifdef Win32}  
-    KeyPreview := true;
+    vstFiles.NodeDataSize := sizeof(rFileTreeData);  
+    dummy := TDragEvent.Create;
+    vstFiles.OnDragDrop := dummy.VSTDragDrop;    
+    dummy.Free;
+    {$Ifdef Win32}
+    KeyPreview := true;       
+    jummy := TButtonEvent.Create;
     OnKeyDown := jummy.KeyDown;
+    jummy.Free;
     {$Endif}
     LoadSystemIcons(imlFileTree);
     Caption := Caption + ' [Version ' + VERSION + ' built ' + BUILD_DATE + ']';
@@ -860,7 +865,12 @@ var
     Dir : String;
 begin
     // TODO: Yeah I guess this is not exactly cross-platform safe...
+    {$Ifdef Win32}
     SelectDirectory('Select a directory to add','',Dir);
+    {$Else}
+    MessageDlg('This function is not implemented yet, sorry :(',mtInformation,[mbOK],0);
+    btnFilesFolder.Enabled := false;
+    {$Endif}
     if Dir <> '' then
     begin
         vstFiles.BeginUpdate;

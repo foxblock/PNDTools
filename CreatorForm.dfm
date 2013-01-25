@@ -28,7 +28,7 @@ object frmCreator: TfrmCreator
     Margins.Top = 0
     Margins.Right = 0
     Margins.Bottom = 0
-    ActivePage = pgcMain1
+    ActivePage = pgcMain6
     Align = alClient
     MultiLine = True
     Style = tsFlatButtons
@@ -89,7 +89,6 @@ object frmCreator: TfrmCreator
           'invalid character.')
         ReadOnly = True
         TabOrder = 0
-        ExplicitHeight = 139
       end
     end
     object pgcMain2: TTabSheet
@@ -551,8 +550,6 @@ object frmCreator: TfrmCreator
         Align = alClient
         ScrollBars = ssVertical
         TabOrder = 1
-        ExplicitTop = 63
-        ExplicitHeight = 96
       end
       object pnlExe: TPanel
         AlignWithMargins = True
@@ -1719,11 +1716,11 @@ object frmCreator: TfrmCreator
       object lblErrors: TLabel
         AlignWithMargins = True
         Left = 4
-        Top = 262
+        Top = 266
         Width = 494
         Height = 13
         Margins.Left = 4
-        Margins.Top = 20
+        Margins.Top = 10
         Margins.Right = 4
         Margins.Bottom = 6
         Align = alTop
@@ -1734,14 +1731,15 @@ object frmCreator: TfrmCreator
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitTop = 262
         ExplicitWidth = 263
       end
       object redErrors: TRichEdit
         AlignWithMargins = True
         Left = 10
-        Top = 281
+        Top = 285
         Width = 488
-        Height = 193
+        Height = 189
         Margins.Left = 10
         Margins.Top = 0
         Margins.Right = 4
@@ -1755,6 +1753,8 @@ object frmCreator: TfrmCreator
           'All valid, good job!')
         ReadOnly = True
         TabOrder = 0
+        ExplicitTop = 281
+        ExplicitHeight = 193
       end
       object grbAdvanced: TGroupBox
         Left = 0
@@ -1972,6 +1972,21 @@ object frmCreator: TfrmCreator
           ReadOnly = True
           TabOrder = 5
         end
+      end
+      object Panel2: TPanel
+        AlignWithMargins = True
+        Left = 0
+        Top = 254
+        Width = 502
+        Height = 2
+        Margins.Left = 0
+        Margins.Top = 12
+        Margins.Right = 0
+        Margins.Bottom = 0
+        Align = alTop
+        BevelOuter = bvLowered
+        TabOrder = 2
+        ExplicitTop = 246
       end
     end
   end

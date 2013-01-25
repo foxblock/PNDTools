@@ -305,7 +305,7 @@ object frmPXML: TfrmPXML
         item
           Options = [coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coVisible, coAllowFocus]
           Position = 0
-          Width = 146
+          Width = 150
           WideText = 'Key'
         end>
     end
@@ -351,14 +351,13 @@ object frmPXML: TfrmPXML
         Left = 6
         Top = 2
         Width = 89
-        Height = 14
+        Height = 13
         Margins.Left = 6
         Margins.Top = 2
         Margins.Right = 4
         Margins.Bottom = 4
         Align = alLeft
         Caption = 'Filter elements by:'
-        ExplicitHeight = 13
       end
       object rabSelection: TRadioButton
         AlignWithMargins = True

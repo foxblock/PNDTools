@@ -102,7 +102,9 @@ var
 begin
     {$Ifdef Win32}
     KeyPreview := true;
+    dummy := TButtonEvent.Create;
     OnKeyDown := dummy.KeyDown;
+    dummy.Free;
     {$Endif}
 end;
 

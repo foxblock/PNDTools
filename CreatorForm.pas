@@ -120,6 +120,7 @@ type
     btnStartdir: TButton;
     edtStartdir: TEdit;
     lblDescrInfo: TLabel;
+    Panel2: TPanel;
     procedure btnExeClick(Sender: TObject);
     procedure btnStartdirClick(Sender: TObject);
     procedure btnRemoveClick(Sender: TObject);
@@ -146,6 +147,8 @@ type
     procedure SavePXMLFile(const Filename : String);
     procedure LoadIcon(const Filename : String);
   public
+    // TODO: Execute function, returning filename to PXML file
+    // TODO: Integration in main menu CreatePXML file
     { Public declarations }
   end;
 
@@ -163,9 +166,12 @@ type
     procedure btnMoveDownClick(Sender: TObject); 
   private
     pFilepath : String; 
-    constructor Create(AOwner : TComponent); overload;
+    constructor Create(AOwner : TComponent); reintroduce; overload;
   public
-    constructor Create(const Filepath: String; const ImageFile : String); overload;
+    // Double linked list for ordering  
+    Prev : TScreenshotPanel;
+    Next : TScreenshotPanel;
+    constructor Create(const Filepath: String; const ImageFile : String); reintroduce; overload;
     property Filepath : String read pFilepath;
   end;
 
@@ -182,6 +188,7 @@ const
 var
   frmCreator: TfrmCreator;
   InputFilter: TInputFilters;
+  First : TScreenshotPanel;
 
 implementation
 
@@ -239,6 +246,8 @@ begin
         AddError('No icon specified!',frmMain.LOG_ERROR_COLOR)
     else if not FileExists(edtIcon.Text) then
         AddError('The specified icon does not exist!',frmMain.LOG_ERROR_COLOR);
+    if First = nil then
+        AddError('No screenshots added!',frmMain.LOG_ERROR_COLOR);
     // Page 5
     if Length(cobLicense.Text) = 0 then
         AddError('No license set!',frmMain.LOG_ERROR_COLOR);
@@ -300,7 +309,7 @@ procedure TfrmCreator.SavePXMLFile(const Filename: string);
 
 var Doc : IXMLDocument;
     temp, packNode, appNode, pxmlNode : IXMLNode;
-    I : Integer;
+    tempScreen : TScreenshotPanel;
 begin
     try
         Doc := NewXMLDocument('1.0');
@@ -363,10 +372,12 @@ begin
             if Length(edtSourceURL.Text) > 0 then
                 temp.Attributes['sourcecodeurl'] := edtSourceURL.Text;
             temp := CreateNode('previewpics',appNode);
-            // TODO: Implement datastructure for ordered previewpics
-            for I := 0 to scbScreenshots.ControlCount - 1 do
-                CreateNode('previewpix',temp).Attributes['src'] :=
-                    (scbScreenshots.Controls[I] as TScreenshotPanel).Filepath;
+            tempScreen := First;
+            while tempScreen <> nil do
+            begin
+                CreateNode('previewpix',temp).Attributes['src'] := tempScreen.Filepath;
+                tempScreen := tempScreen.Next;
+            end;
             if (Length(edtInfoFile.Text) > 0) AND (Length(edtInfoName.Text) > 0) then
             begin
                 temp := CreateNode('info',appNode);
@@ -399,9 +410,9 @@ end;
 
 procedure TfrmCreator.LoadIcon(const Filename: string);
 var temp : TPicture;
-begin
+begin           
+    temp := TPicture.Create;
     try
-        temp := TPicture.Create;
         temp.LoadFromFile(Filename); 
         imgIcon.Canvas.Brush.Color := clBtnFace;
         imgIcon.Canvas.FillRect(Rect(0,0,imgIcon.Width,imgIcon.Height));
@@ -411,7 +422,7 @@ begin
                                IntToStr(temp.Width) + 'x' + IntToStr(temp.Height);
         temp.Free;
     except
-        // Drawn "missing" image
+        // Draw "missing" image
         imgIcon.Canvas.Brush.Color := clWhite;
         imgIcon.Canvas.Pen.Color := clBlack;
         imgIcon.Canvas.Pen.Width := 2;
@@ -439,9 +450,12 @@ begin
     edtVBuild.OnKeyPress := InputFilter.VersionKeyPress;
     edtAppdata.OnKeyPress := InputFilter.FolderKeyPress;
     edtStartdir.OnKeyPress := InputFilter.FolderKeyPress;
+    First := nil;
     {$Ifdef Win32}
     KeyPreview := true;
+    dummy := TButtonEvent.Create;
     OnKeyDown := dummy.KeyDown;
+    dummy.Free;
     {$Endif}
 end;
 
@@ -548,10 +562,11 @@ begin
         (scbScreenshots.Controls[0] as TScreenshotPanel).Free;
     end;
     btnRemove.Enabled := false;
+    First := nil;
 end;
 
 procedure TfrmCreator.btnScreenAddClick(Sender: TObject);
-var temp : TScreenshotPanel;
+var newPanel, temp : TScreenshotPanel;
     I : Integer;
     PData : PFileTreeData;
 begin
@@ -564,7 +579,16 @@ begin
         for I := 0 to frmFileSelect.FileList.Count - 1 do
         begin
             PData := frmMain.vstFiles.GetNodeData(frmFileSelect.NodeList[I]);
-            temp := TScreenshotPanel.Create(frmFileSelect.FileList[I],PData.Name);
+            newPanel := TScreenshotPanel.Create(frmFileSelect.FileList[I],PData.Name);
+            if First = nil then
+                First := newPanel
+            else
+            begin
+                temp := First;
+                First := newPanel;
+                temp.Prev := First;
+                First.Next := temp;
+            end;
         end;
         btnRemove.Enabled := true;
     end;
@@ -744,6 +768,8 @@ var temp : TPicture;
 begin
     Create(frmCreator);
     pFilepath := Filepath;
+    Prev := nil;
+    Next := nil;
     Parent := frmCreator.scbScreenshots;
     Align := alTop;
     Height := 100;
@@ -881,9 +907,9 @@ begin
         OnClick := btnMoveUpClick;    
         Font.Style := [];
     end;
-
+      
+    temp := TPicture.Create;
     try
-        temp := TPicture.Create;
         temp.LoadFromFile(ImageFile);   
         imgScreenshot.Canvas.Brush.Color := clBtnFace;
         imgScreenshot.Canvas.FillRect(Rect(0,0,imgScreenshot.Width,imgScreenshot.Height));
@@ -902,17 +928,53 @@ procedure TScreenshotPanel.btnRemoveClick(Sender: TObject);
 begin
     if frmCreator.scbScreenshots.ControlCount = 1 then
         frmCreator.btnRemove.Enabled := false;
+    if Self = First then
+        First := Self.Next;
+    if Self.Prev <> nil then
+        Self.Prev.Next := Self.Next;
+    if Self.Next <> nil then
+        Self.Next.Prev := Self.Prev;
     Self.Free;
 end;
 
 procedure TScreenshotPanel.btnMoveUpClick(Sender: TObject);
+var temp : TScreenshotPanel;
 begin
-    Self.Top := Self.Top - Self.Height;
+    if Self.Prev <> nil then
+    begin
+        temp := Self.Prev;
+        if temp.Prev <> nil then
+           temp.Prev.Next := Self;
+        if Self.Next <> nil then
+            Self.Next.Prev := temp;
+        Self.Prev := temp.Prev; 
+        temp.Next := Self.Next;
+        Self.Next := temp;
+        temp.Prev := Self;
+        if temp = First then
+            First := Self;
+        Self.Top := Self.Top - Self.Height;
+    end;
 end;
 
-procedure TScreenshotPanel.btnMoveDownClick(Sender: TObject);
+procedure TScreenshotPanel.btnMoveDownClick(Sender: TObject); 
+var temp : TScreenshotPanel;
 begin
-    Self.Top := Self.Top + Self.Height + 1;
+    if Self.Next <> nil then
+    begin
+        temp := Self.Next;
+        if temp.Next <> nil then
+            temp.Next.Prev := Self;
+        if Self.Prev <> nil then
+            Self.Prev.Next := temp;
+        Self.Next := temp.Next; 
+        temp.Prev := Self.Prev;
+        Self.Prev := temp;
+        temp.Next := Self;
+        if Self = First then
+            First := temp;
+        Self.Top := Self.Top + Self.Height + 1;
+    end;
 end;
 
 

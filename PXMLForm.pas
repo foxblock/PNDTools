@@ -128,7 +128,7 @@ type
     Attr : IXMLNode;
     Node : IXMLNode;
   public
-    constructor Create(NewParent : TWinControl; AttrNode, ParentNode : IXMLNode); virtual;
+    constructor Create(NewParent : TWinControl; AttrNode, ParentNode : IXMLNode); reintroduce; virtual; 
     destructor Free; virtual; abstract;
     procedure SetOptional(const Optional : Boolean); virtual; abstract;
     procedure SetTypeData(const Arguments : TStrings); virtual; abstract;
@@ -178,7 +178,7 @@ type
 
   TSubcategoryItemPanel = class (TSetItemPanel)
   public
-    constructor Create(NewParent : TWinControl; AttrNode, ParentNode : IXMLNode; Category : String);
+    constructor Create(NewParent : TWinControl; AttrNode, ParentNode : IXMLNode; Category : String); reintroduce;
   end;
 
 const
@@ -946,7 +946,9 @@ begin
     Schema := nil;
     {$Ifdef Win32}
     KeyPreview := true;
-    OnKeyDown := dummy.KeyDown;
+    dummy := TButtonEvent.Create;
+    OnKeyDown := dummy.KeyDown; 
+    dummy.Free;
     {$Endif}
     SetLength(TrueBoolStrs,2);
     TrueBoolStrs[0] := 'true';
