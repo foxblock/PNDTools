@@ -119,8 +119,8 @@ type
     memInfo: TMemo;
     btnStartdir: TButton;
     edtStartdir: TEdit;
-    lblDescrInfo: TLabel;
     Panel2: TPanel;
+    memDescriptionHelp: TMemo;
     procedure btnExeClick(Sender: TObject);
     procedure btnStartdirClick(Sender: TObject);
     procedure btnRemoveClick(Sender: TObject);
@@ -137,17 +137,18 @@ type
     procedure spbVMajorUpClick(Sender: TObject);
     procedure spbVMajorDownClick(Sender: TObject);
     procedure cobCategoryChange(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure cbxPortClick(Sender: TObject);
   private
+    FFilename : String;
     procedure ChangeVersionNumber(Target: TCustomEdit; const Delta: Integer);
     procedure AddError(const TextToAdd : String; const Color: TColor = clBlack);
     procedure CheckForErrors;
-    procedure SavePXMLFile(const Filename : String);
+    function SavePXMLFile(const Filename : String) : Boolean;
     procedure LoadIcon(const Filename : String);
   public
-    // TODO: Execute function, returning filename to PXML file
+    function Execute : Boolean;
+    property Filename : String read FFilename;
     // TODO: Integration in main menu CreatePXML file
     { Public declarations }
   end;
@@ -189,6 +190,7 @@ var
   frmCreator: TfrmCreator;
   InputFilter: TInputFilters;
   First : TScreenshotPanel;
+  Successful : Boolean;
 
 implementation
 
@@ -271,7 +273,7 @@ begin
     end;
 end;
 
-procedure TfrmCreator.SavePXMLFile(const Filename: string);
+function TfrmCreator.SavePXMLFile(const Filename: string) : Boolean;
 
     function CreateNode(Name : String; Parent : IXMLNode) : IXMLNode;
     begin
@@ -311,93 +313,87 @@ var Doc : IXMLDocument;
     temp, packNode, appNode, pxmlNode : IXMLNode;
     tempScreen : TScreenshotPanel;
 begin
+    Result := false;
     try
         Doc := NewXMLDocument('1.0');
-        if Doc.Active then
-        begin     
-            Doc.Encoding := 'UTF-8';
-            Doc.Options := [doNodeAutoCreate,doNodeAutoIndent];
-            pxmlNode := Doc.AddChild('PXML',PXML_NAMESPACE);
+        Doc.Encoding := 'UTF-8';
+        Doc.Options := [doNodeAutoCreate,doNodeAutoIndent];
+        pxmlNode := Doc.AddChild('PXML',PXML_NAMESPACE);
 
-            // package
-            packNode := CreateNode('package',pxmlNode);
-            packNode.Attributes['id'] := edtID.Text;
+        // package
+        packNode := CreateNode('package',pxmlNode);
+        packNode.Attributes['id'] := edtID.Text;
 
-            SetAuthorInfo(CreateNode('author',packNode),edtName,edtWebsite,edtMail);
-            SetVersionInfo(CreateNode('version',packNode));
-            SetTitleDescrInfo(packNode);
-            temp := CreateNode('icon',packNode);
-            temp.Attributes['src'] := edtIcon.Text;
+        SetAuthorInfo(CreateNode('author',packNode),edtName,edtWebsite,edtMail);
+        SetVersionInfo(CreateNode('version',packNode));
+        SetTitleDescrInfo(packNode);
+        temp := CreateNode('icon',packNode);
+        temp.Attributes['src'] := edtIcon.Text;
 
-            // application
-            appNode := CreateNode('application',pxmlNode);
-            appNode.Attributes['id'] := edtID.Text;
-            if Length(edtAppdata.Text) > 0 then
-                appNode.Attributes['appdata'] := edtAppdata.Text;
-            temp := CreateNode('exec',appNode);
-            temp.Attributes['command'] := edtExe.Text;
-            if cbxExeSettings.Checked then
-            begin
-                if Length(edtArguments.Text) > 0 then
-                    temp.Attributes['arguments'] := edtArguments.Text;
-                if Length(edtStartdir.Text) > 0 then
-                    temp.Attributes['startdir'] := edtStartdir.Text;
-            end;
-            temp := CreateNode('author',appNode);
-            if cbxPort.Checked then
-            begin
-                SetAuthorInfo(temp,edtAppAuthor,edtAppWebsite,edtAppMail);
-            end else
-            begin
-                SetAuthorInfo(temp,edtName,edtWebsite,edtMail);
-            end;
-            SetVersionInfo(CreateNode('version',appNode));
-            SetTitleDescrInfo(appNode);
-            temp := Doc.CreateNode('Extra block for compatibility with OS versions before HF6',ntComment);
-            appNode.ChildNodes.Add(temp);
-            temp := CreateNode('title',appNode);
-            temp.Attributes['lang'] := 'en_EN';
-            temp.NodeValue := edtTitle.Text;
-            temp := CreateNode('description',appNode);
-            temp.Attributes['lang'] := 'en_EN';
-            temp.NodeValue := memDescription.Text;  
-            temp := Doc.CreateNode('END Extra block',ntComment);
-            appNode.ChildNodes.Add(temp);
-            temp := CreateNode('icon',appNode);
-            temp.Attributes['src'] := edtIcon.Text;
-            temp := CreateNode('license',CreateNode('licenses',appNode));
-            temp.Attributes['name'] := cobLicense.Text;
-            if Length(edtLicenseURL.Text) > 0 then
-                temp.Attributes['url'] := edtLicenseURL.Text;
-            if Length(edtSourceURL.Text) > 0 then
-                temp.Attributes['sourcecodeurl'] := edtSourceURL.Text;
-            temp := CreateNode('previewpics',appNode);
-            tempScreen := First;
-            while tempScreen <> nil do
-            begin
-                CreateNode('previewpix',temp).Attributes['src'] := tempScreen.Filepath;
-                tempScreen := tempScreen.Next;
-            end;
-            if (Length(edtInfoFile.Text) > 0) AND (Length(edtInfoName.Text) > 0) then
-            begin
-                temp := CreateNode('info',appNode);
-                temp.Attributes['name'] := StringReplace(edtInfoName.Text,'<yourapptitlehere>',edtTitle.Text,[]);
-                if (ExtractFileExt(edtInfoFile.Text) = '.htm') OR (ExtractFileExt(edtInfoFile.Text) = '.html') then
-                    temp.Attributes['type'] := 'text/html'
-                else
-                    temp.Attributes['type'] := 'text/plain';
-                temp.Attributes['src'] := edtInfoFile.Text;
-            end;
-            temp := CreateNode('category',CreateNode('categories',appNode));
-            temp.Attributes['name'] := cobCategory.Text;
-            temp := CreateNode('subcategory',temp);
-            temp.Attributes['name'] := cobSubcategory.Text;
+        // application
+        appNode := CreateNode('application',pxmlNode);
+        appNode.Attributes['id'] := edtID.Text;
+        if Length(edtAppdata.Text) > 0 then
+            appNode.Attributes['appdata'] := edtAppdata.Text;
+        temp := CreateNode('exec',appNode);
+        temp.Attributes['command'] := edtExe.Text;
+        if cbxExeSettings.Checked then
+        begin
+            if Length(edtArguments.Text) > 0 then
+                temp.Attributes['arguments'] := edtArguments.Text;
+            if Length(edtStartdir.Text) > 0 then
+                temp.Attributes['startdir'] := edtStartdir.Text;
+        end;
+        temp := CreateNode('author',appNode);
+        if cbxPort.Checked then
+            SetAuthorInfo(temp,edtAppAuthor,edtAppWebsite,edtAppMail)
+        else
+            SetAuthorInfo(temp,edtName,edtWebsite,edtMail);
+        SetVersionInfo(CreateNode('version',appNode));
+        SetTitleDescrInfo(appNode);
+        temp := Doc.CreateNode('Extra block for compatibility with OS versions before HF6',ntComment);
+        appNode.ChildNodes.Add(temp);
+        temp := CreateNode('title',appNode);
+        temp.Attributes['lang'] := 'en_EN';
+        temp.NodeValue := edtTitle.Text;
+        temp := CreateNode('description',appNode);
+        temp.Attributes['lang'] := 'en_EN';
+        temp.NodeValue := memDescription.Text;
+        temp := Doc.CreateNode('END Extra block',ntComment);
+        appNode.ChildNodes.Add(temp);
+        temp := CreateNode('icon',appNode);
+        temp.Attributes['src'] := edtIcon.Text;
+        temp := CreateNode('license',CreateNode('licenses',appNode));
+        temp.Attributes['name'] := cobLicense.Text;
+        if Length(edtLicenseURL.Text) > 0 then
+            temp.Attributes['url'] := edtLicenseURL.Text;
+        if Length(edtSourceURL.Text) > 0 then
+            temp.Attributes['sourcecodeurl'] := edtSourceURL.Text;
+        temp := CreateNode('previewpics',appNode);
+        tempScreen := First;
+        while tempScreen <> nil do
+        begin
+            CreateNode('previewpix',temp).Attributes['src'] := tempScreen.Filepath;
+            tempScreen := tempScreen.Next;
+        end;
+        if (Length(edtInfoFile.Text) > 0) AND (Length(edtInfoName.Text) > 0) then
+        begin
+            temp := CreateNode('info',appNode);
+            temp.Attributes['name'] := StringReplace(edtInfoName.Text,'<yourapptitlehere>',edtTitle.Text,[]);
+            if (ExtractFileExt(edtInfoFile.Text) = '.htm') OR (ExtractFileExt(edtInfoFile.Text) = '.html') then
+                temp.Attributes['type'] := 'text/html'
+            else
+                temp.Attributes['type'] := 'text/plain';
+            temp.Attributes['src'] := edtInfoFile.Text;
+        end;
+        temp := CreateNode('category',CreateNode('categories',appNode));
+        temp.Attributes['name'] := cobCategory.Text;
+        temp := CreateNode('subcategory',temp);
+        temp.Attributes['name'] := cobSubcategory.Text;
 
-            Doc.SaveToFile(Filename);
-            Doc.Active := false;
-        end else
-            raise EReadError.Create('Failed loading the default PXML framework file, ' +
-                'please reinstall the program.');
+        Doc.SaveToFile(Filename);
+        Doc.Active := false;
+        Result := true;
     except
         on E : Exception do
         begin
@@ -436,34 +432,38 @@ begin
     end;
 end;
 
-// --- Form --------------------------------------------------------------------
-
-procedure TfrmCreator.FormCreate(Sender: TObject);
-var dummy : TButtonEvent;
-begin
-    edtMail.OnKeyPress := InputFilter.EmailKeyPress;
-    edtAppMail.OnKeyPress := InputFilter.EmailKeyPress;
-    edtID.OnKeyPress := InputFilter.IDKeyPress;
-    edtVMajor.OnKeyPress := InputFilter.VersionKeyPress;
-    edtVMinor.OnKeyPress := InputFilter.VersionKeyPress;
-    edtVRelease.OnKeyPress := InputFilter.VersionKeyPress;
-    edtVBuild.OnKeyPress := InputFilter.VersionKeyPress;
-    edtAppdata.OnKeyPress := InputFilter.FolderKeyPress;
-    edtStartdir.OnKeyPress := InputFilter.FolderKeyPress;
-    First := nil;
-    {$Ifdef Win32}
-    KeyPreview := true;
-    dummy := TButtonEvent.Create;
-    OnKeyDown := dummy.KeyDown;
-    dummy.Free;
-    {$Endif}
-end;
-
-procedure TfrmCreator.FormShow(Sender: TObject);
+function TfrmCreator.Execute : Boolean;
 var F : TextFile;
     S : String;
     P : TStringPair;
+    I : Integer;
 begin
+    Successful := false;
+    // Reset controls
+    btnRemoveClick(Self);
+    for I := 0 to ComponentCount - 1 do
+    begin  
+        try
+            (Components[I] as TEdit).Text := '';
+            Continue;
+        except
+        end;
+        try
+            (Components[I] as TComboBox).ItemIndex := -1;
+            Continue;
+        except
+        try
+            (Components[I] as TCheckBox).Checked := false;
+        except
+        end;
+        end;
+    end;
+    memDescription.Clear;
+    edtVMajor.Text := '1';
+    edtVMinor.Text := '0';  
+    edtVRelease.Text := '0';
+    edtVBuild.Text := '0';
+
     // Fill Category drop-down
     cobCategory.Clear;
     try
@@ -499,12 +499,39 @@ begin
         CloseFile(F);
     end;
     LoadIcon('');
+    pgcMain.ActivePageIndex := 0;
+    ShowModal;
+    Result := Successful;
+end;
+
+// --- Form --------------------------------------------------------------------
+
+procedure TfrmCreator.FormCreate(Sender: TObject);
+var dummy : TButtonEvent;
+begin
+    edtMail.OnKeyPress := InputFilter.EmailKeyPress;
+    edtAppMail.OnKeyPress := InputFilter.EmailKeyPress;
+    edtID.OnKeyPress := InputFilter.IDKeyPress;
+    edtVMajor.OnKeyPress := InputFilter.VersionKeyPress;
+    edtVMinor.OnKeyPress := InputFilter.VersionKeyPress;
+    edtVRelease.OnKeyPress := InputFilter.VersionKeyPress;
+    edtVBuild.OnKeyPress := InputFilter.VersionKeyPress;
+    edtAppdata.OnKeyPress := InputFilter.FolderKeyPress;
+    edtStartdir.OnKeyPress := InputFilter.FolderKeyPress;
+    First := nil;
+    {$Ifdef Win32}
+    KeyPreview := true;
+    dummy := TButtonEvent.Create;
+    OnKeyDown := dummy.KeyDown;
+    dummy.Free;
+    {$Endif}
 end;
 
 // --- Buttons -----------------------------------------------------------------
 
 procedure TfrmCreator.btnCancelClick(Sender: TObject);
 begin
+    Successful := false;
     Close;
 end;
 
@@ -542,7 +569,17 @@ begin
     end else
     begin
         if sadPXML.Execute then
-            SavePXMLFile(sadPXML.Filename);
+        begin
+            if SavePXMLFile(sadPXML.Filename) then
+            begin
+                FFilename := sadPXML.Filename;
+                Successful := true;
+                Close;
+            end else
+                MessageDlg('An error occurred while attempting to save PXML file.'#13#10 +
+                    'Sorry about that...'#13#10 +
+                    'Check the log on the main window for details.',mtError,[mbOK],0);
+        end;
     end;
 end;
 

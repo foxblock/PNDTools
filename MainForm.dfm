@@ -87,15 +87,6 @@ object frmMain: TfrmMain
       ScrollBars = ssVertical
       TabOrder = 0
     end
-    object Button1: TButton
-      Left = 416
-      Top = 48
-      Width = 75
-      Height = 25
-      Caption = 'Button1'
-      TabOrder = 1
-      OnClick = Button1Click
-    end
   end
   object grbFiles: TGroupBox
     AlignWithMargins = True
@@ -407,6 +398,7 @@ object frmMain: TfrmMain
       Caption = 'Create PXML'
       TabOrder = 2
       OnClick = btnPXMLEditClick
+      ExplicitTop = 17
     end
   end
   object imlFileTree: TImageList

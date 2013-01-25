@@ -16,7 +16,6 @@ object frmCreator: TfrmCreator
   OldCreateOrder = False
   Position = poDesigned
   OnCreate = FormCreate
-  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object pgcMain: TPageControl
@@ -28,7 +27,7 @@ object frmCreator: TfrmCreator
     Margins.Top = 0
     Margins.Right = 0
     Margins.Bottom = 0
-    ActivePage = pgcMain6
+    ActivePage = pgcMain1
     Align = alClient
     MultiLine = True
     Style = tsFlatButtons
@@ -86,7 +85,17 @@ object frmCreator: TfrmCreator
           
             'Some fields don'#39't accept every character, you may hear a beeping' +
             ' noise if you try to enter an'
-          'invalid character.')
+          'invalid character.'
+          ''
+          
+            'NOTE: You should have already added data files to the PND struct' +
+            'ure (using the main window), if not '
+          'please cancel this wizard and do so.'
+          'You will need at least the following:'
+          ' - an executable for your application'
+          ' - an icon for the application/PND'
+          ' - screenshots of your application'
+          'An info or help file is not mandatory, but highly recommended.')
         ReadOnly = True
         TabOrder = 0
       end
@@ -476,22 +485,6 @@ object frmCreator: TfrmCreator
         Font.Style = [fsBold]
         ParentFont = False
         ExplicitWidth = 25
-      end
-      object lblDescrInfo: TLabel
-        AlignWithMargins = True
-        Left = 4
-        Top = 61
-        Width = 494
-        Height = 13
-        Margins.Left = 4
-        Margins.Top = 2
-        Margins.Right = 4
-        Margins.Bottom = 0
-        Align = alTop
-        Caption = 
-          'Short description of the application. You may use multiple lines' +
-          ' if you really have to.'
-        ExplicitWidth = 401
       end
       object cobCategory: TComboBox
         AlignWithMargins = True
@@ -1099,6 +1092,31 @@ object frmCreator: TfrmCreator
               'release')
           end
         end
+      end
+      object memDescriptionHelp: TMemo
+        AlignWithMargins = True
+        Left = 4
+        Top = 61
+        Width = 494
+        Height = 13
+        Margins.Left = 4
+        Margins.Top = 2
+        Margins.Right = 4
+        Margins.Bottom = 0
+        Align = alTop
+        BevelInner = bvNone
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        Color = clBtnFace
+        Enabled = False
+        Lines.Strings = (
+          
+            'Short description of the application. You may use multiple lines' +
+            ' if you really have to.')
+        ReadOnly = True
+        TabOrder = 8
+        ExplicitLeft = -4
+        ExplicitTop = 80
       end
     end
     object pgcMain4: TTabSheet
@@ -1731,7 +1749,6 @@ object frmCreator: TfrmCreator
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitTop = 262
         ExplicitWidth = 263
       end
       object redErrors: TRichEdit
@@ -1753,8 +1770,6 @@ object frmCreator: TfrmCreator
           'All valid, good job!')
         ReadOnly = True
         TabOrder = 0
-        ExplicitTop = 281
-        ExplicitHeight = 193
       end
       object grbAdvanced: TGroupBox
         Left = 0
@@ -1986,7 +2001,6 @@ object frmCreator: TfrmCreator
         Align = alTop
         BevelOuter = bvLowered
         TabOrder = 2
-        ExplicitTop = 246
       end
     end
   end

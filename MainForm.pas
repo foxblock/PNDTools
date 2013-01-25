@@ -71,8 +71,6 @@ type
     menMainFileExit: TMenuItem;   
     btnPXMLEdit: TButton;
     pomFilesDelete: TMenuItem;
-    Button1: TButton;
-    procedure Button1Click(Sender: TObject);
     procedure pomFilesDeleteClick(Sender: TObject);
     procedure edtPXMLChange(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -900,6 +898,7 @@ begin
 end;
 
 procedure TfrmMain.btnPXMLEditClick(Sender: TObject);
+var temp : Integer;
 begin
     if (edtPXML.Text <> '') then
     begin
@@ -918,7 +917,18 @@ begin
         end;
     end else
     begin
-        edtPXML.Text := frmPXML.CreateNewFile;
+        temp := MessageDlg('Do you want PNDTools to assist you in the creation of the PXML file?'#13#10 +
+            'Choosing ''yes'' will launch the PXML wizard, which is great for beginners and suffices in most use-cases.'#13#10 +
+            'Choosing ''no'' will give you a full xml editor allowing for more advanced edits, but also gives less guidance and help.'#13#10 +
+            'NOTE: In any case you should add all data files beforehand (using the controls above).',
+            mtConfirmation,[mbYes,mbNo,mbCancel],0);
+        if temp = mrYes then
+        begin
+            if frmCreator.Execute then
+                edtPXML.Text := frmCreator.Filename;
+        end else
+        if temp = mrNo then
+            edtPXML.Text := frmPXML.CreateNewFile;
     end;
 end;
 
@@ -926,11 +936,6 @@ procedure TfrmMain.btnPXMLLoadClick(Sender: TObject);
 begin
     if opdPXML.Execute then
         edtPXML.Text := opdPXML.FileName;
-end;
-
-procedure TfrmMain.Button1Click(Sender: TObject);
-begin
-    frmCreator.Show;
 end;
 
 end.
