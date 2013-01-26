@@ -144,7 +144,7 @@ type
   end;
 
 const
-    VERSION : String           = '0.5.0';
+    VERSION : String           = '0.5.1';
     BUILD_DATE : String        = '26.01.2013';
     UNSQUASHFS_PATH : String   = 'tools\unsquashfs.exe';
     MKSQUASH_PATH : String     = 'tools\mksquashfs.exe'; // Path to mkquashfs
@@ -927,7 +927,10 @@ begin
         if temp = mrYes then
         begin
             if frmCreator.Execute then
+            begin
                 edtPXML.Text := frmCreator.Filename;
+                edtIcon.Text := frmCreator.IconFilename;
+            end;
         end else
         if temp = mrNo then
             edtPXML.Text := frmPXML.CreateNewFile;

@@ -1,0 +1,3 @@
+If you are having trouble creating the PND because chmod.exe or mksquashfs.exe keep failing for some reason (and the cmd window does not stay open to show the error), here is what to do:
+In the PNDTools options (File->Options...) change the Paths of chmod, mksquash (and unsquash) to the .bat files of the same name (so just exchange .exe for .bat).
+Parameters are kind of hard coded then, but you can change the .bat files to your liking.

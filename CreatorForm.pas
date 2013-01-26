@@ -147,9 +147,11 @@ type
     procedure CheckForErrors;
     function SavePXMLFile(const Filename : String) : Boolean;
     procedure LoadIcon(const Filename : String);
+    function GetIconFilename : String;
   public
     function Execute : Boolean;
-    property Filename : String read FFilename;
+    property Filename : String read FFilename;     
+    property IconFilename : String read GetIconFilename;
     { Public declarations }
   end;
 
@@ -431,6 +433,20 @@ begin
         imgIcon.Canvas.LineTo(0,imgIcon.Height);
         lblIconInfo.Caption := 'No icon loaded';
         temp.Free;
+    end;
+end;
+
+function TfrmCreator.GetIconFilename : String;
+var PData : PFileTreeData;
+    Node : PVirtualNode;
+begin
+    Node := CheckForExistance(frmMain.vstFiles,edtIcon.Text);
+    if Node = nil then
+        Result := ''
+    else
+    begin
+        PData := frmMain.vstFiles.GetNodeData(Node);
+        Result := PData.Name;
     end;
 end;
 
