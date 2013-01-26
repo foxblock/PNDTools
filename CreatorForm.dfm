@@ -27,7 +27,7 @@ object frmCreator: TfrmCreator
     Margins.Top = 0
     Margins.Right = 0
     Margins.Bottom = 0
-    ActivePage = pgcMain1
+    ActivePage = pgcMain6
     Align = alClient
     MultiLine = True
     Style = tsFlatButtons
@@ -1115,8 +1115,6 @@ object frmCreator: TfrmCreator
             ' if you really have to.')
         ReadOnly = True
         TabOrder = 8
-        ExplicitLeft = -4
-        ExplicitTop = 80
       end
     end
     object pgcMain4: TTabSheet
@@ -1666,6 +1664,7 @@ object frmCreator: TfrmCreator
             Font.Style = []
             ParentFont = False
             TabOrder = 1
+            OnClick = btnInfoFileClick
           end
         end
         object edtInfoName: TEdit

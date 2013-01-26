@@ -144,8 +144,8 @@ type
   end;
 
 const
-    VERSION : String           = '0.4.0';
-    BUILD_DATE : String        = '26.11.2011';
+    VERSION : String           = '0.5.0';
+    BUILD_DATE : String        = '26.01.2013';
     UNSQUASHFS_PATH : String   = 'tools\unsquashfs.exe';
     MKSQUASH_PATH : String     = 'tools\mksquashfs.exe'; // Path to mkquashfs
     CHMOD_PATH : String        = 'tools\chmod.exe';      // Path to cygwin's chmod

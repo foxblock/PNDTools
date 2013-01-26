@@ -121,6 +121,7 @@ type
     edtStartdir: TEdit;
     Panel2: TPanel;
     memDescriptionHelp: TMemo;
+    procedure btnInfoFileClick(Sender: TObject);
     procedure btnExeClick(Sender: TObject);
     procedure btnStartdirClick(Sender: TObject);
     procedure btnRemoveClick(Sender: TObject);
@@ -149,7 +150,6 @@ type
   public
     function Execute : Boolean;
     property Filename : String read FFilename;
-    // TODO: Integration in main menu CreatePXML file
     { Public declarations }
   end;
 
@@ -237,7 +237,7 @@ begin
         AddError('Invalid or no title set!',frmMain.LOG_ERROR_COLOR);
     if Length(edtExe.Text) = 0 then
         AddError('No executable specified!',frmMain.LOG_ERROR_COLOR)
-    else if not FileExists(edtExe.Text) then
+    else if CheckForExistance(frmMain.vstFiles,edtExe.Text) = nil then
         AddError('The selected executable does not exist!',frmMain.LOG_ERROR_COLOR);
     if Length(cobCategory.Text) = 0 then
         AddError('No category specified!',frmMain.LOG_ERROR_COLOR);
@@ -246,7 +246,7 @@ begin
     // Page 4
     if Length(edtIcon.Text) = 0 then
         AddError('No icon specified!',frmMain.LOG_ERROR_COLOR)
-    else if not FileExists(edtIcon.Text) then
+    else if CheckForExistance(frmMain.vstFiles,edtIcon.Text) = nil then
         AddError('The specified icon does not exist!',frmMain.LOG_ERROR_COLOR);
     if First = nil then
         AddError('No screenshots added!',frmMain.LOG_ERROR_COLOR);
@@ -302,10 +302,10 @@ function TfrmCreator.SavePXMLFile(const Filename: string) : Boolean;
     var temp : IXMLNode;
     begin
         temp := CreateNode('title',CreateNode('titles',Node));
-        temp.Attributes['lang'] := 'en_EN';
+        temp.Attributes['lang'] := 'en_US';
         temp.NodeValue := edtTitle.Text;
         temp := CreateNode('description',CreateNode('descriptions',Node));
-        temp.Attributes['lang'] := 'en_EN';
+        temp.Attributes['lang'] := 'en_US';
         temp.NodeValue := memDescription.Text;
     end;
 
@@ -354,10 +354,10 @@ begin
         temp := Doc.CreateNode('Extra block for compatibility with OS versions before HF6',ntComment);
         appNode.ChildNodes.Add(temp);
         temp := CreateNode('title',appNode);
-        temp.Attributes['lang'] := 'en_EN';
+        temp.Attributes['lang'] := 'en_US';
         temp.NodeValue := edtTitle.Text;
         temp := CreateNode('description',appNode);
-        temp.Attributes['lang'] := 'en_EN';
+        temp.Attributes['lang'] := 'en_US';
         temp.NodeValue := memDescription.Text;
         temp := Doc.CreateNode('END Extra block',ntComment);
         appNode.ChildNodes.Add(temp);
@@ -369,11 +369,13 @@ begin
             temp.Attributes['url'] := edtLicenseURL.Text;
         if Length(edtSourceURL.Text) > 0 then
             temp.Attributes['sourcecodeurl'] := edtSourceURL.Text;
+        temp := CreateNode('icon',appNode);
+        temp.Attributes['src'] := edtIcon.Text;
         temp := CreateNode('previewpics',appNode);
         tempScreen := First;
         while tempScreen <> nil do
         begin
-            CreateNode('previewpix',temp).Attributes['src'] := tempScreen.Filepath;
+            CreateNode('pic',temp).Attributes['src'] := tempScreen.Filepath;
             tempScreen := tempScreen.Next;
         end;
         if (Length(edtInfoFile.Text) > 0) AND (Length(edtInfoName.Text) > 0) then
@@ -499,7 +501,9 @@ begin
         CloseFile(F);
     end;
     LoadIcon('');
-    pgcMain.ActivePageIndex := 0;
+    pgcMain.ActivePageIndex := 0; 
+    btnPrev.Enabled := false;    
+    btnNext.Caption := 'Next ->';
     ShowModal;
     Result := Successful;
 end;
@@ -538,7 +542,7 @@ end;
 procedure TfrmCreator.btnExeClick(Sender: TObject);
 begin
     frmFileSelect.SetFilter('.bin;;.sh','Executable files');
-    frmFileSelect.Caption := 'Select executable...';  
+    frmFileSelect.Caption := 'Select executable...';
     frmFileSelect.CopyTreeData(frmMain.vstFiles,frmMain.Settings.ShowIcons);
     frmFileSelect.MultiSelect := false;
     if frmFileSelect.Execute then
@@ -549,7 +553,7 @@ procedure TfrmCreator.btnIconClick(Sender: TObject);
 var PData : PFileTreeData;
 begin
     frmFileSelect.SetFilter('.png','PNG Image');
-    frmFileSelect.Caption := 'Select icon image...';  
+    frmFileSelect.Caption := 'Select icon image...';
     frmFileSelect.CopyTreeData(frmMain.vstFiles,frmMain.Settings.ShowIcons);
     frmFileSelect.MultiSelect := false;
     if frmFileSelect.Execute then
@@ -558,6 +562,16 @@ begin
         PData := frmMain.vstFiles.GetNodeData(frmFileSelect.FileNode);
         LoadIcon(PData.Name);
     end;
+end;
+
+procedure TfrmCreator.btnInfoFileClick(Sender: TObject);
+begin
+    frmFileSelect.SetFilter('.txt;.htm;.html','Text or HTML files');
+    frmFileSelect.Caption := 'Select documentation file...';
+    frmFileSelect.CopyTreeData(frmMain.vstFiles,frmMain.Settings.ShowIcons);
+    frmFileSelect.MultiSelect := false;
+    if frmFileSelect.Execute then
+        edtInfoFile.Text := frmFileSelect.Filename;
 end;
 
 procedure TfrmCreator.btnNextClick(Sender: TObject);
@@ -678,7 +692,7 @@ procedure TfrmCreator.pgcMainChange(Sender: TObject);
     function IDFormatString(const S : String) : String;
     var I : Integer;
     begin
-        Result := S;
+        Result := AnsiLowerCase(S);
         I := 1;
         while I <= Length(Result) do
         begin
