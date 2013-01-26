@@ -1,6 +1,6 @@
 object frmCreator: TfrmCreator
-  Left = 120
-  Top = 145
+  Left = 225
+  Top = 265
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'PXML Creation Utility'
   ClientHeight = 542
@@ -27,7 +27,7 @@ object frmCreator: TfrmCreator
     Margins.Top = 0
     Margins.Right = 0
     Margins.Bottom = 0
-    ActivePage = pgcMain6
+    ActivePage = pgcMain1
     Align = alClient
     MultiLine = True
     Style = tsFlatButtons
@@ -217,7 +217,7 @@ object frmCreator: TfrmCreator
           AlignWithMargins = True
           Left = 6
           Top = 15
-          Width = 482
+          Width = 105
           Height = 13
           Margins.Left = 4
           Margins.Top = 0
@@ -232,13 +232,12 @@ object frmCreator: TfrmCreator
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
           ParentFont = False
-          ExplicitWidth = 105
         end
         object lblAppWebsite: TLabel
           AlignWithMargins = True
           Left = 6
           Top = 59
-          Width = 482
+          Width = 171
           Height = 13
           Margins.Left = 4
           Margins.Top = 2
@@ -253,13 +252,12 @@ object frmCreator: TfrmCreator
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
           ParentFont = False
-          ExplicitWidth = 171
         end
         object lblAppMail: TLabel
           AlignWithMargins = True
           Left = 6
           Top = 103
-          Width = 482
+          Width = 169
           Height = 13
           Margins.Left = 4
           Margins.Top = 2
@@ -274,7 +272,6 @@ object frmCreator: TfrmCreator
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
           ParentFont = False
-          ExplicitWidth = 169
         end
         object edtAppAuthor: TEdit
           AlignWithMargins = True
@@ -596,7 +593,7 @@ object frmCreator: TfrmCreator
           AlignWithMargins = True
           Left = 6
           Top = 61
-          Width = 482
+          Width = 161
           Height = 13
           Margins.Left = 4
           Margins.Top = 2
@@ -611,13 +608,12 @@ object frmCreator: TfrmCreator
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
           ParentFont = False
-          ExplicitWidth = 161
         end
         object lblArguments: TLabel
           AlignWithMargins = True
           Left = 6
           Top = 17
-          Width = 482
+          Width = 174
           Height = 13
           Margins.Left = 4
           Margins.Top = 2
@@ -632,7 +628,6 @@ object frmCreator: TfrmCreator
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
           ParentFont = False
-          ExplicitWidth = 174
         end
         object edtArguments: TEdit
           AlignWithMargins = True
@@ -663,6 +658,7 @@ object frmCreator: TfrmCreator
           Enabled = False
           TabOrder = 1
           OnClick = btnStartdirClick
+          ExplicitTop = 80
         end
         object edtStartdir: TEdit
           AlignWithMargins = True
@@ -730,7 +726,7 @@ object frmCreator: TfrmCreator
             AlignWithMargins = True
             Left = 0
             Top = 0
-            Width = 55
+            Width = 27
             Height = 13
             Margins.Left = 0
             Margins.Top = 0
@@ -744,7 +740,6 @@ object frmCreator: TfrmCreator
             Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
-            ExplicitWidth = 27
           end
           object spbVMajor: TSpinButton
             Left = 40
@@ -810,7 +805,7 @@ object frmCreator: TfrmCreator
             AlignWithMargins = True
             Left = 0
             Top = 0
-            Width = 55
+            Width = 26
             Height = 13
             Margins.Left = 0
             Margins.Top = 0
@@ -824,7 +819,6 @@ object frmCreator: TfrmCreator
             Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
-            ExplicitWidth = 26
           end
           object spbVMinor: TSpinButton
             Left = 40
@@ -890,7 +884,7 @@ object frmCreator: TfrmCreator
             AlignWithMargins = True
             Left = 0
             Top = 0
-            Width = 55
+            Width = 38
             Height = 13
             Margins.Left = 0
             Margins.Top = 0
@@ -904,7 +898,6 @@ object frmCreator: TfrmCreator
             Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
-            ExplicitWidth = 38
           end
           object spbVRelease: TSpinButton
             Left = 40
@@ -970,7 +963,7 @@ object frmCreator: TfrmCreator
             AlignWithMargins = True
             Left = 0
             Top = 0
-            Width = 55
+            Width = 22
             Height = 13
             Margins.Left = 0
             Margins.Top = 0
@@ -984,7 +977,6 @@ object frmCreator: TfrmCreator
             Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
-            ExplicitWidth = 22
           end
           object spbVBuild: TSpinButton
             Left = 40
@@ -1295,7 +1287,7 @@ object frmCreator: TfrmCreator
             AlignWithMargins = True
             Left = 4
             Top = 2
-            Width = 410
+            Width = 19
             Height = 13
             Margins.Left = 4
             Margins.Top = 2
@@ -1309,13 +1301,12 @@ object frmCreator: TfrmCreator
             Font.Name = 'Tahoma'
             Font.Style = [fsBold]
             ParentFont = False
-            ExplicitWidth = 19
           end
           object lblIconInfo: TLabel
             AlignWithMargins = True
             Left = 16
             Top = 44
-            Width = 398
+            Width = 44
             Height = 13
             Margins.Left = 16
             Margins.Top = 0
@@ -1329,7 +1320,6 @@ object frmCreator: TfrmCreator
             Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
-            ExplicitWidth = 44
           end
           object pnlIconPath: TPanel
             AlignWithMargins = True

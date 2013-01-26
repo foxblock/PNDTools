@@ -450,6 +450,7 @@ begin
         end;
         ReadFormSettings(Ini,frmMain);
         ReadFormSettings(Ini,frmPXML);
+        ReadFormSettings(Ini,frmCreator);
     finally
         Ini.Free;
     end;
@@ -476,6 +477,7 @@ begin
         end;
         WriteFormSettings(Ini,frmMain);
         WriteFormSettings(Ini,frmPXML);
+        WriteFormSettings(Ini,frmCreator);
     finally
         Ini.Free;
     end;

@@ -1,6 +1,6 @@
 object frmPXML: TfrmPXML
-  Left = 428
-  Top = 154
+  Left = 248
+  Top = 276
   Caption = 'PXML'
   ClientHeight = 492
   ClientWidth = 404
