@@ -221,7 +221,7 @@ uses {$Ifdef Win32}ControlHideFix,{$Endif} MainForm, FormatUtils, Math;
     // DONE: Add info about multiple elements of the same kind to scheme and loading functionality here
     // TODO: Context-sensitive context menu for adding elements
     // DONE: Fill element dropDown (preferrebly from schema file)
-    // TODO: Panel type for paths (tricky to do as relative from PND)
+    // TODO: Panel type for paths (tricky to do as relative from PND) -> copy from CreatorForm
     // DONE: Panel type for category and sub-category
     // DONE: Select added element
     // DONE: Get correct application element by selection in browser

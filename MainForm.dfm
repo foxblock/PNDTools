@@ -77,6 +77,7 @@ object frmMain: TfrmMain
       Margins.Right = 4
       Margins.Bottom = 4
       Align = alClient
+      HideSelection = False
       Lines.Strings = (
         'Welcome to the PNDTools'
         
