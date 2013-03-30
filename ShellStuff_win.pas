@@ -1,3 +1,9 @@
+{*******************************************************}
+{                                                       }
+{  Windows shell and file interaction functions         }
+{                                                       }
+{*******************************************************}
+
 unit ShellStuff_win;
 
 interface

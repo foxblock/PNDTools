@@ -1,3 +1,9 @@
+{***************************************************************}
+{                                                               }
+{  Various utility functions regarding graphics and rendering   }
+{                                                               }
+{***************************************************************}
+
 unit GraphicUtils;
     
 {$IFDEF FPC}
@@ -8,6 +14,8 @@ interface
 
 uses Types;
 
+{ Returns a TRect of (ScrWidth,SrcHeight) stretched to (DestWidth,DestHeight)
+  while keeping the original proportions }
 function GetStretchRect(const SrcWidth : Integer; const SrcHeight : Integer;
     const DestWidth : Integer; const DestHeight : Integer) : TRect;
 

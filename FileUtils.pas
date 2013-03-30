@@ -1,3 +1,11 @@
+{***************************************************************}
+{                                                               }
+{  Functions for byte-level file interaction (looking for and   } 
+{  appending data/bytes)                                        }
+{                                                               }
+{***************************************************************}
+
+
 unit FileUtils;
 
 {$IFDEF FPC}

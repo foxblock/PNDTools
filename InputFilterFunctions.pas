@@ -1,3 +1,10 @@
+{*******************************************************}
+{                                                       }
+{  Implementations for KeyPress filter functions for    }
+{  the TStringItemPanel in PXMLForm and CreatorForm     }
+{                                                       }
+{*******************************************************}
+
 unit InputFilterFunctions;
 
 interface

@@ -1,3 +1,9 @@
+{***************************************************************}
+{                                                               }
+{  Various utility functions regarding string formatting        }
+{                                                               }
+{***************************************************************}
+
 unit FormatUtils;
 
 {$IFDEF FPC}

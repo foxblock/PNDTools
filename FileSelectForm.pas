@@ -35,34 +35,47 @@ type
   private       
     FFileList : TStrings;
     FNodeList : TNodeArray;
+    { Get data for the OriginalNode linked with Node, Tree is the tree Node is
+      in, global OriginalTree variable will be used to get the data }
     function GetOriginalNodeData(Tree : TBaseVirtualTree; Node : PVirtualNode) : PFileTreeData;
     function GetMultiSelect : Boolean;
     procedure SetMultiSelect(NewValue : Boolean);
     function GetFileName : String;
     function GetFileNode : PVirtualNode;
     function FileExtInFilters(Data : PFileTreeData) : Boolean;
-    procedure ApplyFilter;
   public
+    { Copies all nodes fron the passed Tree to the local one, sets up the link
+      tree data and filter settings on each node, as well as OriginalTree var }
     procedure CopyTreeData(Tree : TBaseVirtualTree; sShowIcons : Boolean);
+    { Apply the passed filter and set the form's title accordingly
+      FilterString is a semicolon seperated list of file extensions with the
+      leading dot, or the special FOLDER_WILDCARD
+      e.g. ".png;.jpg;.gif" }
     procedure SetFilter(const FilterStr : String; const Title : String);
     function Execute : Boolean;
+    // Enable selection of multiple files
     property MultiSelect : Boolean read GetMultiSelect write SetMultiSelect;
+    // Local filename (in the PND) of the (first) selected item
     property Filename : String read GetFilename;
+    // Node (tree on frmMain) of the (first) selected item
     property FileNode : PVirtualNode read GetFileNode;
+    // Full list of filenames of selected items
     property FileList : TStrings read FFileList;
+    // Full list of nodes of selected items
     property NodeList : TNodeArray read FNodeList;
+    // Filter string for folder
     const FOLDER_WILDCARD : String = '[folder]';
   end;
 
   rFileMirrorTreeData = record
-    OriginalNode : PVirtualNode;
-    IsFiltered : Boolean;
+    OriginalNode : PVirtualNode; // Link to node in tree on frmMain
+    IsFiltered : Boolean; // Flag whether the file succumbs to the current filter
   end;
   PFileMirrorTreeData = ^rFileMirrorTreeData;
 
 var
   frmFileSelect: TfrmFileSelect;
-  OriginalTree: TBaseVirtualTree;
+  OriginalTree: TBaseVirtualTree; // Link to tree on frmMain
   Successful : Boolean;
   ShowIcons : Boolean;
   Filters : TStrings;
@@ -141,31 +154,6 @@ begin
     end;
 end;
 
-procedure TfrmFileSelect.ApplyFilter;
-var Node : PVirtualNode;
-    PData : PFileMirrorTreeData;
-    POrigData : PFileTreeData;
-begin
-    Node := vstFiles.GetFirst();
-    while Node <> nil do
-    begin
-        PData := vstFiles.GetNodeData(Node);
-        POrigData := GetOriginalNodeData(OriginalTree,Node);
-        if vstFiles.HasChildren[Node] OR FileExtInFilters(POrigData) then
-        begin
-            PData.IsFiltered := false; 
-            vstFiles.IsVisible[Node] := cbxFilter.Checked;
-            vstFiles.IsDisabled[Node] := NOT cbxFilter.Checked;
-        end else
-        begin
-            PData.IsFiltered := true;    
-            vstFiles.IsVisible[Node] := NOT cbxFilter.Checked;
-            vstFiles.IsDisabled[Node] := cbxFilter.Checked;
-        end;
-        Node := vstFiles.GetNext(Node);
-    end;
-end;
-
 procedure TfrmFileSelect.CopyTreeData(Tree : TBaseVirtualTree; sShowIcons : Boolean);
 
     procedure CopyChildNodes(Tree : TBaseVirtualTree; Parent : PVirtualNode = nil;
@@ -182,14 +170,13 @@ procedure TfrmFileSelect.CopyTreeData(Tree : TBaseVirtualTree; sShowIcons : Bool
             PData := vstFiles.GetNodeData(Node);
             PData.OriginalNode := OriginalNode;
             PData.IsFiltered := true;
-            if Tree.HasChildren[OriginalNode] then
+            if Tree.HasChildren[OriginalNode] then // folder
             begin
                 PData.IsFiltered := false;
                 CopyChildNodes(Tree,Node,OriginalNode);
             end else
             begin
-                if FileExtInFilters(POrigData) then
-                    PData.IsFiltered := false;
+                PData.IsFiltered := not FileExtInFilters(POrigData);
             end;
             if PData.IsFiltered then
             begin

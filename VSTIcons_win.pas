@@ -1,3 +1,9 @@
+{********************************************************}
+{                                                        }
+{  Functions for VirtualTree (system) file icon loading  }
+{                                                        }
+{********************************************************}
+
 unit VSTIcons_win;
 
 interface
