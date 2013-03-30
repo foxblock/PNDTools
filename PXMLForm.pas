@@ -17,13 +17,14 @@ type
     data (faster than searching the XML file every time) }
   PPXMLElement = ^rPXMLElement;
   rPXMLElement = record
-    Tag : String;
+    Tag : String; // Literal string of the XML tag
     Parent : PPXMLElement;
-    XNode : IXMLNode;
+    XNode : IXMLNode; // Link to XML node
     Root : PPXMLElement;
-    Display : String;
+    Display : String; // Displayed XML tag in PNDTools (includes root node)
   end;
 
+  { DataType for the VirtualTree displaying nodes in the PXML }
   rXMLTreeData = record
     Node : IXMLNode;
     DisplayKey : String;
@@ -31,6 +32,7 @@ type
   end;
   PXMLTreeData = ^rXMLTreeData;
 
+  { DataType for the button group, link to cached XML schema file }
   TXMLGrpButtonItem = class(TGrpButtonItem)
   public
     Data : PPXMLElement;
@@ -84,38 +86,38 @@ type
     procedure btnOKClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
   private
-    // Recursively adds XML Data to the VirtualTree starting with the passed node
+    { Recursively adds XML Data to the VirtualTree starting with the passed node }
     procedure AddDataToTree(Tree : TBaseVirtualTree; Data : IXMLNode;
       Node : PVirtualNode);
-    // Updates the XML Data in Doc with the values in the current attribute panels
+    { Updates the XML Data in Doc with the values in the current attribute panels }
     procedure UpdateXMLData;
-    // Clears the currently displayed attribute panels
+    { Clears the currently displayed attribute panels }
     procedure ResetPanels;
-    // Adds attribute panels for the passed node (reads schema for missing attributes)
-    // and adds those, too
+    { Adds attribute panels for the passed node (reads schema for missing attributes)
+      and adds those, too }
     procedure AddPanels(Data : PXMLTreeData);
-    // Search for a node by caption (element name), returns NULL on failure
+    { Search for a node by caption (element name), returns NULL on failure }
     function  FindNode(Tree : TBaseVirtualTree; const S : String;
       Base : PVirtualNode) : PVirtualNode; overload;
     function  FindNode(const S : String; Node : IXMLNode) : IXMLNode; overload;
-    // Find a selected node with the passed caption, returns either the selected
-    // node, a parent of the selected node (if applicable) or NULL
+    { Find a selected node with the passed caption, returns either the selected
+      node, a parent of the selected node (if applicable) or NULL }
     function  FindSelectedNode(Tree: TBaseVirtualTree; const S: String) : PVirtualNode;
-    // Counts occurences of nodes with the passed caption in child nodes of Base
+    { Counts occurences of nodes with the passed caption in child nodes of Base }
     function  CountNodes(Tree : TBaseVirtualTree; const S : String;
       Base : PVirtualNode) : Integer;
-    // Show applicable element buttons for the current situation
+    { Show applicable element buttons for the current situation }
     procedure ShowElementButtons;
   public
-    // Clears the whole Form, dispatches all Objects
+    { Clears the whole Form, dispatches all Objects }
     procedure Clear;
-    // Load a XML file to the Form
+    { Load a XML file to the Form }
     function  LoadFromFile(const FileName : String) : Boolean;
-    // Create a new XML file (loads the default file)
+    { Create a new XML file (loads the default file) }
     function  CreateNewFile : String;
-    // Adds a new XML node to the doc and tree
+    { Adds a new XML node to the doc and tree }
     function  AddEmptyNode(Tree : TBaseVirtualTree; Element : PPXMLElement) : PVirtualNode;
-    // Generates a list of PPXMLElements from the schema file
+    { Generates a list of PPXMLElements from the schema file }
     procedure GetElementNames(Node : IXMLNode; ParentElement : PPXMLElement;
       RootElement : PPXMLElement);
   end;
@@ -129,9 +131,12 @@ type
     Node : IXMLNode;
   public
     constructor Create(NewParent : TWinControl; AttrNode, ParentNode : IXMLNode); reintroduce; virtual; 
-    destructor Free; virtual; abstract;
-    procedure SetOptional(const Optional : Boolean); virtual; abstract;
-    procedure SetTypeData(const Arguments : TStrings); virtual; abstract;
+    destructor Free; virtual; abstract;  
+    { Set whether this panel represents an optional PXML node }
+    procedure SetOptional(const Optional : Boolean); virtual; abstract;   
+    { Set panel type specific data }
+    procedure SetTypeData(const Arguments : TStrings); virtual; abstract;  
+    { Updates the linked XML node with the data entered into the panel }
     procedure UpdateData; virtual; abstract;
   end;
 
@@ -147,6 +152,7 @@ type
     procedure UpdateData; override;
   private     
     procedure GenericKeyPress(Sender: TObject; var Key: Char);
+    // Additional KeyPress functions in InputFilterFunctions.pas
   end;
 
   TSetItemPanel = class (TItemPanel)
@@ -182,28 +188,40 @@ type
   end;
 
 const
+  // Default data values
   NO_DESCRIPTION_LINE : String   = 'no description available for this element';
   DATA_MISSING_STR : String      = '--INSERT DATA HERE-';
+  // Delimiter for list of values in schema nodes
   DELIMITER_STR : String         = ',';
+  // Colours to paint lblKey TLabel components in TCustomPanel elements
   OPTIONAL_COLOR : TColor        = clGrayText;
-  REQUIRED_COLOR : TColor        = clWindowText;    
+  REQUIRED_COLOR : TColor        = clWindowText;
+  // Attributes used in the schema file
   SCHEMA_ATTRIBUTES : Array [0..2] of String = ('elemdesc','min','max');
+  // Names of elments with specific sub-elements
   ROOT_ELEMENT_NAMES : Array [0..2] of String = ('package','application','category');
+  // Element with a full text value
   FULL_TEXT_ELEMENT : String     = 'description'; // hard-coded until better implemented in schema
   MAX_DEFAULT_VALUE : Integer    = 1;
   MIN_DEFAULT_VALUE : Integer    = 1;
+  // Default "basic" PXML file (base for creating a new PXML)
   NEW_DEFAULT_FILE : String      = 'tools\PXML_default.xml';
+  // Default path of file in which the freedesktop categories are stored
   CATEGORIES_FILE : String       = 'tools\Categories.txt';
 
 var
   frmPXML: TfrmPXML;
   Doc : TXMLDocument;
   Schema : TXMLDocument;
+  // Current set of visible panels representing nodes in the xml file
   CurrentPanels : Array of TItemPanel;
+  // Array of nodes loaded from schema file
   PXMLElements : Array of PPXMLElement;
+  // Currently selected node in the VirtualTree
   CurrentNode : PVirtualNode;
   IsExistingFile : Boolean;
   Successful : Boolean;
+  // Loaded set of static KeyPress filter functions
   InputFilter : TInputFilters;
 
 implementation

@@ -125,20 +125,31 @@ type
       no file has been saved }
     procedure ExtractPNDMetaData(Stream : TFileStream; var PXML : String;
         var Icon : String);
+    { Function to read/write saved settings specific to the passed TForm
+      component, such as position and size }
     procedure ReadFormSettings(const Ini : TIniFile; Frm : TForm);
     procedure WriteFormSettings(Ini : TIniFile; const Frm : TForm);
   public
-    Settings : rSettings;   
+    Settings : rSettings;
+    // Default names for saving extracted files and for the "smart add" function
     const PXML_PATH : String = 'PXML.xml';
     const ICON_PATH : String = 'icon.png';
     const PND_EXT : String = '.pnd';
+    // Default colours for LogLine
     const LOG_ERROR_COLOR : TColor   = clRed;
     const LOG_WARNING_COLOR : TColor = $0000AAFF;
     const LOG_SUCCESS_COLOR : TColor = clGreen;
+
+    { Prints the passed string to Log on the main window in the passed colour }
     procedure LogLine(const TextToAdd : String; const Color: TColor = clBlack);
+    { Opens the specified file as PND, extracts its contents and meta data and
+      updates the GUI accordingly }
     procedure OpenPND(const FileName : String);
+    { Creates a PND with the contents of the file tree in the main window and
+      attaches the passed PXML and icon files }
     procedure SavePND(const FileName : String; const PXML : String;
       const Icon : String);
+    { Load/Save settings from/to an ini file }
     procedure LoadSettings(const FileName : String; var S : rSettings);
     procedure SaveSettings(const FileName : String; const S : rSettings);
   end;
@@ -146,11 +157,15 @@ type
 const
     VERSION : String           = '0.5.1';
     BUILD_DATE : String        = '26.01.2013';
+
+    // Default tool paths
     UNSQUASHFS_PATH : String   = 'tools\unsquashfs.exe';
-    MKSQUASH_PATH : String     = 'tools\mksquashfs.exe'; // Path to mkquashfs
-    CHMOD_PATH : String        = 'tools\chmod.exe';      // Path to cygwin's chmod
+    MKSQUASH_PATH : String     = 'tools\mksquashfs.exe';
+    CHMOD_PATH : String        = 'tools\chmod.exe';
     SETTINGS_PATH : String     = 'settings.ini';
     SCHEMA_PATH : String       = 'tools\PXML_schema.xml';
+
+    // Variables for program arguments
     SOURCE_VAR : String        = '%source%';
     TARGET_VAR : String        = '%target%';
 
@@ -164,7 +179,7 @@ implementation
 
     // DONE: Graphical browser and editor for the PXML
     // TODO: Display icon
-    // TODO: Ask for overwrite on copy
+    // TODO: Ask for overwrite on copy to file tree
     // DONE: Open PND
     // DONE: Show total uncompressed size
     // DONE: Clear temp folder on exit and start

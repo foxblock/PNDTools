@@ -142,15 +142,24 @@ type
     procedure cbxPortClick(Sender: TObject);
   private
     FFilename : String;
+    { Extracts a number from the passed edit component, increments it by delta
+      and writes it back to the component }
     procedure ChangeVersionNumber(Target: TCustomEdit; const Delta: Integer);
+    { Same as TfrmMain.LogLine basically }
     procedure AddError(const TextToAdd : String; const Color: TColor = clBlack);
+    { PXML Validation based on current inputs }
     procedure CheckForErrors;
+    { Save current inputs to the passed filename as PXML file }
     function SavePXMLFile(const Filename : String) : Boolean;
+    { Load icon from file and render it to the TImage component }
     procedure LoadIcon(const Filename : String);
+    { Reverse lookup the filename on the disk) for the icon set in the creator
+      (which was set as the local filename in the PND)
+      Returns nil if icon cannot be found inside the PND's content }
     function GetIconFilename : String;
   public
     function Execute : Boolean;
-    property Filename : String read FFilename;     
+    property Filename : String read FFilename; // PXML filename    
     property IconFilename : String read GetIconFilename;
     { Public declarations }
   end;
@@ -168,14 +177,16 @@ type
     procedure btnMoveUpClick(Sender: TObject);
     procedure btnMoveDownClick(Sender: TObject); 
   private
-    pFilepath : String; 
+    pFilename : String;
     constructor Create(AOwner : TComponent); reintroduce; overload;
   public
     // Double linked list for ordering  
     Prev : TScreenshotPanel;
     Next : TScreenshotPanel;
-    constructor Create(const Filepath: String; const ImageFile : String); reintroduce; overload;
-    property Filepath : String read pFilepath;
+    { Filepath is the local path in the PND, ImageFile is the path to the image
+      on the disk }
+    constructor Create(const Filename: String; const ImageFile : String); reintroduce; overload;
+    property Filename : String read pFilename;
   end;
 
   TStringPair = class
@@ -191,6 +202,7 @@ const
 var
   frmCreator: TfrmCreator;
   InputFilter: TInputFilters;
+  // Starting point of double-linked list of TScreenshotPanels
   First : TScreenshotPanel;
   Successful : Boolean;
 
@@ -210,7 +222,7 @@ begin
     except
         Exit;
     end;
-    if (temp > 0) OR ((Target.Text = '0') AND (Delta > 0)) then
+    if (temp+Delta >= 0) then
         Target.Text := IntToStr(temp+Delta);
 end;
 
@@ -377,7 +389,7 @@ begin
         tempScreen := First;
         while tempScreen <> nil do
         begin
-            CreateNode('pic',temp).Attributes['src'] := tempScreen.Filepath;
+            CreateNode('pic',temp).Attributes['src'] := tempScreen.Filename;
             tempScreen := tempScreen.Next;
         end;
         if (Length(edtInfoFile.Text) > 0) AND (Length(edtInfoName.Text) > 0) then
@@ -840,11 +852,11 @@ begin
     inherited;
 end;
 
-constructor TScreenshotPanel.Create(const Filepath: String; const ImageFile : String);
+constructor TScreenshotPanel.Create(const Filename: String; const ImageFile : String);
 var temp : TPicture;
 begin
     Create(frmCreator);
-    pFilepath := Filepath;
+    pFilename := Filename;
     Prev := nil;
     Next := nil;
     Parent := frmCreator.scbScreenshots;
@@ -900,7 +912,7 @@ begin
         Parent := pnlText;
         Align := alTop;
         AlignWithMargins := true;
-        Caption := Filepath;
+        Caption := Filename;
         with Margins do
         begin
             Bottom := 0;
@@ -992,7 +1004,7 @@ begin
         imgScreenshot.Canvas.FillRect(Rect(0,0,imgScreenshot.Width,imgScreenshot.Height));
         imgScreenshot.Canvas.StretchDraw(GetStretchRect(temp.Width,temp.Height,
             imgScreenshot.Width,imgScreenshot.Height),temp.Graphic);
-        lblSize.Caption := UpperCase(ExtractFileExt(Filepath)) + ', ' +
+        lblSize.Caption := UpperCase(ExtractFileExt(Filename)) + ', ' +
                             IntToStr(temp.Width) + 'x' + IntToStr(temp.Height);
         temp.Free;
     except
