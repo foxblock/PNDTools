@@ -2,9 +2,9 @@ object frmOptions: TfrmOptions
   Left = 0
   Top = 0
   BorderIcons = [biSystemMenu, biMinimize]
-  BorderStyle = bsSingle
+  BorderStyle = bsDialog
   Caption = 'Options'
-  ClientHeight = 384
+  ClientHeight = 446
   ClientWidth = 510
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,7 +21,7 @@ object frmOptions: TfrmOptions
     Left = 4
     Top = 4
     Width = 502
-    Height = 74
+    Height = 134
     Margins.Left = 4
     Margins.Top = 4
     Margins.Right = 4
@@ -29,6 +29,27 @@ object frmOptions: TfrmOptions
     Align = alTop
     Caption = '   General   '
     TabOrder = 0
+    object lblMessage: TLabel
+      Left = 6
+      Top = 69
+      Width = 285
+      Height = 13
+      Caption = 'Show messages of the following warning level (or higher)...'
+    end
+    object lblLog: TLabel
+      Left = 22
+      Top = 88
+      Width = 60
+      Height = 13
+      Caption = '...in the log:'
+    end
+    object lblDialogue: TLabel
+      Left = 22
+      Top = 107
+      Width = 112
+      Height = 13
+      Caption = '...as a popup dialogue:'
+    end
     object cbxSmartAdd: TCheckBox
       AlignWithMargins = True
       Left = 6
@@ -73,13 +94,46 @@ object frmOptions: TfrmOptions
       Caption = 'Use binary file size units'
       TabOrder = 2
     end
+    object cobLog: TComboBox
+      Left = 140
+      Top = 85
+      Width = 119
+      Height = 21
+      Style = csDropDownList
+      ItemHeight = 13
+      ItemIndex = 0
+      TabOrder = 3
+      Text = 'Information'
+      Items.Strings = (
+        'Information'
+        'Success'
+        'Warning'
+        'Error'
+        'None')
+    end
+    object cobDialogue: TComboBox
+      Left = 140
+      Top = 104
+      Width = 119
+      Height = 21
+      Style = csDropDownList
+      ItemHeight = 13
+      ItemIndex = 2
+      TabOrder = 4
+      Text = 'Error'
+      Items.Strings = (
+        'Success'
+        'Warning'
+        'Error'
+        'None')
+    end
   end
   object grbPaths: TGroupBox
     AlignWithMargins = True
     Left = 4
-    Top = 82
+    Top = 142
     Width = 502
-    Height = 107
+    Height = 108
     Margins.Left = 4
     Margins.Top = 4
     Margins.Right = 4
@@ -87,6 +141,7 @@ object frmOptions: TfrmOptions
     Align = alTop
     Caption = '   Paths   '
     TabOrder = 1
+    ExplicitTop = 144
     object pnlProgMkSquash: TPanel
       AlignWithMargins = True
       Left = 6
@@ -105,12 +160,13 @@ object frmOptions: TfrmOptions
         Left = 0
         Top = 3
         Width = 52
-        Height = 13
+        Height = 18
         Margins.Left = 0
         Margins.Right = 11
         Margins.Bottom = 0
         Align = alLeft
         Caption = 'mkSquash:'
+        ExplicitHeight = 13
       end
       object edtProgMkSquash: TEdit
         AlignWithMargins = True
@@ -155,12 +211,13 @@ object frmOptions: TfrmOptions
         Left = 0
         Top = 3
         Width = 51
-        Height = 13
+        Height = 18
         Margins.Left = 0
         Margins.Right = 12
         Margins.Bottom = 0
         Align = alLeft
         Caption = 'unSquash:'
+        ExplicitHeight = 13
       end
       object edtProgUnSquash: TEdit
         AlignWithMargins = True
@@ -205,12 +262,13 @@ object frmOptions: TfrmOptions
         Left = 0
         Top = 3
         Width = 35
-        Height = 13
+        Height = 18
         Margins.Left = 0
         Margins.Right = 28
         Margins.Bottom = 0
         Align = alLeft
         Caption = 'chmod:'
+        ExplicitHeight = 13
       end
       object edtProgChmod: TEdit
         AlignWithMargins = True
@@ -255,12 +313,13 @@ object frmOptions: TfrmOptions
         Left = 0
         Top = 3
         Width = 63
-        Height = 13
+        Height = 18
         Margins.Left = 0
         Margins.Right = 0
         Margins.Bottom = 0
         Align = alLeft
         Caption = 'XML Schema:'
+        ExplicitHeight = 13
       end
       object edtSchema: TEdit
         AlignWithMargins = True
@@ -291,16 +350,17 @@ object frmOptions: TfrmOptions
   object grbParams: TGroupBox
     AlignWithMargins = True
     Left = 4
-    Top = 193
+    Top = 254
     Width = 502
-    Height = 158
+    Height = 160
     Margins.Left = 4
     Margins.Top = 4
     Margins.Right = 4
     Margins.Bottom = 0
     Align = alTop
-    Caption = '   Params   '
+    Caption = '   Parameters   '
     TabOrder = 2
+    ExplicitTop = 256
     object memParams: TMemo
       AlignWithMargins = True
       Left = 6
@@ -350,12 +410,13 @@ object frmOptions: TfrmOptions
         Left = 0
         Top = 3
         Width = 52
-        Height = 13
+        Height = 18
         Margins.Left = 0
         Margins.Right = 0
         Margins.Bottom = 0
         Align = alLeft
         Caption = 'mkSquash:'
+        ExplicitHeight = 13
       end
       object edtParamMkSquash: TEdit
         AlignWithMargins = True
@@ -390,12 +451,13 @@ object frmOptions: TfrmOptions
         Left = 0
         Top = 3
         Width = 35
-        Height = 13
+        Height = 18
         Margins.Left = 0
         Margins.Right = 17
         Margins.Bottom = 0
         Align = alLeft
         Caption = 'chmod:'
+        ExplicitHeight = 13
       end
       object edtParamChmod: TEdit
         AlignWithMargins = True
@@ -430,12 +492,13 @@ object frmOptions: TfrmOptions
         Left = 0
         Top = 3
         Width = 51
-        Height = 13
+        Height = 18
         Margins.Left = 0
         Margins.Right = 1
         Margins.Bottom = 0
         Align = alLeft
         Caption = 'unSquash:'
+        ExplicitHeight = 13
       end
       object edtParamUnSquash: TEdit
         AlignWithMargins = True
@@ -456,16 +519,17 @@ object frmOptions: TfrmOptions
   object pnlButtons: TPanel
     AlignWithMargins = True
     Left = 4
-    Top = 355
+    Top = 417
     Width = 502
     Height = 25
     Margins.Left = 4
     Margins.Top = 4
     Margins.Right = 4
-    Margins.Bottom = 0
-    Align = alTop
+    Margins.Bottom = 4
+    Align = alBottom
     BevelOuter = bvNone
     TabOrder = 3
+    ExplicitTop = 355
     object btnCancel: TButton
       Left = 427
       Top = 0

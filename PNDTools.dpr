@@ -15,7 +15,8 @@ uses
   CreatorForm in 'CreatorForm.pas' {frmCreator},
   InputFilterFunctions in 'InputFilterFunctions.pas',
   FileSelectForm in 'FileSelectForm.pas' {frmFileSelect},
-  GraphicUtils in 'GraphicUtils.pas';
+  GraphicUtils in 'GraphicUtils.pas',
+  AboutForm in 'AboutForm.pas' {frmAbout};
 
 {$R *.res}
 
@@ -27,5 +28,6 @@ begin
   Application.CreateForm(TfrmPXML, frmPXML);
   Application.CreateForm(TfrmFileSelect, frmFileSelect);
   Application.CreateForm(TfrmCreator, frmCreator);
+  Application.CreateForm(TfrmAbout, frmAbout);
   Application.Run;
 end.

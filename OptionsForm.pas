@@ -7,7 +7,7 @@ unit OptionsForm;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, ExtCtrls, MainForm;
 
 type
@@ -49,6 +49,11 @@ type
     lblSchema: TLabel;
     edtSchema: TEdit;
     btnSchema: TButton;
+    lblMessage: TLabel;
+    lblLog: TLabel;
+    cobLog: TComboBox;
+    lblDialogue: TLabel;
+    cobDialogue: TComboBox;
     procedure btnSchemaClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
@@ -89,6 +94,8 @@ begin
         edtParamUnSquash.Text := ParamUnSquash;
         edtParamChmod.Text := ParamChmod;
         edtSchema.Text := SchemaFile;
+        cobLog.ItemIndex := LogLevel;
+        cobDialogue.ItemIndex := DialogueLevel - 1; // no "info" option
     end;
               
     Successful := false;
@@ -124,7 +131,7 @@ procedure TfrmOptions.btnUnSquashClick(Sender: TObject);
 begin
     if opdExeFile.Execute then
         edtProgUnSquash.Text := opdExeFile.FileName;
-end;       
+end;
 
 procedure TfrmOptions.btnSchemaClick(Sender: TObject);
 begin
@@ -139,7 +146,7 @@ begin
         SmartAdd := cbxSmartAdd.Checked;
         ShowIcons := cbxIcons.Checked;
         SizeBinary := cbxBinary.Checked;
-        ShowIcons := cbxIcons.Checked; 
+        ShowIcons := cbxIcons.Checked;
         ProgMkSquash := edtProgMkSquash.Text;
         ProgUnSquash := edtProgUnSquash.Text;
         ProgChmod := edtProgChmod.Text;
@@ -147,6 +154,8 @@ begin
         ParamUnSquash := edtParamUnSquash.Text;
         ParamChmod := edtParamChmod.Text;
         SchemaFile := edtSchema.Text;
+        LogLevel := cobLog.ItemIndex;
+        DialogueLevel := cobDialogue.ItemIndex + 1; // no "info" option
     end;
 
     Successful := true;

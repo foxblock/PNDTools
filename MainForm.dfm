@@ -2,7 +2,7 @@ object frmMain: TfrmMain
   Left = 100
   Top = 100
   Caption = 'PNDTools'
-  ClientHeight = 582
+  ClientHeight = 590
   ClientWidth = 561
   Color = clBtnFace
   Constraints.MinHeight = 500
@@ -24,7 +24,7 @@ object frmMain: TfrmMain
   object pnlButtons: TPanel
     AlignWithMargins = True
     Left = 4
-    Top = 545
+    Top = 553
     Width = 553
     Height = 33
     Margins.Left = 4
@@ -34,6 +34,7 @@ object frmMain: TfrmMain
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 4
+    ExplicitTop = 545
     object btnCreate: TButton
       AlignWithMargins = True
       Left = 444
@@ -53,7 +54,7 @@ object frmMain: TfrmMain
   object grbLog: TGroupBox
     AlignWithMargins = True
     Left = 4
-    Top = 441
+    Top = 449
     Width = 553
     Height = 100
     Margins.Left = 4
@@ -66,6 +67,7 @@ object frmMain: TfrmMain
     Constraints.MinHeight = 20
     TabOrder = 3
     OnDblClick = grbLogDblClick
+    ExplicitTop = 441
     object redLog: TRichEdit
       AlignWithMargins = True
       Left = 6
@@ -94,7 +96,7 @@ object frmMain: TfrmMain
     Left = 4
     Top = 4
     Width = 553
-    Height = 341
+    Height = 349
     Margins.Left = 4
     Margins.Top = 4
     Margins.Right = 4
@@ -102,12 +104,13 @@ object frmMain: TfrmMain
     Align = alClient
     Caption = '   Files (drag&&drop stuff here)   '
     TabOrder = 0
+    ExplicitHeight = 341
     object vstFiles: TVirtualStringTree
       AlignWithMargins = True
       Left = 6
       Top = 15
       Width = 541
-      Height = 270
+      Height = 278
       Margins.Left = 4
       Margins.Top = 0
       Margins.Right = 4
@@ -142,6 +145,7 @@ object frmMain: TfrmMain
       OnMouseUp = vstFilesMouseUp
       OnNodeMoving = vstFilesNodeMoving
       OnStructureChange = vstFilesStructureChange
+      ExplicitHeight = 270
       Columns = <
         item
           Position = 0
@@ -162,12 +166,13 @@ object frmMain: TfrmMain
     end
     object pnlFilesButtons: TPanel
       Left = 2
-      Top = 306
+      Top = 314
       Width = 549
       Height = 33
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 2
+      ExplicitTop = 306
       object btnFilesClear: TButton
         AlignWithMargins = True
         Left = 470
@@ -232,12 +237,13 @@ object frmMain: TfrmMain
     end
     object pnlFilesInfo: TPanel
       Left = 2
-      Top = 285
+      Top = 293
       Width = 549
       Height = 21
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitTop = 285
       object lblFilesSizeLbl: TLabel
         AlignWithMargins = True
         Left = 452
@@ -274,7 +280,7 @@ object frmMain: TfrmMain
   object grbIcon: TGroupBox
     AlignWithMargins = True
     Left = 4
-    Top = 349
+    Top = 357
     Width = 553
     Height = 42
     Margins.Left = 4
@@ -284,6 +290,7 @@ object frmMain: TfrmMain
     Align = alBottom
     Caption = '   Icon   '
     TabOrder = 1
+    ExplicitTop = 349
     object edtIcon: TEdit
       AlignWithMargins = True
       Left = 6
@@ -331,7 +338,7 @@ object frmMain: TfrmMain
   object grbPXML: TGroupBox
     AlignWithMargins = True
     Left = 4
-    Top = 395
+    Top = 403
     Width = 553
     Height = 42
     Margins.Left = 4
@@ -341,6 +348,7 @@ object frmMain: TfrmMain
     Align = alBottom
     Caption = '   PXML   '
     TabOrder = 2
+    ExplicitTop = 395
     object btnPXMLLoad: TButton
       AlignWithMargins = True
       Left = 314
@@ -480,6 +488,10 @@ object frmMain: TfrmMain
       object menMainHelpPND: TMenuItem
         Caption = 'PND quickstart (online)'
         OnClick = menMainHelpPNDClick
+      end
+      object menMainHelpThread: TMenuItem
+        Caption = 'Website (online)'
+        OnClick = menMainHelpThreadClick
       end
       object N1: TMenuItem
         Caption = '-'

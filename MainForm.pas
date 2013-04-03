@@ -13,6 +13,9 @@ uses
   ComCtrls, Menus;
 
 type
+  TExtractBehaviour = (ebTemp, ebUser, ebAsk);
+  TWarningLevel = (wlInfo, wlSuccess, wlWarning, wlError, wlNone);
+
   rSettings = record
     SmartAdd : Boolean;
     ShowIcons : Boolean;
@@ -24,6 +27,8 @@ type
     ParamUnSquash : String;
     ParamChmod : String;
     SchemaFile : String;
+    LogLevel : Integer;
+    DialogueLevel : Integer;
   end;
 
   TfrmMain = class(TForm)
@@ -71,6 +76,8 @@ type
     menMainFileExit: TMenuItem;   
     btnPXMLEdit: TButton;
     pomFilesDelete: TMenuItem;
+    menMainHelpThread: TMenuItem;
+    procedure menMainHelpThreadClick(Sender: TObject);
     procedure pomFilesDeleteClick(Sender: TObject);
     procedure edtPXMLChange(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -135,13 +142,16 @@ type
     const PXML_PATH : String = 'PXML.xml';
     const ICON_PATH : String = 'icon.png';
     const PND_EXT : String = '.pnd';
-    // Default colours for LogLine
+    // Default colour for LogLine
     const LOG_ERROR_COLOR : TColor   = clRed;
     const LOG_WARNING_COLOR : TColor = $0000AAFF;
     const LOG_SUCCESS_COLOR : TColor = clGreen;
+    const LOG_INFO_COLOR : TColor = clBlack;
 
-    { Prints the passed string to Log on the main window in the passed colour }
-    procedure LogLine(const TextToAdd : String; const Color: TColor = clBlack);
+    { Depennding on the passed Level and set levels LogLevel and DialogueLevel in
+      frmMain.Settings this will print the passed string to frmMain.redLog in
+      a colour according to Level OR show a MessageDlg with the passed Text }
+    procedure LogLine(const TextToAdd : String; const Level : TWarningLevel = wlInfo);
     { Opens the specified file as PND, extracts its contents and meta data and
       updates the GUI accordingly }
     procedure OpenPND(const FileName : String);
@@ -155,8 +165,8 @@ type
   end;
 
 const
-    VERSION : String           = '0.5.1';
-    BUILD_DATE : String        = '26.01.2013';
+    VERSION : String           = '0.5.2';
+    BUILD_DATE : String        = '2013-04-03';
 
     // Default tool paths
     UNSQUASHFS_PATH : String   = 'tools\unsquashfs.exe';
@@ -188,14 +198,15 @@ implementation
     // TODO: Pass all external paths to function for WinLin conversion
     // TODO: Add option for extraction behaviour (user path, program path, ask)
     // TODO: ISO file system
-    // TODO: Show message box when encountering a critical error
-    // TODO: Option to show message, log or both on error
+    // DONE: Show message box when encountering a critical error
+    // DONE: Option to show message, log or both on error
     // TODO: Add proper licensing information
     // DONE: Scroll down Log automatically to reveal latest line
 
 
 uses
     VSTUtils, FormatUtils, FileUtils, OptionsForm, PXMLForm, CreatorForm,
+    AboutForm,
     {$Ifdef Win32}
     VSTDragDrop_win, VSTIcons_win, ShellStuff_win, ControlHideFix;
     {$Else}
@@ -214,7 +225,7 @@ begin
     if ShellCopyFile(Source,Destination,false) then
         begin
         LogLine('Copied all files to temporary directory '#13#10 + TargetDir,
-            LOG_SUCCESS_COLOR);
+            wlSuccess);
         end
     else
         begin 
@@ -223,7 +234,7 @@ begin
                 'Check whether you have right access to it and no file is ' +
                 'currently in use by another application.' + #13#10 +
                 'The error code was: ' + IntToStr(GetLastError()),
-                LOG_ERROR_COLOR);
+                wlError);
         end;
 end;
 
@@ -247,14 +258,14 @@ begin
         Pos := FindStringDataInStream(FallbackHeader,Stream,0,true);
         if Pos = -1 then
         begin
-            LogLine('No PXML data found!',LOG_ERROR_COLOR);
+            LogLine('No PXML data found!',wlError);
             PXML := '';
             Icon := '';
             Exit;
         end else
             LogLine('PXML file missing proper xml header, you should fix ' +
                     'that, check the PXML specification for details',
-                    LOG_WARNING_COLOR);
+                    wlWarning);
     end;
     // write PXML data to a file
     LogLine('PXML data found, writing to file ' + PXML);
@@ -283,26 +294,50 @@ begin
         end;
     end else
     begin
-        LogLine('No icon data found in PND',LOG_WARNING_COLOR);
+        LogLine('No icon data found in PND',wlWarning);
         Icon := '';
     end;
 
-    LogLine('PND metadata successfully extracted',LOG_SUCCESS_COLOR);
+    LogLine('PND metadata successfully extracted',wlSuccess);
 end;
 
-procedure TfrmMain.LogLine(const TextToAdd : String; const Color: TColor = clBlack);
+procedure TfrmMain.LogLine(const TextToAdd : String; const Level : TWarningLevel = wlInfo);
+
+    function LevelToDlgType(const Level : TWarningLevel) : TMsgDlgType;
+    begin
+        Result := mtCustom;
+        case Level of
+            wlInfo: Result := mtInformation;
+            wlSuccess: Result := mtInformation;
+            wlWarning: Result := mtWarning;
+            wlError: Result := mtError;
+        end;
+    end;
+    
 var
     Count : Integer;
 begin
-    Count := Length(redLog.Text);
-    redLog.Lines.Add(TextToAdd);
-    redLog.SelStart := count;
-    redLog.SelLength := Length(redLog.Text) - redLog.SelStart;
-    redLog.SelAttributes.Color := Color; 
-    redLog.SelLength := 0;
+    if Ord(Level) >= Ord(Settings.DialogueLevel) then
+    begin
+        MessageDlg(TextToAdd,LevelToDlgType(Level),[mbOk],0);
+    end;
+    if Ord(Level) >= Ord(Settings.LogLevel) then
+    begin
+        Count := Length(redLog.Text);
+        redLog.Lines.Add(TextToAdd);
+        redLog.SelStart := count;
+        redLog.SelLength := Length(redLog.Text) - redLog.SelStart;
+        case Level of
+            wlInfo: redLog.SelAttributes.Color := LOG_INFO_COLOR;
+            wlSuccess: redLog.SelAttributes.Color := LOG_SUCCESS_COLOR;
+            wlWarning: redLog.SelAttributes.Color := LOG_WARNING_COLOR;
+            wlError: redLog.SelAttributes.Color := LOG_ERROR_COLOR;
+        end;
+        redLog.SelLength := 0;
+    end;
 end;
 
-procedure TfrmMain.OpenPND(const FileName: string);   
+procedure TfrmMain.OpenPND(const FileName: string);
 const
     TEMP_PATH : String = 'temp2'; // Relative path (from the .exe) to the temporary folder
     META_PATH : String = 'meta'; // Relative path to the meta folder (for PXML and Icon)
@@ -335,7 +370,7 @@ begin
     end;
 
     // Unsquash the PND
-    LogLine('Extracting PND... this might take a while'); 
+    LogLine('Extracting PND to ' + Param + '... this might take a while'); 
     Prog := Settings.ProgUnSquash;
     Param := StringReplace(Settings.ParamUnSquash,SOURCE_VAR,ConvertPath(FileName),[rfReplaceAll]);
     Param := StringReplace(Param,TARGET_VAR,ConvertPath(TEMP_PATH),[rfReplaceAll]);
@@ -367,10 +402,10 @@ begin
         LogLine('No files have been added, this most likely is due to an ' +
                 'error while extracting the PND.'#13#10 +
                 'The PND might use the ISO file-system, in which case you can '+
-                'simply open it in a program like 7-zip or WinRAR.',LOG_ERROR_COLOR)
+                'simply open it in a program like 7-zip or WinRAR.',wlError)
     else
         LogLine('PND successfully extracted to ' +
-            ExtractFilePath(Application.ExeName) + TEMP_PATH,LOG_SUCCESS_COLOR);
+            ExtractFilePath(Application.ExeName) + TEMP_PATH,wlSuccess);
 end;
 
 procedure TfrmMain.SavePND(const FileName : String; const PXML : String;
@@ -434,16 +469,16 @@ begin
             AppendDataToFileStream(PNDFile,PXML)
         else
             LogLine('Creating PND without PXML data (you should not do this!)',
-                LOG_WARNING_COLOR); 
+                wlWarning); 
         if (Icon <> '') AND FileExists(Icon) then
             AppendDataToFileStream(PNDFile,Icon)
         else
             LogLine('No icon found or icon could not be accessed',
-                LOG_WARNING_COLOR);
+                wlWarning);
     finally
         PNDFile.Free;
     end;
-    LogLine('PND created successfully: ' + FileName,LOG_SUCCESS_COLOR);
+    LogLine('PND created successfully: ' + FileName,wlSuccess);
 end;
 
 procedure TfrmMain.LoadSettings(const FileName: string; var S: rSettings);
@@ -467,6 +502,8 @@ begin
             ParamChmod := Ini.ReadString('Params','Chmod','-R 755 "' +
                 SOURCE_VAR + '"');
             SchemaFile := Ini.ReadString('Paths','Schema',SCHEMA_PATH);
+            LogLevel := Ini.ReadInteger('General','LogLevel',Ord(wlInfo));
+            DialogueLevel := Ini.ReadInteger('General','DialogueLevel',Ord(wlError));
         end;
         ReadFormSettings(Ini,frmMain);
         ReadFormSettings(Ini,frmPXML);
@@ -494,6 +531,8 @@ begin
             Ini.WriteString('Params','UnSquash',ParamUnSquash);
             Ini.WriteString('Params','Chmod',ParamChmod);
             Ini.WriteString('Paths','Schema',SchemaFile);
+            Ini.WriteInteger('General','LogLevel',LogLevel); 
+            Ini.WriteInteger('General','DialogueLevel',DialogueLevel);
         end;
         WriteFormSettings(Ini,frmMain);
         WriteFormSettings(Ini,frmPXML);
@@ -566,10 +605,9 @@ end;
 
 procedure TfrmMain.menMainHelpAboutClick(Sender: TObject);
 begin
-    MessageDlg('PNDTools' + #13#10 +
-               'Created by Janek Schäfer (foxblock)' + #13#10 +
-               'Using Cygwin and SquashFStools',
-               mtInformation,[mbOk],0);
+    frmAbout.Left := frmMain.Left + (frmMain.Width - frmAbout.Width) div 2;
+    frmAbout.Top := frmMain.Top + (frmMain.Height - frmAbout.Height) div 2;
+    frmAbout.ShowModal;
 end;
 
 procedure TfrmMain.menMainHelpPNDClick(Sender: TObject);
@@ -580,6 +618,11 @@ end;
 procedure TfrmMain.menMainHelpPXMLClick(Sender: TObject);
 begin
     ExecuteProgram('http://pandorawiki.org/PXML_specification','','','open',false);
+end;
+
+procedure TfrmMain.menMainHelpThreadClick(Sender: TObject);
+begin
+    ExecuteProgram('http://boards.openpandora.org/index.php?/topic/3756-pndtools/','','','open',false);
 end;
 
 // --- Popup Menu --------------------------------------------------------------
@@ -654,7 +697,8 @@ begin
 end;
 
 procedure TfrmMain.FormShow(Sender: TObject);
-begin
+begin                                   
+    frmAbout.memAbout.Lines[1] := 'Version ' + VERSION + ' built ' + BUILD_DATE;
     LoadSettings(SETTINGS_PATH,Settings);
     if ParamCount > 0 then
         if FileExists(ParamStr(1)) then

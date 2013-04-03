@@ -145,7 +145,7 @@ type
     { Extracts a number from the passed edit component, increments it by delta
       and writes it back to the component }
     procedure ChangeVersionNumber(Target: TCustomEdit; const Delta: Integer);
-    { Same as TfrmMain.LogLine basically }
+    { A simpler version of TfrmMain.LogLine basically }
     procedure AddError(const TextToAdd : String; const Color: TColor = clBlack);
     { PXML Validation based on current inputs }
     procedure CheckForErrors;
@@ -414,7 +414,7 @@ begin
         on E : Exception do
         begin
             frmMain.LogLine('Error creating the PXML file: ' + E.ClassName + ' - ' +
-                E.Message, frmMain.LOG_ERROR_COLOR);
+                E.Message, wlError);
             Doc.Active := false;
         end;
     end;
@@ -793,7 +793,7 @@ begin
         Node := CheckForExistance(frmMain.vstFiles,edtIcon.Text);
         if Node = nil then
         begin
-            frmMain.LogLine('Error loading icon file: ' + edtIcon.Text,frmMain.LOG_ERROR_COLOR);
+            frmMain.LogLine('Error loading icon file: ' + edtIcon.Text,wlError);
             LoadIcon('');
         end else
         begin
