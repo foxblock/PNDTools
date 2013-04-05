@@ -502,7 +502,7 @@ object frmCreator: TfrmCreator
         Align = alBottom
         Style = csDropDownList
         ItemHeight = 13
-        TabOrder = 3
+        TabOrder = 7
         OnChange = cobCategoryChange
       end
       object cobSubcategory: TComboBox
@@ -518,7 +518,7 @@ object frmCreator: TfrmCreator
         Align = alBottom
         Style = csDropDownList
         ItemHeight = 13
-        TabOrder = 4
+        TabOrder = 8
       end
       object edtTitle: TEdit
         AlignWithMargins = True
@@ -545,7 +545,7 @@ object frmCreator: TfrmCreator
         Margins.Bottom = 4
         Align = alClient
         ScrollBars = ssVertical
-        TabOrder = 1
+        TabOrder = 2
       end
       object pnlExe: TPanel
         AlignWithMargins = True
@@ -559,7 +559,7 @@ object frmCreator: TfrmCreator
         Margins.Bottom = 4
         Align = alBottom
         BevelOuter = bvNone
-        TabOrder = 2
+        TabOrder = 3
         object edtExe: TEdit
           Left = 0
           Top = 0
@@ -664,7 +664,7 @@ object frmCreator: TfrmCreator
           Align = alRight
           Caption = '...'
           Enabled = False
-          TabOrder = 1
+          TabOrder = 2
           OnClick = btnStartdirClick
         end
         object edtStartdir: TEdit
@@ -679,7 +679,7 @@ object frmCreator: TfrmCreator
           Margins.Bottom = 8
           Align = alClient
           Enabled = False
-          TabOrder = 2
+          TabOrder = 1
         end
       end
       object cbxExeSettings: TCheckBox
@@ -695,7 +695,7 @@ object frmCreator: TfrmCreator
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         ParentFont = False
-        TabOrder = 6
+        TabOrder = 4
         OnClick = cbxExeSettingsClick
       end
       object grbVersion: TGroupBox
@@ -716,7 +716,7 @@ object frmCreator: TfrmCreator
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         ParentFont = False
-        TabOrder = 7
+        TabOrder = 6
         object pnlVMajor: TPanel
           AlignWithMargins = True
           Left = 6
@@ -1118,7 +1118,7 @@ object frmCreator: TfrmCreator
             'Short description of the application. You may use multiple lines' +
             ' if you really have to.')
         ReadOnly = True
-        TabOrder = 8
+        TabOrder = 1
       end
     end
     object pgcMain4: TTabSheet
@@ -1622,7 +1622,7 @@ object frmCreator: TfrmCreator
           ParentFont = False
           ExplicitWidth = 32
         end
-        object Panel1: TPanel
+        object pnlFile: TPanel
           AlignWithMargins = True
           Left = 6
           Top = 34
@@ -1771,7 +1771,7 @@ object frmCreator: TfrmCreator
         Lines.Strings = (
           'All valid, good job!')
         ReadOnly = True
-        TabOrder = 0
+        TabOrder = 2
       end
       object grbAdvanced: TGroupBox
         Left = 0
@@ -1792,7 +1792,7 @@ object frmCreator: TfrmCreator
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         ParentFont = False
-        TabOrder = 1
+        TabOrder = 0
         object lblID: TLabel
           AlignWithMargins = True
           Left = 6
@@ -1990,7 +1990,7 @@ object frmCreator: TfrmCreator
           TabOrder = 5
         end
       end
-      object Panel2: TPanel
+      object pnlLine: TPanel
         AlignWithMargins = True
         Left = 0
         Top = 254
@@ -2002,7 +2002,7 @@ object frmCreator: TfrmCreator
         Margins.Bottom = 0
         Align = alTop
         BevelOuter = bvLowered
-        TabOrder = 2
+        TabOrder = 1
       end
     end
   end

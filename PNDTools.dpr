@@ -16,7 +16,8 @@ uses
   InputFilterFunctions in 'InputFilterFunctions.pas',
   FileSelectForm in 'FileSelectForm.pas' {frmFileSelect},
   GraphicUtils in 'GraphicUtils.pas',
-  AboutForm in 'AboutForm.pas' {frmAbout};
+  AboutForm in 'AboutForm.pas' {frmAbout},
+  FileConflictForm in 'FileConflictForm.pas' {frmFileConflict};
 
 {$R *.res}
 
@@ -29,5 +30,6 @@ begin
   Application.CreateForm(TfrmFileSelect, frmFileSelect);
   Application.CreateForm(TfrmCreator, frmCreator);
   Application.CreateForm(TfrmAbout, frmAbout);
+  Application.CreateForm(TfrmFileConflict, frmFileConflict);
   Application.Run;
 end.

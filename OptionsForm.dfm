@@ -141,7 +141,6 @@ object frmOptions: TfrmOptions
     Align = alTop
     Caption = '   Paths   '
     TabOrder = 1
-    ExplicitTop = 144
     object pnlProgMkSquash: TPanel
       AlignWithMargins = True
       Left = 6
@@ -360,7 +359,6 @@ object frmOptions: TfrmOptions
     Align = alTop
     Caption = '   Parameters   '
     TabOrder = 2
-    ExplicitTop = 256
     object memParams: TMemo
       AlignWithMargins = True
       Left = 6
@@ -529,7 +527,6 @@ object frmOptions: TfrmOptions
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 3
-    ExplicitTop = 355
     object btnCancel: TButton
       Left = 427
       Top = 0
@@ -537,7 +534,7 @@ object frmOptions: TfrmOptions
       Height = 25
       Align = alRight
       Caption = 'Cancel'
-      TabOrder = 0
+      TabOrder = 1
       OnClick = btnCancelClick
     end
     object btnOK: TButton
@@ -552,7 +549,7 @@ object frmOptions: TfrmOptions
       Margins.Bottom = 0
       Align = alRight
       Caption = 'OK'
-      TabOrder = 1
+      TabOrder = 0
       OnClick = btnOKClick
     end
   end

@@ -66,7 +66,7 @@ object frmFileSelect: TfrmFileSelect
     Height = 29
     Align = alBottom
     BevelOuter = bvNone
-    TabOrder = 1
+    TabOrder = 2
     object btnCancel: TButton
       AlignWithMargins = True
       Left = 279
@@ -79,7 +79,7 @@ object frmFileSelect: TfrmFileSelect
       Margins.Bottom = 4
       Align = alRight
       Caption = 'Cancel'
-      TabOrder = 0
+      TabOrder = 1
       OnClick = btnCancelClick
     end
     object btnOK: TButton
@@ -95,7 +95,7 @@ object frmFileSelect: TfrmFileSelect
       Align = alRight
       Caption = 'OK'
       Enabled = False
-      TabOrder = 1
+      TabOrder = 0
       OnClick = btnOKClick
     end
   end
@@ -106,7 +106,7 @@ object frmFileSelect: TfrmFileSelect
     Height = 21
     Align = alBottom
     BevelOuter = bvNone
-    TabOrder = 2
+    TabOrder = 1
     object cbxFilter: TCheckBox
       AlignWithMargins = True
       Left = 8

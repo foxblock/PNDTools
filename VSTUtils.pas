@@ -51,10 +51,9 @@ type
     procedure AddFolder(Sender : TBaseVirtualTree; Node : PVirtualNode;
         Directory : String; const Recursive : Boolean = true);
 
-    { Adds the file-data (in the associated PFileTreeData) of the passed node
-      to two passed strings, which can be passed to CopyFileEx
-      Checks whether Source and Target are identical to prevent errors
-      TargetDir is the new path the file should be copied to }
+    { Prepares all nodes in Tree (starting with Node as root) for a CopyFileEx
+      operation by copying paths to Target and Source (used in said function)
+      TargetPath is the new root path files and folders should be copied to }
     procedure CopyTreeData(Tree : TBaseVirtualTree; Node : PVirtualNode;
         TargetDir : String; var Source : String; var Target : String);
 
@@ -162,7 +161,7 @@ begin
     Result := CheckForExistance(Sender,Sender.GetFirstChild(Parent),SR.Name);
     if Result <> nil then
         Exit;
-    if IsFile(Sender,Parent) then
+    if IsFile(Sender,Parent) then // Files may not be parent/not have children
         Parent := nil;
 
     Node := Sender.AddChild(Parent);
@@ -171,15 +170,15 @@ begin
     PData.Attr := SR.Attr;
     PData.ExcludeAttr := SR.ExcludeAttr;
     PData.Time := SR.Time;
-    // Icons are set in InitNode event of the virtual tree
-    if (SR.Attr and faDirectory > 0) then
+    if (SR.Attr and faDirectory > 0) then // Adding folder with contents
     begin
         PData.Size := 0;
         AddFolder(Sender,Node,PData.Name,Recursive);
-    end else
+    end else // adding file
     begin
         PData.Size := SR.Size;
-    end;
+    end;  
+    // Icons are set in InitNode event of the virtual tree
     
     Result := Node;
 end;

@@ -102,7 +102,7 @@ type
     memDetailsHelp: TMemo;
     grbInfo: TGroupBox;
     lblInfoFile: TLabel;
-    Panel1: TPanel;
+    pnlFile: TPanel;
     edtInfoFile: TEdit;
     btnInfoFile: TButton;
     lblInfoName: TLabel;
@@ -119,7 +119,7 @@ type
     memInfo: TMemo;
     btnStartdir: TButton;
     edtStartdir: TEdit;
-    Panel2: TPanel;
+    pnlLine: TPanel;
     memDescriptionHelp: TMemo;
     procedure btnInfoFileClick(Sender: TObject);
     procedure btnExeClick(Sender: TObject);
