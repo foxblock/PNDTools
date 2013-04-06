@@ -34,7 +34,7 @@ object frmMain: TfrmMain
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 4
-    ExplicitTop = 545
+    ExplicitTop = 573
     object btnCreate: TButton
       AlignWithMargins = True
       Left = 444
@@ -67,7 +67,7 @@ object frmMain: TfrmMain
     Constraints.MinHeight = 20
     TabOrder = 3
     OnDblClick = grbLogDblClick
-    ExplicitTop = 441
+    ExplicitTop = 469
     object redLog: TRichEdit
       AlignWithMargins = True
       Left = 6
@@ -104,7 +104,7 @@ object frmMain: TfrmMain
     Align = alClient
     Caption = '   Files (drag&&drop stuff here)   '
     TabOrder = 0
-    ExplicitHeight = 341
+    ExplicitHeight = 369
     object vstFiles: TVirtualStringTree
       AlignWithMargins = True
       Left = 6
@@ -145,7 +145,7 @@ object frmMain: TfrmMain
       OnMouseUp = vstFilesMouseUp
       OnNodeMoving = vstFilesNodeMoving
       OnStructureChange = vstFilesStructureChange
-      ExplicitHeight = 270
+      ExplicitHeight = 298
       Columns = <
         item
           Position = 0
@@ -172,7 +172,7 @@ object frmMain: TfrmMain
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 2
-      ExplicitTop = 306
+      ExplicitTop = 334
       object btnFilesClear: TButton
         AlignWithMargins = True
         Left = 470
@@ -243,7 +243,7 @@ object frmMain: TfrmMain
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitTop = 285
+      ExplicitTop = 313
       object lblFilesSizeLbl: TLabel
         AlignWithMargins = True
         Left = 452
@@ -290,7 +290,7 @@ object frmMain: TfrmMain
     Align = alBottom
     Caption = '   Icon   '
     TabOrder = 1
-    ExplicitTop = 349
+    ExplicitTop = 377
     object edtIcon: TEdit
       AlignWithMargins = True
       Left = 6
@@ -348,7 +348,7 @@ object frmMain: TfrmMain
     Align = alBottom
     Caption = '   PXML   '
     TabOrder = 2
-    ExplicitTop = 395
+    ExplicitTop = 423
     object btnPXMLLoad: TButton
       AlignWithMargins = True
       Left = 314

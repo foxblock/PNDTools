@@ -27,9 +27,6 @@ object frmAbout: TfrmAbout
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitLeft = 0
-    ExplicitTop = 325
-    ExplicitWidth = 493
     object btnOK: TButton
       Left = 376
       Top = 0
@@ -39,11 +36,9 @@ object frmAbout: TfrmAbout
       Caption = 'Ok, cool'
       TabOrder = 0
       OnClick = btnOKClick
-      ExplicitLeft = 400
-      ExplicitTop = 3
     end
   end
-  object memAbout: TMemo
+  object memAbout: TRichEdit
     AlignWithMargins = True
     Left = 4
     Top = 4
@@ -66,24 +61,27 @@ object frmAbout: TfrmAbout
       'SquashFS under the GPL'
       '   http://sourceforge.net/projects/squashfs/'
       'SquashFStools for Windows (cygwin) patch by'
-      
-        '   http://fragilematter.blogspot.de/2010/02/squashfs-tools-40-wi' +
-        'ndows-binaries.html'
+      '   http://fragilematter.blogspot.de/2010/02/squashfs-'
+      'tools-40-windows-binaries.html'
       'Cygwin packages under the GPL'
       '   http://www.cygwin.com/'
       'VirtualTreeview Delphi component under the MPL'
-      '   www.lischke-online.de/index.php/controls/virtual-treeview'
+      '   http://www.lischke-'
+      'online.de/index.php/controls/virtual-treeview'
       'GraphicsEX Delphi library under the MPL'
-      '   http://www.lischke-online.de/index.php/libs/graphicex-library'
+      '   http://www.lischke-'
+      'online.de/index.php/libs/graphicex-library'
       ''
       'Thanks!'
       '---'
       'More info, discussion and bug reports:'
-      '   http://boards.openpandora.org/index.php?/topic/3756-pndtools/'
+      '   '
+      'http://boards.openpandora.org/index.php?/topic/3756'
+      '-pndtools/'
       'Source Code:'
       '   https://github.com/foxblock/PNDTools')
+    ReadOnly = True
     ScrollBars = ssVertical
     TabOrder = 1
-    ExplicitWidth = 485
   end
 end

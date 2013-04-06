@@ -84,7 +84,7 @@ implementation
 
 uses StrUtils,
 {$Ifdef Win32}
-    VSTIcons_win;
+    ControlHideFix, VSTIcons_win;
 {$Else}
     VSTIcons_lin;
 {$Endif}
@@ -280,7 +280,15 @@ begin
 end;
 
 procedure TfrmFileSelect.FormCreate(Sender: TObject);
+var
+    dummy : TButtonEvent;
 begin
+    {$Ifdef Win32}
+    KeyPreview := true;
+    dummy := TButtonEvent.Create;
+    OnKeyDown := dummy.KeyDown;
+    dummy.Free;
+    {$Endif}
     vstFiles.NodeDataSize := sizeof(rFileMirrorTreeData);
     Filters := TStringList.Create;
     FFileList := TStringList.Create;

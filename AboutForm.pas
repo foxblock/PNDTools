@@ -3,13 +3,14 @@ unit AboutForm;
 interface
 
 uses
-  Windows, Messages, SysUtils, StdCtrls, Classes, Controls, ExtCtrls, Forms;
+  Windows, Messages, SysUtils, StdCtrls, Classes, Controls, ExtCtrls, Forms,
+  ComCtrls;
 
 type
   TfrmAbout = class(TForm)
     pnlButtons: TPanel;
     btnOK: TButton;
-    memAbout: TMemo;
+    memAbout: TRichEdit;
     procedure btnOKClick(Sender: TObject);
   private
     { Private declarations }

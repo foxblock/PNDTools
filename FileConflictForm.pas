@@ -58,7 +58,7 @@ implementation
 
 {$R *.dfm}
 
-uses MainForm, FormatUtils, FileCtrl;
+uses MainForm, FormatUtils, {$Ifdef Win32}ControlHideFix,{$Endif} FileCtrl;
 
 // --- Functions ---------------------------------------------------------------
 
@@ -162,8 +162,16 @@ begin
 end;
 
 procedure TfrmFileConflict.FormCreate(Sender: TObject);
+var
+    dummy : TButtonEvent;
 begin
     Application.OnMessage := MessageHandler;
+    {$Ifdef Win32}
+    KeyPreview := true;
+    dummy := TButtonEvent.Create;
+    OnKeyDown := dummy.KeyDown;
+    dummy.Free;
+    {$Endif}
 end;
 
 end.

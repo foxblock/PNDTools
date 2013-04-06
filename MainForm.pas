@@ -206,7 +206,7 @@ implementation
 
 uses
     VSTUtils, FormatUtils, FileUtils, OptionsForm, PXMLForm, CreatorForm,
-    AboutForm,
+    AboutForm, FileConflictForm, GraphicUtils,
     {$Ifdef Win32}
     VSTDragDrop_win, VSTIcons_win, ShellStuff_win, ControlHideFix;
     {$Else}
@@ -597,16 +597,14 @@ end;
 
 procedure TfrmMain.menMainFileOptionsClick(Sender: TObject);
 begin
-    frmOptions.Left := frmMain.Left + (frmMain.Width - frmOptions.Width) div 2;
-    frmOptions.Top := frmMain.Top + (frmMain.Height - frmOptions.Height) div 2;
+    CenterControl(frmOptions,frmMain);
     if frmOptions.Execute(Settings) then
         Settings := frmOptions.Settings;
 end;
 
 procedure TfrmMain.menMainHelpAboutClick(Sender: TObject);
 begin
-    frmAbout.Left := frmMain.Left + (frmMain.Width - frmAbout.Width) div 2;
-    frmAbout.Top := frmMain.Top + (frmMain.Height - frmAbout.Height) div 2;
+    CenterControl(frmAbout,frmMain);
     frmAbout.ShowModal;
 end;
 

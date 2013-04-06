@@ -573,8 +573,7 @@ begin
     frmFileSelect.Caption := 'Select executable...';
     frmFileSelect.CopyTreeData(frmMain.vstFiles,frmMain.Settings.ShowIcons);
     frmFileSelect.MultiSelect := false;
-    frmFileSelect.Left := Left + (Width - frmFileSelect.Width) div 2;
-    frmFileSelect.Top := Top + (Height - frmFileSelect.Height) div 2;
+    CenterControl(frmFileSelect,frmCreator);
     if frmFileSelect.Execute then
         edtExe.Text := frmFileSelect.Filename;
 end;
@@ -586,8 +585,7 @@ begin
     frmFileSelect.Caption := 'Select icon image...';
     frmFileSelect.CopyTreeData(frmMain.vstFiles,frmMain.Settings.ShowIcons);
     frmFileSelect.MultiSelect := false; 
-    frmFileSelect.Left := Left + (Width - frmFileSelect.Width) div 2;
-    frmFileSelect.Top := Top + (Height - frmFileSelect.Height) div 2;
+    CenterControl(frmFileSelect,frmCreator);
     if frmFileSelect.Execute then
     begin
         edtIcon.Text := frmFileSelect.FileName;
@@ -602,8 +600,7 @@ begin
     frmFileSelect.Caption := 'Select documentation file...';
     frmFileSelect.CopyTreeData(frmMain.vstFiles,frmMain.Settings.ShowIcons);
     frmFileSelect.MultiSelect := false; 
-    frmFileSelect.Left := Left + (Width - frmFileSelect.Width) div 2;
-    frmFileSelect.Top := Top + (Height - frmFileSelect.Height) div 2;
+    CenterControl(frmFileSelect,frmCreator);
     if frmFileSelect.Execute then
         edtInfoFile.Text := frmFileSelect.Filename;
 end;
@@ -659,8 +656,7 @@ begin
     frmFileSelect.Caption := 'Select (multiple) screenshots...';  
     frmFileSelect.CopyTreeData(frmMain.vstFiles,frmMain.Settings.ShowIcons);
     frmFileSelect.MultiSelect := true;  
-    frmFileSelect.Left := Left + (Width - frmFileSelect.Width) div 2;
-    frmFileSelect.Top := Top + (Height - frmFileSelect.Height) div 2;
+    CenterControl(frmFileSelect,frmCreator);
     if frmFileSelect.Execute then
     begin
         for I := 0 to frmFileSelect.FileList.Count - 1 do
@@ -687,8 +683,7 @@ begin
     frmFileSelect.Caption := 'Select starting directory...';  
     frmFileSelect.CopyTreeData(frmMain.vstFiles,frmMain.Settings.ShowIcons);
     frmFileSelect.MultiSelect := false;  
-    frmFileSelect.Left := Left + (Width - frmFileSelect.Width) div 2;
-    frmFileSelect.Top := Top + (Height - frmFileSelect.Height) div 2;
+    CenterControl(frmFileSelect,frmCreator);
     if frmFileSelect.Execute then
         edtStartdir.Text := frmFileSelect.Filename;
 end;

@@ -27,7 +27,7 @@ object frmCreator: TfrmCreator
     Margins.Top = 0
     Margins.Right = 0
     Margins.Bottom = 0
-    ActivePage = pgcMain4
+    ActivePage = pgcMain1
     Align = alClient
     MultiLine = True
     Style = tsFlatButtons

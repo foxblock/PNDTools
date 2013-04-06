@@ -3,9 +3,11 @@ object frmFileSelect: TfrmFileSelect
   Top = 0
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Select file from PND contents...'
-  ClientHeight = 344
+  ClientHeight = 336
   ClientWidth = 358
   Color = clBtnFace
+  Constraints.MinHeight = 374
+  Constraints.MinWidth = 374
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -21,7 +23,7 @@ object frmFileSelect: TfrmFileSelect
     Left = 4
     Top = 4
     Width = 350
-    Height = 286
+    Height = 278
     Margins.Left = 4
     Margins.Top = 4
     Margins.Right = 4
@@ -61,7 +63,7 @@ object frmFileSelect: TfrmFileSelect
   end
   object pnlButtons: TPanel
     Left = 0
-    Top = 315
+    Top = 307
     Width = 358
     Height = 29
     Align = alBottom
@@ -101,7 +103,7 @@ object frmFileSelect: TfrmFileSelect
   end
   object pnlFilter: TPanel
     Left = 0
-    Top = 294
+    Top = 286
     Width = 358
     Height = 21
     Align = alBottom
