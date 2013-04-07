@@ -87,7 +87,7 @@ procedure TfrmFileConflict.MessageHandler(var Msg: TMsg; var Handled: Boolean);
     end;
 
 var
-  P : TPoint;
+    P : TPoint;
 begin
     Handled := false;
     if NOT frmFileConflict.Active OR
@@ -104,13 +104,15 @@ function TfrmFileConflict.Execute : Boolean;
 begin
     Successful := false;
     pAction := fcCancel;
+    cbxRemember.Checked := false;
     ShowModal;
     Result := Successful;
 end;
 
 procedure TfrmFileConflict.SetNewFile(Path: string; Size: Int64; Time: Integer;
     IconIndex: Integer);
-var temp : TDateTime;
+var
+    temp : TDateTime;
 begin
     lblPathNew.Caption := MinimizeName(Path,lblPathNew.Canvas,lblPathNew.Width);
     lblSizeNew.Caption := SizeToStr(Size,frmMain.Settings.SizeBinary);
@@ -123,7 +125,8 @@ end;
 
 procedure TfrmFileConflict.SetOldFile(Path: string; Size: Int64; Time: Integer;
     IconIndex: Integer);
-var temp : TDateTime;
+var
+    temp : TDateTime;
 begin
     lblPathOld.Caption := MinimizeName(Path,lblPathOld.Canvas,lblPathOld.Width);
     lblSizeOld.Caption := SizeToStr(Size,frmMain.Settings.SizeBinary);

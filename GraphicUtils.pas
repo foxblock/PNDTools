@@ -27,7 +27,8 @@ uses Math;
 
 function GetStretchRect(const SrcWidth : Integer; const SrcHeight : Integer;
     const DestWidth : Integer; const DestHeight : Integer) : TRect;
-var Factor : Real;
+var
+    Factor : Real;
 begin
     Factor := Min(DestWidth / SrcWidth, DestHeight / SrcHeight);
     Result.Left := Round((DestWidth - SrcWidth * Factor) / 2);

@@ -77,6 +77,8 @@ type
     btnPXMLEdit: TButton;
     pomFilesDelete: TMenuItem;
     menMainHelpThread: TMenuItem;
+    pomFilesFolder: TMenuItem;
+    procedure pomFilesFolderClick(Sender: TObject);
     procedure menMainHelpThreadClick(Sender: TObject);
     procedure pomFilesDeleteClick(Sender: TObject);
     procedure edtPXMLChange(Sender: TObject);
@@ -165,8 +167,8 @@ type
   end;
 
 const
-    VERSION : String           = '0.5.2';
-    BUILD_DATE : String        = '2013-04-03';
+    VERSION : String           = '0.6.0';
+    BUILD_DATE : String        = '2013-04-08';
 
     // Default tool paths
     UNSQUASHFS_PATH : String   = 'tools\unsquashfs.exe';
@@ -630,6 +632,16 @@ begin
     vstFiles.DeleteSelectedNodes;
 end;
 
+procedure TfrmMain.pomFilesFolderClick(Sender: TObject);
+var
+    Node : PVirtualNode;
+    PData : PFileTreeData;
+begin
+    Node := vstFiles.GetFirstSelected();
+    PData := vstFiles.GetNodeData(Node);
+    ExecuteProgram(ExtractFilePath(PData.Name),'','','explore',false);
+end;
+
 procedure TfrmMain.pomFilesOpenClick(Sender: TObject);
 var
     Node : PVirtualNode;
@@ -639,7 +651,7 @@ begin
     PData := vstFiles.GetNodeData(Node);
     if IsFile(vstFiles,Node) then
         ExecuteProgram(PData.Name,'','','open',false)
-    else                                             
+    else
         ExecuteProgram(PData.Name,'','','explore',false);
 end;
 

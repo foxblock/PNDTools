@@ -37,8 +37,8 @@ procedure TDragEvent.VSTDragDrop(Sender: TBaseVirtualTree;
     Source: TObject; DataObject: IDataObject; Formats: TFormatArray;
     Shift: TShiftState; Pt: TPoint; var Effect: Integer; Mode: TDropMode);
 var
-    I, j: Integer;
-    MyList: TStringList;
+    I : Integer;
+    MyList : TStringList;
 begin
     MyList := TStringList.Create;
     Sender.BeginUpdate;
@@ -50,15 +50,12 @@ begin
                 GetFileListFromObj(DataObject, MyList);
 
                 //here we have all filenames
-                for j:=0 to MyList.Count - 1 do
+                if Mode = dmOnNode then
                 begin
-                    if Mode = dmOnNode then
-                    begin
-                        AddItem(Sender,Sender.DropTargetNode,MyList.Strings[j]);
-                    end else
-                    begin
-                        AddItem(Sender,nil,MyList.Strings[j]);
-                    end;
+                    AddItemList(Sender,Sender.DropTargetNode,MyList,true);
+                end else
+                begin
+                    AddItemList(Sender,nil,MyList,true);
                 end;
             end else
             if Formats[i] = CF_VIRTUALTREE then // VirtualTree drop
