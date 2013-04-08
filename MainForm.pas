@@ -1,3 +1,24 @@
+﻿{******************************************************************************}
+{                                                                              }
+{  PNDTools is Copyright ©2011-2013 Janek Schäfer                              }
+{                                                                              }
+{  This file is part of PNDTools                                               }
+{                                                                              }
+{  PNDTools is free software: you can redistribute it and/or modify            }
+{  it under the terms of the GNU General Public License as published by        }
+{  the Free Software Foundation, either version 3 of the License, or           }
+{  (at your option) any later version.                                         }
+{                                                                              }
+{  PNDTools is distributed in the hope that it will be useful,                 }
+{  but WITHOUT ANY WARRANTY; without even the implied warranty of              }
+{  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the               }
+{  GNU General Public License for more details.                                }
+{                                                                              }
+{  You should have received a copy of the GNU General Public License           }
+{  along with this program.  If not, see <http://www.gnu.org/licenses/>.       }
+{                                                                              }
+{******************************************************************************}
+
 unit MainForm;
 
 {$IFDEF FPC}
@@ -191,7 +212,7 @@ implementation
 
     // DONE: Graphical browser and editor for the PXML
     // TODO: Display icon
-    // TODO: Ask for overwrite on copy to file tree
+    // DONE: Ask for overwrite on copy to file tree
     // DONE: Open PND
     // DONE: Show total uncompressed size
     // DONE: Clear temp folder on exit and start
@@ -202,7 +223,7 @@ implementation
     // TODO: ISO file system
     // DONE: Show message box when encountering a critical error
     // DONE: Option to show message, log or both on error
-    // TODO: Add proper licensing information
+    // DONE: Add proper licensing information
     // DONE: Scroll down Log automatically to reveal latest line
 
 
