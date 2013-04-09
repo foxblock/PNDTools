@@ -61,6 +61,8 @@ object frmFileConflict: TfrmFileConflict
     Margins.Bottom = 4
     Align = alTop
     ParentBackground = False
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 0
     OnClick = pnlNewClick
     object lblNewCaption: TLabel
@@ -117,6 +119,7 @@ object frmFileConflict: TfrmFileConflict
         Width = 229
         Height = 13
         Align = alTop
+        AutoSize = False
         Caption = '2013-04-05 00:40'
         ExplicitWidth = 87
       end
@@ -126,6 +129,7 @@ object frmFileConflict: TfrmFileConflict
         Width = 229
         Height = 13
         Align = alTop
+        AutoSize = False
         Caption = '1042 KB'
         ExplicitWidth = 39
       end
@@ -135,6 +139,7 @@ object frmFileConflict: TfrmFileConflict
         Width = 229
         Height = 13
         Align = alTop
+        AutoSize = False
         Caption = 'C:\Some\Path\To\file.ext'
         ExplicitWidth = 121
       end
@@ -224,6 +229,8 @@ object frmFileConflict: TfrmFileConflict
     Margins.Bottom = 4
     Align = alTop
     ParentBackground = False
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 1
     OnClick = pnlOldClick
     object lblOldCaption: TLabel
@@ -328,6 +335,7 @@ object frmFileConflict: TfrmFileConflict
         Width = 229
         Height = 13
         Align = alTop
+        AutoSize = False
         Caption = '2013-04-05 00:40'
         ExplicitWidth = 87
       end
@@ -346,6 +354,7 @@ object frmFileConflict: TfrmFileConflict
         Width = 229
         Height = 13
         Align = alTop
+        AutoSize = False
         Caption = 'C:\Some\Path\To\file.ext'
         ExplicitWidth = 121
       end
@@ -362,7 +371,7 @@ object frmFileConflict: TfrmFileConflict
     Margins.Right = 8
     Margins.Bottom = 4
     Align = alTop
-    Caption = 'Remember for future conflics in this operation'
+    Caption = 'Remember action for future conflics in this operation'
     TabOrder = 2
   end
 end

@@ -702,8 +702,6 @@ var
     XNode, XRootParentNode : IXMLNode;
     I : Integer;
 begin
-    Result := nil;
-
     // get package or application element
     if Element.Root <> nil then
     begin

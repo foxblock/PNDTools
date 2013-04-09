@@ -79,7 +79,7 @@ implementation
 
 {$R *.dfm}
 
-uses MainForm, FormatUtils, {$Ifdef Win32}ControlHideFix,{$Endif} FileCtrl;
+uses MainForm, FormatUtils, {$Ifdef Win32}ControlHideFix, FileCtrl{$Endif};
 
 // --- Functions ---------------------------------------------------------------
 
@@ -135,7 +135,12 @@ procedure TfrmFileConflict.SetNewFile(Path: string; Size: Int64; Time: Integer;
 var
     temp : TDateTime;
 begin
+    {$Ifdef Win32}
     lblPathNew.Caption := MinimizeName(Path,lblPathNew.Canvas,lblPathNew.Width);
+    {$Else}
+    lblPathNew.Caption := Path;
+    {$Endif}
+    pnlNew.Hint := Path;
     lblSizeNew.Caption := SizeToStr(Size,frmMain.Settings.SizeBinary);
     temp := FileDateToDateTime(Time);
     lblChangedNew.Caption := DateToStr(temp) + ' ' + TimeToStr(temp);
@@ -148,8 +153,13 @@ procedure TfrmFileConflict.SetOldFile(Path: string; Size: Int64; Time: Integer;
     IconIndex: Integer);
 var
     temp : TDateTime;
-begin
+begin   
+    {$Ifdef Win32}
     lblPathOld.Caption := MinimizeName(Path,lblPathOld.Canvas,lblPathOld.Width);
+    {$Else}          
+    lblPathOld.Caption := Path;
+    {$Endif}
+    pnlOld.Hint := Path;
     lblSizeOld.Caption := SizeToStr(Size,frmMain.Settings.SizeBinary);
     temp := FileDateToDateTime(Time);
     lblChangedOld.Caption := DateToStr(temp) + ' ' + TimeToStr(temp);
