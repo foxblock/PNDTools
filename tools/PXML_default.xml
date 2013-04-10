@@ -14,15 +14,15 @@
 	<application id="application.id.here.use.package.id.for.single.appliation.pnds">
 		<exec command="path_to_executable"/>
 		<author name="Name of application author (not you if this is a port)" />
-		<version major="1" minor="1" release="0" build="5"/>
+		<version major="1" minor="0" release="0" build="0"/>
 		<titles>
 			<title lang="en_US">Title of the application</title>
 		</titles>
-		<title lang="en_US">Title of the application (for pre HF6 compatibility)</title> 
+		<title lang="en_US">Title of the application (element for pre HF6 compatibility)</title> 
 		<descriptions>
 			<description lang="en_US">Short description of the application</description>
 		</descriptions>
-		<description lang="en_US">Short description of the application (for pre HF6 compatibility)</description>
+		<description lang="en_US">Short description of the application (element for pre HF6 compatibility)</description>
 		<licenses>
 			<license name="License name"/>
 		</licenses>

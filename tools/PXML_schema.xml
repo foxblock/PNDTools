@@ -31,7 +31,7 @@
     <author name="required,string" website="optional,string,website" email="optional,string,email" elemdesc="descriptions\author.rtf"/>
     <version major="required,string,version" minor="required,string,version" release="required,string,version" build="required,string,version" type="optional,set,alpha,beta,release" elemdesc="descriptions\version.rtf"/>
     <titles elemdesc="descriptions\titles.rtf">
-      <title lang="required,string,language" elemdesc="descriptions\titles.rtf" min="1" max="0">CONTENT</title>
+      <title lang="required,string,language" elemdesc="descriptions\titles.rtf" max="0">CONTENT</title>
     </titles>
     <descriptions elemdesc="descriptions\descriptions.rtf" min="0">
       <description lang="required,string,language" elemdesc="descriptions\descriptions.rtf" max="0">CONTENT</description>
@@ -40,7 +40,7 @@
   </package>
   
   <application id="required,string,id" appdata="optional,string,folder" elemdesc="descriptions\application.rtf" max="0">
-    <exec command="required,string,path" arguments="optional,string" startdir="optional,string,dir" standalone="optional,boolean" background="optional,boolean" x11="optional,set,req,stop,ignore" elemdesc="descriptions\exec.rtf"/>
+    <exec command="required,string,path" arguments="optional,string" startdir="optional,string,dir" standalone="optional,boolean" background="optional,boolean" x11="optional,set,req,stop,ignore" extraarguments="optional,string" elemdesc="descriptions\exec.rtf"/>
     <author name="required,string" website="optional,string,website" email="optional,string,email" elemdesc="descriptions\author.rtf"/>
     <version major="required,string,version" minor="required,string,version" release="required,string,version" build="required,string,version" type="optional,set,alpha,beta,release" elemdesc="descriptions\version.rtf"/>
     <osversion major="required,string,version" minor="required,string,version" release="required,string,version" build="required,string,version" elemdesc="descriptions\osversion.rtf" min="0"/>
@@ -66,7 +66,7 @@
       </category>
     </categories>
     <associations elemdesc="descriptions\association.rtf" min="0">
-      <association name="required,string" filetype="required,string,mime" exec="required,string" elemdesc="descriptions\association.rtf" max="0"/>
+      <association name="required,string" filetype="required,string,mime" elemdesc="descriptions\association.rtf" max="0"/>
     </associations>
     <clockspeed frequency="required,string,integer" elemdesc="descriptions\clockspeed.rtf" min="0"/>
   </application>

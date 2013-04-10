@@ -66,17 +66,9 @@ type
     sadPXML: TSaveDialog;
     pnlData: TPanel;
     scbValues: TScrollBox;
-    lblValue: TLabel;
-    lblAttr: TLabel;
-    lblDescription: TLabel;
-    lblNoValue: TLabel;
-    lblNoAttr: TLabel;
-    pnlValue: TPanel;
-    edtValue: TEdit;
     pnlTree: TPanel;
     vstPXML: TVirtualStringTree;
     sptHor: TSplitter;
-    redDescription: TRichEdit;
     pomPXML: TPopupMenu;
     pomPXMLDelete: TMenuItem;
     pnlElements: TPanel;
@@ -87,8 +79,19 @@ type
     rabSelection: TRadioButton;
     rabPackage: TRadioButton;
     rabApplication: TRadioButton;
+    pnlValueParent: TPanel;
+    lblValue: TLabel;
+    lblNoValue: TLabel;
+    pnlValue: TPanel;
+    edtValue: TEdit;
     pnlValueText: TPanel;
     memValue: TMemo;
+    pnlAttrParent: TPanel;
+    lblAttr: TLabel;
+    lblNoAttr: TLabel;
+    pnlDescrParent: TPanel;
+    lblDescription: TLabel;
+    redDescription: TRichEdit;
     procedure FormShow(Sender: TObject);
     procedure vstPXMLKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -505,13 +508,13 @@ begin
                 // create panel by type
                 temp := List.Strings[1];
                 if temp = 'string' then
-                    CurrentPanels[High(CurrentPanels)] := TStringItemPanel.Create(scbValues,AttrNode,Data.Node)
+                    CurrentPanels[High(CurrentPanels)] := TStringItemPanel.Create(pnlAttrParent,AttrNode,Data.Node)
                 else if temp = 'set' then
-                    CurrentPanels[High(CurrentPanels)] := TSetItemPanel.Create(scbValues,AttrNode,Data.Node)
+                    CurrentPanels[High(CurrentPanels)] := TSetItemPanel.Create(pnlAttrParent,AttrNode,Data.Node)
                 else if temp = 'boolean' then
-                    CurrentPanels[High(CurrentPanels)] := TBooleanItemPanel.Create(scbValues,AttrNode,Data.Node)
+                    CurrentPanels[High(CurrentPanels)] := TBooleanItemPanel.Create(pnlAttrParent,AttrNode,Data.Node)
                 else if temp = 'category' then
-                    CurrentPanels[High(CurrentPanels)] := TCategoryItemPanel.Create(scbValues,AttrNode,Data.Node)
+                    CurrentPanels[High(CurrentPanels)] := TCategoryItemPanel.Create(pnlAttrParent,AttrNode,Data.Node)
                 else if temp = 'subcategory' then
                 begin
                     PData := vstPXML.GetNodeData(vstPXML.GetFirstSelected().Parent);
@@ -524,13 +527,13 @@ begin
                             except
                                 temp := '';
                             end;
-                            CurrentPanels[High(CurrentPanels)] := TSubcategoryItemPanel.Create(scbValues,AttrNode,Data.Node,temp);
+                            CurrentPanels[High(CurrentPanels)] := TSubcategoryItemPanel.Create(pnlAttrParent,AttrNode,Data.Node,temp);
                             Break;
                         end;
                     end;
                     if CurrentPanels[High(CurrentPanels)] = nil then
                     begin
-                        CurrentPanels[High(CurrentPanels)] := TStringItemPanel.Create(scbValues,AttrNode,Data.Node);
+                        CurrentPanels[High(CurrentPanels)] := TStringItemPanel.Create(pnlAttrParent,AttrNode,Data.Node);
                         Continue;
                     end;
                 end
@@ -1017,7 +1020,7 @@ begin
     Align := alTop;
     AlignWithMargins := true;
     Height := 21;
-    Top := frmPXML.lblDescription.Top - Height;
+    Top := NewParent.Height;
     BevelOuter := bvNone;
     Caption := '';
     Attr := AttrNode;

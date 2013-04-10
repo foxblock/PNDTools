@@ -188,8 +188,8 @@ type
   end;
 
 const
-    VERSION : String           = '0.6.1';
-    BUILD_DATE : String        = '2013-04-09';
+    VERSION : String           = '0.6.2';
+    BUILD_DATE : String        = '2013-04-10';
 
     // Default tool paths
     UNSQUASHFS_PATH : String   = 'tools\unsquashfs.exe';
