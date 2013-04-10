@@ -3,7 +3,7 @@ object frmFileConflict: TfrmFileConflict
   Top = 0
   BorderStyle = bsDialog
   Caption = 'File conflict'
-  ClientHeight = 292
+  ClientHeight = 300
   ClientWidth = 375
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -54,12 +54,13 @@ object frmFileConflict: TfrmFileConflict
     Left = 8
     Top = 51
     Width = 359
-    Height = 84
+    Height = 86
     Margins.Left = 8
     Margins.Top = 4
     Margins.Right = 8
     Margins.Bottom = 4
     Align = alTop
+    BevelWidth = 2
     ParentBackground = False
     ParentShowHint = False
     ShowHint = True
@@ -67,9 +68,9 @@ object frmFileConflict: TfrmFileConflict
     OnClick = pnlNewClick
     object lblNewCaption: TLabel
       AlignWithMargins = True
-      Left = 9
-      Top = 9
-      Width = 345
+      Left = 10
+      Top = 10
+      Width = 343
       Height = 18
       Margins.Left = 8
       Margins.Top = 8
@@ -87,8 +88,8 @@ object frmFileConflict: TfrmFileConflict
     end
     object imgNew: TImage
       AlignWithMargins = True
-      Left = 17
-      Top = 31
+      Left = 18
+      Top = 32
       Width = 40
       Height = 40
       Margins.Left = 16
@@ -98,12 +99,14 @@ object frmFileConflict: TfrmFileConflict
       Align = alLeft
       Stretch = True
       Transparent = True
+      ExplicitLeft = 17
+      ExplicitTop = 31
     end
     object pnlDataNew: TPanel
       AlignWithMargins = True
-      Left = 121
-      Top = 31
-      Width = 229
+      Left = 122
+      Top = 32
+      Width = 227
       Height = 52
       Margins.Left = 8
       Margins.Top = 4
@@ -116,7 +119,7 @@ object frmFileConflict: TfrmFileConflict
       object lblChangedNew: TLabel
         Left = 0
         Top = 26
-        Width = 229
+        Width = 227
         Height = 13
         Align = alTop
         AutoSize = False
@@ -126,7 +129,7 @@ object frmFileConflict: TfrmFileConflict
       object lblSizeNew: TLabel
         Left = 0
         Top = 13
-        Width = 229
+        Width = 227
         Height = 13
         Align = alTop
         AutoSize = False
@@ -136,7 +139,7 @@ object frmFileConflict: TfrmFileConflict
       object lblPathNew: TLabel
         Left = 0
         Top = 0
-        Width = 229
+        Width = 227
         Height = 13
         Align = alTop
         AutoSize = False
@@ -146,8 +149,8 @@ object frmFileConflict: TfrmFileConflict
     end
     object pnlLabelsNew: TPanel
       AlignWithMargins = True
-      Left = 61
-      Top = 31
+      Left = 62
+      Top = 32
       Width = 52
       Height = 52
       Margins.Left = 0
@@ -196,18 +199,18 @@ object frmFileConflict: TfrmFileConflict
   object pnlButtons: TPanel
     AlignWithMargins = True
     Left = 4
-    Top = 263
-    Width = 367
+    Top = 267
+    Width = 363
     Height = 25
     Margins.Left = 4
     Margins.Top = 4
-    Margins.Right = 4
-    Margins.Bottom = 4
+    Margins.Right = 8
+    Margins.Bottom = 8
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 3
     object btnCancel: TButton
-      Left = 292
+      Left = 288
       Top = 0
       Width = 75
       Height = 25
@@ -220,14 +223,15 @@ object frmFileConflict: TfrmFileConflict
   object pnlOld: TPanel
     AlignWithMargins = True
     Left = 8
-    Top = 143
+    Top = 145
     Width = 359
-    Height = 84
+    Height = 86
     Margins.Left = 8
     Margins.Top = 4
     Margins.Right = 8
     Margins.Bottom = 4
     Align = alTop
+    BevelWidth = 2
     ParentBackground = False
     ParentShowHint = False
     ShowHint = True
@@ -235,9 +239,9 @@ object frmFileConflict: TfrmFileConflict
     OnClick = pnlOldClick
     object lblOldCaption: TLabel
       AlignWithMargins = True
-      Left = 9
-      Top = 9
-      Width = 345
+      Left = 10
+      Top = 10
+      Width = 343
       Height = 18
       Margins.Left = 8
       Margins.Top = 8
@@ -255,8 +259,8 @@ object frmFileConflict: TfrmFileConflict
     end
     object imgOld: TImage
       AlignWithMargins = True
-      Left = 17
-      Top = 31
+      Left = 18
+      Top = 32
       Width = 40
       Height = 40
       Margins.Left = 16
@@ -266,11 +270,13 @@ object frmFileConflict: TfrmFileConflict
       Align = alLeft
       Stretch = True
       Transparent = True
+      ExplicitLeft = 17
+      ExplicitTop = 31
     end
     object pnlLabelOld: TPanel
       AlignWithMargins = True
-      Left = 61
-      Top = 31
+      Left = 62
+      Top = 32
       Width = 52
       Height = 52
       Margins.Left = 0
@@ -317,9 +323,9 @@ object frmFileConflict: TfrmFileConflict
     end
     object pnlDataOld: TPanel
       AlignWithMargins = True
-      Left = 121
-      Top = 31
-      Width = 229
+      Left = 122
+      Top = 32
+      Width = 227
       Height = 52
       Margins.Left = 8
       Margins.Top = 4
@@ -332,7 +338,7 @@ object frmFileConflict: TfrmFileConflict
       object lblChangedOld: TLabel
         Left = 0
         Top = 26
-        Width = 229
+        Width = 227
         Height = 13
         Align = alTop
         AutoSize = False
@@ -342,7 +348,7 @@ object frmFileConflict: TfrmFileConflict
       object lblSizeOld: TLabel
         Left = 0
         Top = 13
-        Width = 229
+        Width = 227
         Height = 13
         Align = alTop
         Caption = '1042 KB'
@@ -351,7 +357,7 @@ object frmFileConflict: TfrmFileConflict
       object lblPathOld: TLabel
         Left = 0
         Top = 0
-        Width = 229
+        Width = 227
         Height = 13
         Align = alTop
         AutoSize = False
@@ -363,7 +369,7 @@ object frmFileConflict: TfrmFileConflict
   object cbxRemember: TCheckBox
     AlignWithMargins = True
     Left = 12
-    Top = 235
+    Top = 239
     Width = 355
     Height = 17
     Margins.Left = 12
