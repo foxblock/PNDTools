@@ -99,6 +99,8 @@ type
     pomFilesDelete: TMenuItem;
     menMainHelpThread: TMenuItem;
     pomFilesFolder: TMenuItem;
+    menMainFileNew: TMenuItem;
+    procedure menMainFileNewClick(Sender: TObject);
     procedure pomFilesFolderClick(Sender: TObject);
     procedure menMainHelpThreadClick(Sender: TObject);
     procedure pomFilesDeleteClick(Sender: TObject);
@@ -595,6 +597,14 @@ begin
     Close;
 end;
 
+procedure TfrmMain.menMainFileNewClick(Sender: TObject);
+begin
+    vstFiles.Clear;
+    edtIcon.Clear;
+    edtPXML.Clear;
+    LogLine('All inputs cleared!',wlInfo);
+end;
+
 procedure TfrmMain.menMainFileOpenClick(Sender: TObject);
 begin
     // error checking
@@ -940,7 +950,7 @@ end;
 
 procedure TfrmMain.btnFilesClearClick(Sender: TObject);
 begin
-    vstFiles.Clear; 
+    vstFiles.Clear;
 end;
 
 procedure TfrmMain.btnFilesFileClick(Sender: TObject);
