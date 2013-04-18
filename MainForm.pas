@@ -100,6 +100,7 @@ type
     menMainHelpThread: TMenuItem;
     pomFilesFolder: TMenuItem;
     menMainFileNew: TMenuItem;
+    procedure vstFilesHeaderClick(Sender: TVTHeader; HitInfo: TVTHeaderHitInfo);
     procedure menMainFileNewClick(Sender: TObject);
     procedure pomFilesFolderClick(Sender: TObject);
     procedure menMainHelpThreadClick(Sender: TObject);
@@ -135,8 +136,6 @@ type
     procedure vstFilesGetImageIndex(Sender: TBaseVirtualTree;
       Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex;
       var Ghosted: Boolean; var ImageIndex: Integer);
-    procedure vstFilesHeaderClick(Sender: TVTHeader; Column: TColumnIndex;
-      Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure vstFilesCompareNodes(Sender: TBaseVirtualTree; Node1,
       Node2: PVirtualNode; Column: TColumnIndex; var Result: Integer);
     procedure vstFilesGetText(Sender: TBaseVirtualTree;
@@ -843,18 +842,18 @@ begin
     end;
 end;
 
-procedure TfrmMain.vstFilesHeaderClick(Sender: TVTHeader; Column: TColumnIndex;
-    Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+procedure TfrmMain.vstFilesHeaderClick(Sender: TVTHeader;
+  HitInfo: TVTHeaderHitInfo);
 begin
-    if Sender.SortColumn = Column then
+    if Sender.SortColumn = HitInfo.Column then
     begin
         if Sender.SortDirection=sdAscending then
             Sender.SortDirection:=sdDescending
         else
             Sender.SortDirection:=sdAscending;
     end else
-        Sender.SortColumn := Column;
-    Sender.Treeview.SortTree(Column,Sender.SortDirection,True);
+        Sender.SortColumn := HitInfo.Column;
+    Sender.Treeview.SortTree(HitInfo.Column,Sender.SortDirection,True);
 end;
 
 procedure TfrmMain.vstFilesInitNode(Sender: TBaseVirtualTree; ParentNode,
