@@ -67,6 +67,8 @@ object frmAbout: TfrmAbout
         'ndows-binaries.html'
       'Cygwin packages under the GPL'
       '   http://www.cygwin.com/'
+      '7zip command line utility under the LGPL'
+      '   http://www.7-zip.org/'
       'VirtualTreeview Delphi component under the MPL'
       
         '   http://www.lischke-online.de/index.php/controls/virtual-treev' +

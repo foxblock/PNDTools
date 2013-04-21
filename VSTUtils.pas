@@ -252,6 +252,24 @@ begin
     PData.Attr := SR.Attr;
     PData.ExcludeAttr := SR.ExcludeAttr;
     PData.Time := SR.Time;
+    // icon
+    if frmMain.Settings.ShowIcons then
+    begin
+        PData.ClosedIndex := GetIconIndex(PData.Name,false);
+        PData.OpenIndex := GetIconIndex(PData.Name,true);
+    end else
+    begin
+        if (PData.Attr and faDirectory = 0) then
+        begin
+            PData.ClosedIndex := 0;
+            PData.OpenIndex := 0;
+        end else
+        begin
+            PData.ClosedIndex := 1;
+            PData.OpenIndex := 1;
+        end;
+    end;
+    
     if (SR.Attr and faDirectory > 0) then // Adding folder with contents
     begin
         PData.Size := 0;

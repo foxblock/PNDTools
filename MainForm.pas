@@ -44,9 +44,11 @@ type
     ProgMkSquash : String;
     ProgUnSquash : String;
     ProgChmod : String;
+    Prog7zip : String;
     ParamMkSquash : String;
     ParamUnSquash : String;
     ParamChmod : String;
+    Param7zip : String;
     SchemaFile : String;
     LogLevel : Integer;
     DialogueLevel : Integer;
@@ -119,8 +121,6 @@ type
     procedure menMainHelpAboutClick(Sender: TObject);
     procedure vstFilesNodeMoving(Sender: TBaseVirtualTree; Node,
       Target: PVirtualNode; var Allowed: Boolean);
-    procedure vstFilesInitNode(Sender: TBaseVirtualTree; ParentNode,
-      Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
     procedure pomFilesOpenClick(Sender: TObject);
     procedure vstFilesMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -189,13 +189,14 @@ type
   end;
 
 const
-    VERSION : String           = '0.6.2';
-    BUILD_DATE : String        = '2013-04-10';
+    VERSION : String           = '0.7.0';
+    BUILD_DATE : String        = '2013-04-21';
 
     // Default tool paths
     UNSQUASHFS_PATH : String   = 'tools\unsquashfs.exe';
     MKSQUASH_PATH : String     = 'tools\mksquashfs.exe';
     CHMOD_PATH : String        = 'tools\chmod.exe';
+    ZIP_PATH : String         = 'tools\7z.exe';
     SETTINGS_PATH : String     = 'settings.ini';
     SCHEMA_PATH : String       = 'tools\PXML_schema.xml';
 
@@ -265,21 +266,29 @@ end;
 procedure TfrmMain.ExtractPNDMetaData(Stream : TFileStream; var PXML : String;
     var Icon : String);
 const
-    Header : String = '<?xml';
-    FallbackHeader : String = '<PXML';
-    Footer : String = '</PXML>';
+    PXML_HEADER : String = '<?xml';
+    PXML_HEADER_FALLBACK : String = '<PXML';
+    PXML_FOOTER : String = '</PXML>';
 var
     OutputStream : TFileStream;
     Pos : Int64; 
     NumRead, NumWrite : Integer;
     Buffer : Array [Word] of Byte;
-begin
+    Headers : Array [0..4] of String;
+    ImageIndex : Integer;
+begin     
+    // File signatures taken from: http://www.garykessler.net/library/file_sigs.html
+    Headers[0] := Chr(137) + 'PNG' + Chr(13) + Chr(10) + Chr(26) + Chr(10); // PNG
+    Headers[1] := Chr(255) + Chr(216) + Chr(255); // JPG
+    Headers[2] := 'GIF8'; // GIF
+    Headers[3] := 'BM'; // BMP
+    Headers[4] := Chr(0) + Chr(0) + Chr(1) + Chr(0); // ICO
     // find PXML data
     LogLine('Looking for PXML data...');
-    Pos := FindStringDataInStream(Header,Stream,0,true);
+    Pos := FindStringDataInStream(PXML_HEADER,Stream,0,true);
     if Pos = -1 then
     begin
-        Pos := FindStringDataInStream(FallbackHeader,Stream,0,true);
+        Pos := FindStringDataInStream(PXML_HEADER_FALLBACK,Stream,0,true);
         if Pos = -1 then
         begin
             LogLine('No PXML data found!',wlError);
@@ -295,16 +304,28 @@ begin
     LogLine('PXML data found, writing to file ' + PXML);
     OutputStream := TFileStream.Create(PXML,fmCreate);
     try
-        Pos := FindStringDataInStream(Footer,Stream,Pos,false,OutputStream);
+        Pos := FindStringDataInStream(PXML_FOOTER,Stream,Pos,false,OutputStream);
     finally
         OutputStream.Free;
     end;
 
-    // search for PNG header and extract PNG data
-    // TODO: Search for other image types, too
-    Pos := FindStringDataInStream(Chr(137) + 'PNG',Stream,Pos);
+    // search for icon header and extract icon data
+    ImageIndex := Low(Headers);
+    while (Pos = -1) AND (ImageIndex <= High(Headers)) do
+    begin
+        Pos := FindStringDataInStream(Headers[ImageIndex],Stream,Pos);
+        Inc(ImageIndex);
+    end;
+
     if Pos <> -1 then
     begin
+        case ImageIndex of
+            1: ChangeFileExt(Icon,'.png');  
+            2: ChangeFileExt(Icon,'.jpg');
+            3: ChangeFileExt(Icon,'.gif');
+            4: ChangeFileExt(Icon,'.bmp');
+            5: ChangeFileExt(Icon,'.ico');
+        end;
         LogLine('Icon data found, writing to file ' + Icon);
         OutputStream := TFileStream.Create(Icon,fmCreate);
         try
@@ -368,7 +389,7 @@ const
 var
     Stream : TFileStream;
     PXML, Icon, Prog, Param : String;
-    temp : Boolean;
+    temp, IsISO : Boolean;
 begin
     // clean-up
     vstFiles.Clear;
@@ -385,19 +406,32 @@ begin
     CreateDir(Param);
     CreateDir(ExtractFilePath(Application.ExeName) + META_PATH);
 
-    // extract PXML and Icon
+    // Detect ISO file system
     Stream := TFileStream.Create(FileName,fmOpenRead);
+    IsISO := DetectIsoFormat(Stream);
+    if IsISO then
+        LogLine('ISO file format detected!',wlWarning);
+
+    // extract PXML and Icon
     try
-        ExtractPNDMetaData(Stream,PXML,ICON);
+        ExtractPNDMetaData(Stream,PXML,Icon);
     finally
         Stream.Free;
     end;
 
-    // Unsquash the PND
-    LogLine('Extracting PND to ' + Param + '... this might take a while'); 
-    Prog := Settings.ProgUnSquash;
-    Param := StringReplace(Settings.ParamUnSquash,SOURCE_VAR,ConvertPath(FileName),[rfReplaceAll]);
-    Param := StringReplace(Param,TARGET_VAR,ConvertPath(TEMP_PATH),[rfReplaceAll]);
+    // Extract the PND 
+    LogLine('Extracting PND to ' + Param + '... this might take a while');
+    if IsISO then
+    begin
+        Prog := Settings.Prog7zip;
+        Param := StringReplace(Settings.Param7zip,SOURCE_VAR,FileName,[rfReplaceAll]);
+        Param := StringReplace(Param,TARGET_VAR,TEMP_PATH,[rfReplaceAll]);
+    end else // squashFS
+    begin
+        Prog := Settings.ProgUnSquash;
+        Param := StringReplace(Settings.ParamUnSquash,SOURCE_VAR,ConvertPath(FileName),[rfReplaceAll]);
+        Param := StringReplace(Param,TARGET_VAR,ConvertPath(TEMP_PATH),[rfReplaceAll]);
+    end;
     LogLine('Calling program: ' + Prog + ' ' + Param);
     if not ExecuteProgram(Prog,Param) then
     begin
@@ -406,9 +440,8 @@ begin
         Exit;
     end;
 
+    // add files to tree   
     LogLine('Adding files to tree, this might take a while...');
-
-    // add files to tree
     vstFiles.BeginUpdate;
 
     temp := Settings.SmartAdd;
@@ -518,13 +551,16 @@ begin
             SizeBinary := Ini.ReadBool('General','SizeBinary',false);
             ProgMkSquash := Ini.ReadString('Paths','MkSquash',MKSQUASH_PATH);
             ProgUnSquash := Ini.ReadString('Paths','UnSquash',UNSQUASHFS_PATH);
-            ProgChmod := Ini.ReadString('Paths','Chmod',CHMOD_PATH);
+            ProgChmod := Ini.ReadString('Paths','Chmod',CHMOD_PATH);  
+            Prog7zip := Ini.ReadString('Paths','7zip',ZIP_PATH);
             ParamMkSquash := Ini.ReadString('Params','MkSquash','"' +
                 SOURCE_VAR + '" "' + TARGET_VAR + '" -nopad -no-recovery -noappend');
             ParamUnSquash := Ini.ReadString('Params','UnSquash','-f -d "' +
                 TARGET_VAR + '" "' + SOURCE_VAR + '"');
             ParamChmod := Ini.ReadString('Params','Chmod','-R 755 "' +
-                SOURCE_VAR + '"');
+                SOURCE_VAR + '"');    
+            Param7zip := Ini.ReadString('Params','7zip','x "' +
+                SOURCE_VAR + '" -o"' + TARGET_VAR + '" -y');
             SchemaFile := Ini.ReadString('Paths','Schema',SCHEMA_PATH);
             LogLevel := Ini.ReadInteger('General','LogLevel',Ord(wlInfo));
             DialogueLevel := Ini.ReadInteger('General','DialogueLevel',Ord(wlError));
@@ -550,10 +586,12 @@ begin
             Ini.WriteBool('General','SizeBinary',SizeBinary);
             Ini.WriteString('Paths','MkSquash',ProgMkSquash);
             Ini.WriteString('Paths','UnSquash',ProgUnSquash);
-            Ini.WriteString('Paths','Chmod',ProgChmod);  
+            Ini.WriteString('Paths','Chmod',ProgChmod);     
+            Ini.WriteString('Paths','7zip',Prog7zip);
             Ini.WriteString('Params','MkSquash',ParamMkSquash);
             Ini.WriteString('Params','UnSquash',ParamUnSquash);
-            Ini.WriteString('Params','Chmod',ParamChmod);
+            Ini.WriteString('Params','Chmod',ParamChmod);   
+            Ini.WriteString('Params','7zip',Param7zip);
             Ini.WriteString('Paths','Schema',SchemaFile);
             Ini.WriteInteger('General','LogLevel',LogLevel); 
             Ini.WriteInteger('General','DialogueLevel',DialogueLevel);
@@ -856,35 +894,11 @@ begin
     Sender.Treeview.SortTree(HitInfo.Column,Sender.SortDirection,True);
 end;
 
-procedure TfrmMain.vstFilesInitNode(Sender: TBaseVirtualTree; ParentNode,
-  Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
-var
-    PData : PFileTreeData;
-begin
-    PData := Sender.GetNodeData(Node);
-    if Settings.ShowIcons then
-    begin
-        PData.ClosedIndex := GetIconIndex(PData.Name,false);
-        PData.OpenIndex := GetIconIndex(PData.Name,true);
-    end else
-    begin
-        if (PData.Attr and faDirectory = 0) then
-        begin
-            PData.ClosedIndex := 0;
-            PData.OpenIndex := 0;
-        end else
-        begin
-            PData.ClosedIndex := 1;
-            PData.OpenIndex := 1;
-        end;
-    end;
-end;
-
 procedure TfrmMain.vstFilesKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
     case Key of
-        46 : // Entf
+        46 : // Del
         begin
             vstFiles.DeleteSelectedNodes;
         end;    

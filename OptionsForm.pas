@@ -75,6 +75,14 @@ type
     cobLog: TComboBox;
     lblDialogue: TLabel;
     cobDialogue: TComboBox;
+    pnlProg7zip: TPanel;
+    lblProg7zip: TLabel;
+    edtProg7zip: TEdit;
+    btnProg7zip: TButton;
+    pnlParam7zip: TPanel;
+    lblParam7zip: TLabel;
+    edtParam7zip: TEdit;
+    procedure btnProg7zipClick(Sender: TObject);
     procedure btnSchemaClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
@@ -111,9 +119,11 @@ begin
         edtProgMkSquash.Text := ProgMkSquash;
         edtProgUnSquash.Text := ProgUnSquash;
         edtProgChmod.Text := ProgChmod;
+        edtProg7zip.Text := Prog7zip;
         edtParamMkSquash.Text := ParamMkSquash;
         edtParamUnSquash.Text := ParamUnSquash;
         edtParamChmod.Text := ParamChmod;
+        edtParam7zip.Text := Param7zip;
         edtSchema.Text := SchemaFile;
         cobLog.ItemIndex := LogLevel;
         cobDialogue.ItemIndex := DialogueLevel - 1; // no "info" option
@@ -152,6 +162,12 @@ procedure TfrmOptions.btnUnSquashClick(Sender: TObject);
 begin
     if opdExeFile.Execute then
         edtProgUnSquash.Text := opdExeFile.FileName;
+end;   
+
+procedure TfrmOptions.btnProg7zipClick(Sender: TObject);
+begin
+    if opdExeFile.Execute then
+        edtProg7zip.Text := opdExeFile.FileName;
 end;
 
 procedure TfrmOptions.btnSchemaClick(Sender: TObject);
@@ -171,9 +187,11 @@ begin
         ProgMkSquash := edtProgMkSquash.Text;
         ProgUnSquash := edtProgUnSquash.Text;
         ProgChmod := edtProgChmod.Text;
+        Prog7zip := edtProg7zip.Text;
         ParamMkSquash := edtParamMkSquash.Text;
         ParamUnSquash := edtParamUnSquash.Text;
         ParamChmod := edtParamChmod.Text;
+        Param7zip := edtParam7zip.Text;
         SchemaFile := edtSchema.Text;
         LogLevel := cobLog.ItemIndex;
         DialogueLevel := cobDialogue.ItemIndex + 1; // no "info" option

@@ -135,7 +135,6 @@ object frmMain: TfrmMain
       OnGetText = vstFilesGetText
       OnGetImageIndex = vstFilesGetImageIndex
       OnHeaderClick = vstFilesHeaderClick
-      OnInitNode = vstFilesInitNode
       OnKeyDown = vstFilesKeyDown
       OnMouseUp = vstFilesMouseUp
       OnNodeMoving = vstFilesNodeMoving

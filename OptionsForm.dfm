@@ -4,7 +4,7 @@ object frmOptions: TfrmOptions
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsDialog
   Caption = 'Options'
-  ClientHeight = 446
+  ClientHeight = 493
   ClientWidth = 510
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -133,7 +133,7 @@ object frmOptions: TfrmOptions
     Left = 4
     Top = 142
     Width = 502
-    Height = 108
+    Height = 129
     Margins.Left = 4
     Margins.Top = 4
     Margins.Right = 4
@@ -297,7 +297,7 @@ object frmOptions: TfrmOptions
     object pnlSchema: TPanel
       AlignWithMargins = True
       Left = 6
-      Top = 78
+      Top = 99
       Width = 490
       Height = 21
       Margins.Left = 4
@@ -307,6 +307,7 @@ object frmOptions: TfrmOptions
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 3
+      ExplicitTop = 78
       object lblSchema: TLabel
         AlignWithMargins = True
         Left = 0
@@ -345,13 +346,68 @@ object frmOptions: TfrmOptions
         OnClick = btnSchemaClick
       end
     end
+    object pnlProg7zip: TPanel
+      AlignWithMargins = True
+      Left = 6
+      Top = 78
+      Width = 490
+      Height = 21
+      Margins.Left = 4
+      Margins.Top = 0
+      Margins.Right = 4
+      Margins.Bottom = 0
+      Align = alTop
+      BevelOuter = bvNone
+      TabOrder = 4
+      ExplicitLeft = 8
+      ExplicitTop = 89
+      object lblProg7zip: TLabel
+        AlignWithMargins = True
+        Left = 0
+        Top = 3
+        Width = 47
+        Height = 18
+        Margins.Left = 0
+        Margins.Right = 16
+        Margins.Bottom = 0
+        Align = alLeft
+        Caption = '7zip (iso):'
+        ExplicitHeight = 13
+      end
+      object edtProg7zip: TEdit
+        AlignWithMargins = True
+        Left = 67
+        Top = 0
+        Width = 398
+        Height = 21
+        Margins.Left = 4
+        Margins.Top = 0
+        Margins.Right = 4
+        Margins.Bottom = 0
+        Align = alClient
+        TabOrder = 0
+        Text = 'edtMkSquash'
+        ExplicitLeft = 79
+        ExplicitWidth = 386
+      end
+      object btnProg7zip: TButton
+        Left = 469
+        Top = 0
+        Width = 21
+        Height = 21
+        Align = alRight
+        Caption = '...'
+        TabOrder = 1
+        OnClick = btnProg7zipClick
+      end
+    end
   end
   object grbParams: TGroupBox
     AlignWithMargins = True
     Left = 4
-    Top = 254
+    Top = 275
     Width = 502
-    Height = 160
+    Height = 182
     Margins.Left = 4
     Margins.Top = 4
     Margins.Right = 4
@@ -359,6 +415,7 @@ object frmOptions: TfrmOptions
     Align = alTop
     Caption = '   Parameters   '
     TabOrder = 2
+    ExplicitTop = 277
     object memParams: TMemo
       AlignWithMargins = True
       Left = 6
@@ -513,11 +570,54 @@ object frmOptions: TfrmOptions
         Text = 'edtParamMkSquash'
       end
     end
+    object pnlParam7zip: TPanel
+      AlignWithMargins = True
+      Left = 6
+      Top = 152
+      Width = 490
+      Height = 21
+      Margins.Left = 4
+      Margins.Top = 0
+      Margins.Right = 4
+      Margins.Bottom = 0
+      Align = alTop
+      BevelOuter = bvNone
+      TabOrder = 4
+      ExplicitLeft = 4
+      ExplicitTop = 155
+      object lblParam7zip: TLabel
+        AlignWithMargins = True
+        Left = 0
+        Top = 3
+        Width = 47
+        Height = 18
+        Margins.Left = 0
+        Margins.Right = 5
+        Margins.Bottom = 0
+        Align = alLeft
+        Caption = '7zip (iso):'
+        ExplicitHeight = 13
+      end
+      object edtParam7zip: TEdit
+        AlignWithMargins = True
+        Left = 56
+        Top = 0
+        Width = 434
+        Height = 21
+        Margins.Left = 4
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        Align = alClient
+        TabOrder = 0
+        Text = 'edtParamMkSquash'
+      end
+    end
   end
   object pnlButtons: TPanel
     AlignWithMargins = True
     Left = 4
-    Top = 417
+    Top = 464
     Width = 502
     Height = 25
     Margins.Left = 4
@@ -527,6 +627,7 @@ object frmOptions: TfrmOptions
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 3
+    ExplicitTop = 417
     object btnCancel: TButton
       Left = 427
       Top = 0

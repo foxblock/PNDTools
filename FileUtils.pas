@@ -42,8 +42,7 @@ procedure AppendDataToFileStream(Stream : TFileStream; const FileName : String;
     const DontSeek : Boolean = false);
 
 { Searches for a Data string in the passed byte-stream (will convert the string
-  to a byte array), will always seek in the passed stream, so pass Stream.Position
-  as StartPos to work "around" that
+  to a byte array)
   StartPos is the postition to start searching from, pass negative values for
   a offset from the end of the stream (passing 0 and Backwards=true will start
   at the end)
@@ -51,10 +50,17 @@ procedure AppendDataToFileStream(Stream : TFileStream; const FileName : String;
   You can pass an optional OutputStream in which all data from StartPos to the
   final end of the String to find will be written (only when Backwards is false)
   Uses a "rolling" buffer to eliminate the problem of the string to be split into two
-  Because of that only the first 512 bytes of Data are used for comparison }
+  Because of that only the first 512 bytes of Data are used for comparison
+
+  Returns the starting position of the match (first byte in Data) or -1 if no
+  match could be found }
 function FindStringDataInStream(const Data : String; Stream : TFileStream;
     const StartPos : Int64 = 0; const Backwards : Boolean = false;
     OutputStream : TFileStream = nil) : Int64;
+    
+{ Looks for the ISO file header in the passed stream
+  Returns true if found, false otherwise }
+function DetectIsoFormat(Stream : TFileStream) : Boolean;
 
 implementation
 
@@ -168,6 +174,38 @@ begin
     // forward: read less bytes than buffer means end of file
     // backward: seeking does not change position means beginning of file
     until (NumRead < SizeOf(Buffer)) OR (Stream.Position = Pos);
+end;
+
+function DetectIsoFormat(Stream : TFileStream) : Boolean;
+const
+    // Source: http://www.mactech.com/articles/develop/issue_03/high_sierra.html
+    ISO_HEADER : Array [0..4] of Byte = (67,68,48,48,49); // CD001
+    OFFSET_BYTES : Array [0..2] of Integer = (32769,34817,36865);
+var
+    Buffer : Array [Word] of Byte;
+    I,K : Integer;
+    Found : Boolean;
+begin
+    Result := false;
+    for I := 0 to High(OFFSET_BYTES) do
+    begin
+        Stream.Seek(OFFSET_BYTES[I],soFromBeginning);
+        Stream.Read(Buffer,Length(Buffer));
+        Found := true;
+        for K := 0 to High(ISO_HEADER) do
+        begin
+            if Buffer[K] <> ISO_HEADER[K] then
+            begin
+                Found := false;
+                Break;
+            end;
+        end;
+        if Found then
+        begin
+            Result := true;
+            Exit;
+        end;
+    end;
 end;
 
 end.
