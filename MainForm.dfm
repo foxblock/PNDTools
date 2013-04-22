@@ -206,7 +206,7 @@ object frmMain: TfrmMain
         Margins.Right = 0
         Margins.Bottom = 4
         Align = alRight
-        Caption = 'Add file...'
+        Caption = 'Add files...'
         TabOrder = 0
         OnClick = btnFilesFileClick
       end
@@ -413,7 +413,9 @@ object frmMain: TfrmMain
   end
   object opdPXML: TOpenDialog
     DefaultExt = 'xml'
-    Filter = 'PXML-file|PXML.xml;pxml.xml|Any file|*'
+    Filter = 
+      'PXML-file (pxml.xml)|PXML.xml;pxml.xml|XML-file (*.xml)|*.xml|An' +
+      'y file|*'
     FilterIndex = 0
     Options = [ofHideReadOnly, ofPathMustExist, ofFileMustExist, ofEnableSizing]
     Title = 'Select PXML file'
@@ -421,9 +423,7 @@ object frmMain: TfrmMain
     Top = 48
   end
   object opdIcon: TOpenDialog
-    Filter = 
-      'PNG-Image (*.png)|*.png|Image file (*.png;*.bmp;*.jpg;*.jpeg;*.g' +
-      'if)|*.png;*.bmp;*.jpg;*.jpeg;*.gif|Any file|*'
+    Filter = 'PNG-Image (*.png)|*.png|Any file|*'
     FilterIndex = 0
     Options = [ofHideReadOnly, ofPathMustExist, ofFileMustExist, ofEnableSizing]
     Title = 'Select icon for the PND'

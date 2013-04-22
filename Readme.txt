@@ -5,7 +5,7 @@ Source code licensed under the GPLv3
 Source code: https://github.com/foxblock/PNDTools
 Discussion, bug reports, etc.: http://boards.openpandora.org/index.php/topic/3756-pndtools
 Official download: http://foxblock.pirategames.co.uk/programs/pndtools/PNDTools.zip
-Contact: foxblock[@]gmail[.]com
+Contact: foxblock AT gmail DOT com
 ---
 A program to open and create PND files for the OpenPandora on Windows.
 
@@ -16,7 +16,6 @@ How to open a PND file:
 4. Other file contents will end up in the "temp2" folder inside the PNDTools folder
 5. You can also monitor the file's content via the tree structure on the main window
 6. You can edit the PXML file via the built-in editor by clicking "Edit PXML"
-Note: PND files may use the ISO or SquashFS file system, currently PNDTools only supports the latter and will fail to open the former, it will however still be able to extract icon and PXML. You can use any regular zip program (such as 7-zip) to access the contents of such a PND file.
 
 How to create a PND file:
 1. Add files to the PND by dragging and dropping files and folders to the tree structure (top of main window)
@@ -29,9 +28,9 @@ How to create a PND file:
 6. You are DONE, congrats!
 
 In case something goes wrong (and the log does not print anything useful): 
-If you are having trouble creating the PND because chmod.exe or mksquashfs.exe keep failing for some reason (and the cmd window does not stay open to show the error), here is what might help to find the error (most likely not fix it though):
-Since opting and creating the squashFS filesystem is silent you won't be able to see any error occurring there (only the fact that something went wrong). Hence PNDTools provides some batch scripts, which can be used instead of the direct exe call (of mksquashfs, etc.) to keep a terminal of the process (and all messages, errors, etc.) open.
-In the PNDTools options (File->Options...) change the paths of chmod, mksquash (and unsquash) exes to the .bat files of the same name (so just exchange .exe for .bat).
+If you are having trouble creating (or opening) the PND because chmod.exe or mksquashfs.exe keep failing for some reason (and the cmd window does not stay open to show the error), here is what might help to find the error (most likely not fix it though):
+Since opening and creating the filesystem is silent you won't be able to see any error occurring there (only the fact that something went wrong). Hence PNDTools provides some batch scripts, which can be used instead of the direct exe call (of mksquashfs, etc.) to keep a terminal of the process (and all messages, errors, etc.) open.
+In the PNDTools options (File->Options...) change the paths of chmod and mksquash (or unsquash, 7zip) exes to the .bat files of the same name (so just exchange .exe for .bat).
 Set parameters in the Options window will have no effect then, but you can customize the .bat files to your liking,
 
 Notes about the manual PXML editor:

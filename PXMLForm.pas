@@ -102,8 +102,6 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure vstPXMLChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
-    procedure vstPXMLInitNode(Sender: TBaseVirtualTree; ParentNode,
-      Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
     procedure FormCreate(Sender: TObject);
     procedure vstPXMLGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: WideString);
@@ -132,6 +130,8 @@ type
       Base : PVirtualNode) : Integer;
     { Show applicable element buttons for the current situation }
     procedure ShowElementButtons;
+
+    procedure InitNode(Tree : TBaseVirtualTree; Data: IXMLNode; Node: PVirtualNode);
   public
     { Clears the whole Form, dispatches all Objects }
     procedure Clear;
@@ -272,6 +272,24 @@ uses {$Ifdef Win32}ControlHideFix,{$Endif} MainForm, FormatUtils, Math;
 
 // --- Functions ---------------------------------------------------------------
 
+procedure TfrmPXML.InitNode(Tree : TBaseVirtualTree; Data: IXMLNode; Node: PVirtualNode);
+var
+    PData : PXMLTreeData;
+    XNode : IXMLNode;
+    I : Integer;
+begin
+    PData := Tree.GetNodeData(Node);
+    PData.Node := Data;
+    PData.DisplayKey := PData.Node.NodeName;
+    XNode := PData.Node;
+    while XNode.ParentNode <> Doc.DocumentElement do
+        XNode := XNode.ParentNode;
+    for I := 0 to High(PXMLElements) do
+        if (PXMLElements[I].Tag = PData.DisplayKey) AND
+           ((PXMLElements[I].Root = nil) OR (PXMLElements[I].Root.Tag = XNode.NodeName)) then
+           PData.SchemaLink := PXMLElements[I];
+end;
+
 procedure TfrmPXML.AddDataToTree(Tree : TBaseVirtualTree; Data: IXMLNode; Node: PVirtualNode);
 var
     I : Integer;
@@ -279,8 +297,7 @@ var
 begin
     if (Node <> nil) then
     begin
-        PData := Tree.GetNodeData(Node);
-        PData.Node := Data;
+        InitNode(Tree,Data,Node);
     end;
     for I := 0 to Data.ChildNodes.Count - 1 do
     begin
@@ -661,7 +678,8 @@ var
 begin
     Result := Tree.AddChild(ParentTreeNode);
     PData := Tree.GetNodeData(Result);
-    PData.Node := CopyData.XNode.CloneNode(false);
+    PData.Node := CopyData.XNode.CloneNode(false); 
+    PData.DisplayKey := PData.Node.NodeName;
     PData.SchemaLink := CopyData;
     if ParentTreeNode = nil then
     begin
@@ -871,25 +889,6 @@ begin
     end;
 end;
 
-procedure TfrmPXML.vstPXMLInitNode(Sender: TBaseVirtualTree; ParentNode,
-  Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
-var
-    PData : PXMLTreeData;
-    XNode : IXMLNode;
-    I : Integer;
-begin
-    PData := Sender.GetNodeData(Node);
-    PData.DisplayKey := PData.Node.NodeName;
-    XNode := PData.Node;
-    while XNode.ParentNode <> Doc.DocumentElement do
-        XNode := XNode.ParentNode;
-    for I := 0 to High(PXMLElements) do
-        if (PXMLElements[I].Tag = PData.DisplayKey) AND
-           ((PXMLElements[I].Root = nil) OR (PXMLElements[I].Root.Tag = XNode.NodeName)) then
-           PData.SchemaLink := PXMLElements[I];
-
-end;
-
 procedure TfrmPXML.vstPXMLKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
@@ -926,19 +925,20 @@ procedure TfrmPXML.btnOKClick(Sender: TObject);
 begin        
     UpdateXMLData;
     ResetPanels;
-    Successful := true;
+    if FindNode('PXML',Doc.DocumentElement).ChildNodes.Last.NodeType <> ntComment then
+        FindNode('PXML',Doc.DocumentElement).ChildNodes.Add(
+            Doc.CreateNode('Created with the advanced PXML editor of PNDTools v.'+VERSION,ntComment));
     if IsExistingFile then
-    begin
-        Doc.SaveToFile(Doc.FileName); 
-        Close;
-    end else
+        Doc.SaveToFile(Doc.FileName)
+    else
     begin
         if sadPXML.Execute then
-        begin
-            Doc.SaveToFile(sadPXML.FileName);
-            Close;
-        end;
-    end;
+            Doc.SaveToFile(sadPXML.FileName)
+        else
+            Exit;
+    end;  
+    Successful := true;   
+    Close;
 end;
 
 procedure TfrmPXML.bugElementsButtonClicked(Sender: TObject; Index: Integer);

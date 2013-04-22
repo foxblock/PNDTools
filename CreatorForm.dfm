@@ -1167,13 +1167,13 @@ object frmCreator: TfrmCreator
           Lines.Strings = (
             'Add screenshots at their original size, don'#39't add thumbnails!'
             
-              'Try to supply shots of different parts of the application, to ge' +
-              't people interested (not just the title '
+              'Try to supply images of different parts of the application, to g' +
+              'et people interested (not just the title '
             'screen for example).'
             
-              'Put the most representive shot top in the list, it will be displ' +
-              'ayed first (or only) by applications like '
-            'PNDManager or PND websites.')
+              'Put the most representive screenshot at the top of the list, it ' +
+              'will be displayed first (or only) by '
+            'applications like PNDManager or PND websites.')
           ParentFont = False
           ReadOnly = True
           TabOrder = 0

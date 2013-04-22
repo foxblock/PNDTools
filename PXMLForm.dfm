@@ -53,7 +53,6 @@ object frmPXML: TfrmPXML
     BevelKind = bkTile
     BevelOuter = bvNone
     TabOrder = 3
-    ExplicitTop = 459
     object btnCancel: TButton
       AlignWithMargins = True
       Left = 325
@@ -94,7 +93,6 @@ object frmPXML: TfrmPXML
     BevelOuter = bvNone
     Constraints.MinWidth = 200
     TabOrder = 1
-    ExplicitHeight = 574
     object scbValues: TScrollBox
       AlignWithMargins = True
       Left = 4
@@ -112,7 +110,6 @@ object frmPXML: TfrmPXML
       BevelInner = bvNone
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitHeight = 397
       object pnlValueParent: TPanel
         Left = 0
         Top = 0
@@ -137,7 +134,7 @@ object frmPXML: TfrmPXML
           Font.Name = 'Tahoma'
           Font.Style = []
           ParentFont = False
-          ExplicitTop = 6
+          ExplicitWidth = 39
         end
         object lblNoValue: TLabel
           AlignWithMargins = True
@@ -154,7 +151,7 @@ object frmPXML: TfrmPXML
           Font.Name = 'Tahoma'
           Font.Style = [fsItalic]
           ParentFont = False
-          ExplicitTop = 31
+          ExplicitWidth = 119
         end
         object pnlValue: TPanel
           AlignWithMargins = True
@@ -166,7 +163,6 @@ object frmPXML: TfrmPXML
           BevelOuter = bvNone
           TabOrder = 0
           Visible = False
-          ExplicitTop = 50
           object edtValue: TEdit
             Left = 0
             Top = 0
@@ -248,7 +244,6 @@ object frmPXML: TfrmPXML
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 2
-        ExplicitHeight = 125
         object lblDescription: TLabel
           AlignWithMargins = True
           Left = 3
@@ -300,7 +295,6 @@ object frmPXML: TfrmPXML
     Constraints.MaxWidth = 300
     Constraints.MinWidth = 100
     TabOrder = 0
-    ExplicitHeight = 356
     object vstPXML: TVirtualStringTree
       AlignWithMargins = True
       Left = 4
@@ -315,7 +309,6 @@ object frmPXML: TfrmPXML
       DragOperations = [doMove]
       DragType = dtVCL
       Header.AutoSizeIndex = 0
-      Header.DefaultHeight = 17
       Header.Font.Charset = DEFAULT_CHARSET
       Header.Font.Color = clWindowText
       Header.Font.Height = -11
@@ -323,7 +316,6 @@ object frmPXML: TfrmPXML
       Header.Font.Style = []
       Header.Options = [hoAutoResize, hoColumnResize, hoDrag]
       Header.SortColumn = 0
-      Header.Style = hsXPStyle
       LineStyle = lsSolid
       ParentShowHint = False
       ShowHint = False
@@ -333,10 +325,8 @@ object frmPXML: TfrmPXML
       TreeOptions.SelectionOptions = [toFullRowSelect]
       OnChange = vstPXMLChange
       OnGetText = vstPXMLGetText
-      OnInitNode = vstPXMLInitNode
       OnKeyDown = vstPXMLKeyDown
       OnMouseUp = vstPXMLMouseUp
-      ExplicitHeight = 350
       Columns = <
         item
           Options = [coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coVisible, coAllowFocus]
@@ -355,7 +345,6 @@ object frmPXML: TfrmPXML
     BevelOuter = bvNone
     Constraints.MinHeight = 48
     TabOrder = 2
-    ExplicitTop = 359
     object bugElements: TButtonGroup
       AlignWithMargins = True
       Left = 4

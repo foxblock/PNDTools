@@ -32,7 +32,6 @@ object frmFileSelect: TfrmFileSelect
     ClipboardFormats.Strings = (
       'Virtual Tree Data')
     Header.AutoSizeIndex = 0
-    Header.DefaultHeight = 17
     Header.Font.Charset = DEFAULT_CHARSET
     Header.Font.Color = clWindowText
     Header.Font.Height = -11
@@ -40,7 +39,6 @@ object frmFileSelect: TfrmFileSelect
     Header.Font.Style = []
     Header.Options = [hoAutoResize, hoColumnResize, hoDblClickResize, hoShowSortGlyphs, hoVisible]
     Header.SortColumn = 0
-    Header.Style = hsXPStyle
     Images = frmMain.imlFileTree
     LineStyle = lsSolid
     TabOrder = 0
@@ -52,7 +50,6 @@ object frmFileSelect: TfrmFileSelect
     OnGetText = vstFilesGetText
     OnGetImageIndex = vstFilesGetImageIndex
     OnHeaderClick = vstFilesHeaderClick
-    OnInitNode = vstFilesInitNode
     Columns = <
       item
         Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]

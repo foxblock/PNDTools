@@ -44,15 +44,12 @@ type
     procedure vstFilesGetImageIndex(Sender: TBaseVirtualTree;
       Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex;
       var Ghosted: Boolean; var ImageIndex: Integer);
-    procedure vstFilesHeaderClick(Sender: TVTHeader; Column: TColumnIndex;
-      Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure vstFilesHeaderClick(Sender: TVTHeader; HitInfo: TVTHeaderHitInfo);
     procedure vstFilesCompareNodes(Sender: TBaseVirtualTree; Node1,
       Node2: PVirtualNode; Column: TColumnIndex; var Result: Integer);
     procedure vstFilesGetText(Sender: TBaseVirtualTree;
       Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
-      var CellText: WideString); 
-    procedure vstFilesInitNode(Sender: TBaseVirtualTree; ParentNode,
-      Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
+      var CellText: WideString);
   private       
     FFileList : TStrings;
     FNodeList : TNodeArray;
@@ -391,42 +388,18 @@ begin
     end;
 end;
 
-procedure TfrmFileSelect.vstFilesHeaderClick(Sender: TVTHeader; Column: TColumnIndex;
-    Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+procedure TfrmFileSelect.vstFilesHeaderClick(Sender: TVTHeader;
+    HitInfo: TVTHeaderHitInfo);
 begin
-    if Sender.SortColumn = Column then
+    if Sender.SortColumn = HitInfo.Column then
     begin
         if Sender.SortDirection=sdAscending then
             Sender.SortDirection:=sdDescending
         else
             Sender.SortDirection:=sdAscending;
     end else
-        Sender.SortColumn := Column;
-    Sender.Treeview.SortTree(Column,Sender.SortDirection,True);
-end;
-
-procedure TfrmFileSelect.vstFilesInitNode(Sender: TBaseVirtualTree; ParentNode,
-  Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
-var
-    PData : PFileTreeData;
-begin
-    PData := GetOriginalNodeData(Sender,Node);
-    if ShowIcons then
-    begin
-        PData.ClosedIndex := GetIconIndex(PData.Name,false);
-        PData.OpenIndex := GetIconIndex(PData.Name,true);
-    end else
-    begin
-        if (PData.Attr and faDirectory = 0) then
-        begin
-            PData.ClosedIndex := 0;
-            PData.OpenIndex := 0;
-        end else
-        begin
-            PData.ClosedIndex := 1;
-            PData.OpenIndex := 1;
-        end;
-    end;
+        Sender.SortColumn := HitInfo.Column;
+    Sender.Treeview.SortTree(HitInfo.Column,Sender.SortDirection,True);
 end;
 
 end.

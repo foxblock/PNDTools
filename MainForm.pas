@@ -222,7 +222,7 @@ implementation
     // DONE: Function for proper conversion from Windows to Cygwin POSIX path
     // TODO: Pass all external paths to function for WinLin conversion
     // TODO: Add option for extraction behaviour (user path, program path, ask)
-    // TODO: ISO file system
+    // DONE: ISO file system
     // DONE: Show message box when encountering a critical error
     // DONE: Option to show message, log or both on error
     // DONE: Add proper licensing information

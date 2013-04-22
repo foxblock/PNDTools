@@ -428,6 +428,8 @@ begin
         temp := CreateNode('subcategory',temp);
         temp.Attributes['name'] := cobSubcategory.Text;
 
+        pxmlNode.ChildNodes.Add(Doc.CreateNode('Created with the PXMLCreator of PNDTools v.'+VERSION,ntComment));
+
         Doc.SaveToFile(Filename);
         Doc.Active := false;
         Result := true;
@@ -673,7 +675,7 @@ var newPanel, temp : TScreenshotPanel;
     I : Integer;
     PData : PFileTreeData;
 begin
-    frmFileSelect.SetFilter('.png;.jpg;.gif','Image files');
+    frmFileSelect.SetFilter('.png;.jpg;.jpeg;.gif;.bmp','Image files');
     frmFileSelect.Caption := 'Select (multiple) screenshots...';  
     frmFileSelect.CopyTreeData(frmMain.vstFiles,frmMain.Settings.ShowIcons);
     frmFileSelect.MultiSelect := true;  
