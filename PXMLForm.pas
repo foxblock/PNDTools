@@ -293,7 +293,6 @@ end;
 procedure TfrmPXML.AddDataToTree(Tree : TBaseVirtualTree; Data: IXMLNode; Node: PVirtualNode);
 var
     I : Integer;
-    PData : PXMLTreeData;
 begin
     if (Node <> nil) then
     begin
