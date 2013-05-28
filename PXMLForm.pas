@@ -928,12 +928,16 @@ begin
         FindNode('PXML',Doc.DocumentElement).ChildNodes.Add(
             Doc.CreateNode('Created with the advanced PXML editor of PNDTools v.'+VERSION,ntComment));
     if IsExistingFile then
-        Doc.SaveToFile(Doc.FileName)
-    else
+    begin
+        Doc.SaveToFile(Doc.FileName);
+        frmMain.LogLine('Updated PXML file: ' + Doc.FileName, wlSuccess );
+    end else
     begin
         if sadPXML.Execute then
-            Doc.SaveToFile(sadPXML.FileName)
-        else
+        begin
+            Doc.SaveToFile(sadPXML.FileName);
+            frmMain.LogLine('Created PXML file: ' + sadPXML.FileName, wlSuccess );
+        end else
             Exit;
     end;  
     Successful := true;   

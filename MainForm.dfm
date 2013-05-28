@@ -431,6 +431,7 @@ object frmMain: TfrmMain
     Top = 48
   end
   object sadPND: TSaveDialog
+    DefaultExt = 'pnd'
     Filter = 'PND files (*.pnd)|*.pnd'
     Options = [ofOverwritePrompt, ofHideReadOnly, ofPathMustExist, ofCreatePrompt, ofEnableSizing]
     Title = 'Select a destination for the PND file'

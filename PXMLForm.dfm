@@ -436,6 +436,7 @@ object frmPXML: TfrmPXML
     end
   end
   object sadPXML: TSaveDialog
+    FileName = 'PXML.xml'
     Filter = 'PXML-file|PXML.xml;pxml.xml|Any file|*'
     Options = [ofOverwritePrompt, ofHideReadOnly, ofPathMustExist, ofCreatePrompt, ofEnableSizing]
     Title = 'Save PXML file as'

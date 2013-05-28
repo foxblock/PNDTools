@@ -2072,6 +2072,7 @@ object frmCreator: TfrmCreator
     Top = 512
   end
   object sadPXML: TSaveDialog
+    FileName = 'PXML.xml'
     Filter = 'PXML file (*.xml)'
     Options = [ofOverwritePrompt, ofHideReadOnly, ofPathMustExist, ofCreatePrompt, ofEnableSizing]
     Title = 'Select a destination for the PXML file'
