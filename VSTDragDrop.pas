@@ -23,14 +23,19 @@
 {                                                                              }
 {******************************************************************************}
 
-unit VSTDragDrop_win;
+unit VSTDragDrop;
 
 interface
 
 uses
     VirtualTrees,
     VSTUtils,
-    ActiveX, ShellAPI, Classes, Types, Windows;
+    Classes, Types, ActiveX,
+    {$Ifdef Win32}
+    ShellAPI, Windows
+    {$Else}
+    //
+    {$Endif};
 
 type
     { Implements the drag&drop functions called by the files tree in frmMain
@@ -55,6 +60,7 @@ uses ComObj;
 procedure TDragEvent.VSTDragDrop(Sender: TBaseVirtualTree;
     Source: TObject; DataObject: IDataObject; Formats: TFormatArray;
     Shift: TShiftState; Pt: TPoint; var Effect: Integer; Mode: TDropMode);
+{$Ifdef Win32}
 var
     I : Integer;
     MyList : TStringList;
@@ -96,10 +102,16 @@ begin
         Sender.SortTree(0,sdAscending,true);
         Sender.EndUpdate;
     end;
+end;  
+{$Else}
+begin
+    {$Message Error 'This function needs to be implemented for Linux!'}
 end;
+{$Endif}
 
 procedure TDragEvent.GetFileListFromObj(const DataObj: IDataObject;
     FileList: TStringList);
+{$Ifdef Win32}
 var
     FmtEtc: TFormatEtc;                   // specifies required data format
     Medium: TStgMedium;                   // storage medium containing file list
@@ -139,6 +151,11 @@ begin
     finally
         ReleaseStgMedium(Medium);
     end;
+end;   
+{$Else}
+begin
+    {$Message Error 'This function needs to be implemented for Linux!'}
 end;
+{$Endif}
 
 end.

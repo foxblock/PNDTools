@@ -100,11 +100,9 @@ var
 
 implementation
 
-uses StrUtils,
+uses StrUtils, VSTIcons,
 {$Ifdef Win32}
-    ControlHideFix, VSTIcons_win;
-{$Else}
-    VSTIcons_lin;
+    ControlHideFix;
 {$Endif}
 
 {$R *.dfm}

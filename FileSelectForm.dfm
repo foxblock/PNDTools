@@ -54,7 +54,7 @@ object frmFileSelect: TfrmFileSelect
       item
         Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
         Position = 0
-        Width = 346
+        Width = 350
         WideText = 'Filename'
       end>
   end

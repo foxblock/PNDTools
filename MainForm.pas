@@ -235,12 +235,7 @@ implementation
 uses
     VSTUtils, FormatUtils, FileUtils, OptionsForm, PXMLForm, CreatorForm,
     AboutForm, FileConflictForm, GraphicUtils,
-    {$Ifdef Win32}
-    VSTDragDrop_win, VSTIcons_win, ShellStuff_win, ControlHideFix;
-    {$Else}
-    {These files have yet to be created and the Windows code ported over}
-    VSTDragDrop_lin, VSTIcons_lin, ShellStuff_lin;
-    {$Endif}
+    VSTDragDrop, VSTIcons, ShellStuff, {$Ifdef Win32}ControlHideFix{$Endif};
 
 // --- Functions ---------------------------------------------------------------
 

@@ -23,11 +23,16 @@
 {                                                                              }
 {******************************************************************************}
 
-unit VSTIcons_win;
+unit VSTIcons;
 
 interface
 
-uses ShellAPI, Controls;
+uses Controls, 
+    {$Ifdef Win32}
+    ShellAPI
+    {$Else}
+    //
+    {$Endif};
 
 { Loads a pointer to the system icons into the passed ImageList
   No image is actually added until requested by GetIconIndex }
@@ -39,6 +44,7 @@ function  GetIconIndex(const Filename : String; const Open : Boolean) : Integer;
 implementation
 
 procedure LoadSystemIcons(Target : TImageList);
+{$Ifdef Win32}
 var
     SFI : TSHFileInfo;
 begin
@@ -46,8 +52,14 @@ begin
         SHGFI_SYSICONINDEX or SHGFI_SMALLICON);
     Target.ShareImages := True;
 end;
+{$Else}
+begin
+    {$Message Error 'This function needs to be implemented for Linux!'}
+end;
+{$Endif}
 
 function GetIconIndex(const Filename : String; const Open : Boolean) : Integer;
+{$Ifdef Win32}
 var
     SFI : TSHFileInfo;
     Flags : Cardinal;
@@ -59,6 +71,11 @@ begin
         Result := -1
     else
         Result := SFI.iIcon;
+end;  
+{$Else}
+begin
+    {$Message Error 'This function needs to be implemented for Linux!'}
 end;
+{$Endif}
 
 end.

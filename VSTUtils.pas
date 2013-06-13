@@ -105,12 +105,7 @@ implementation
 
     // TODO: Make this standalone and remove at least dependency of MainForm
 
-uses Dialogs, Controls, MainForm, StrUtils, GraphicUtils,
-    {$Ifdef Win32}
-    VSTIcons_win;
-    {$Else}
-    VSTIcons_lin;
-    {$Endif}
+uses Dialogs, Controls, MainForm, StrUtils, GraphicUtils, VSTIcons;
 
 const LINUX_PATH_DELIMITER : String = '/';
 

@@ -1,6 +1,6 @@
 ﻿{******************************************************************************}
 {                                                                              }
-{  Windows shell and file interaction functions                                }
+{  Shell and file interaction functions                                        }
 {                                                                              }
 {  --------------------------------------------------------------------------  }
 {                                                                              }
@@ -23,11 +23,15 @@
 {                                                                              }
 {******************************************************************************}
 
-unit ShellStuff_win;
+unit ShellStuff;
 
 interface
 
+{$Ifdef Win32}
 uses Windows;
+{$Else}
+//
+{$Endif}
 
 { Copies a list of files (separated by #0) from ASource to ADest, both strings
   must contain the same number of files
@@ -58,14 +62,20 @@ function  ExecuteProgram(const FileName : String; const Params : String;
     const WaitForFinish : Boolean = true) : Boolean;     
 
 { Tries to convert a DOS path into a POSIX path used by Cygwin applications
-  The Linux version should simply return Path or convert any '\' to '/' }
+  The Linux version will simply return Path while converting any '\' to '/' }
 function ConvertPath(const Path : String) : String;
 
 implementation
 
-uses ShellAPI, Forms, SysUtils;
+uses Forms, SysUtils,
+    {$Ifdef Win32}
+    ShellAPI
+    {$Else}
+    //
+    {$Endif};
 
 function ShellCopyFile(const ASource, ADest: String; ARenameCheck: Boolean = false): Boolean;
+{$Ifdef Win32}
 var
     sh: TSHFileOpStruct;
 begin
@@ -79,8 +89,14 @@ begin
         sh.fFlags := sh.fFlags or FOF_RENAMEONCOLLISION;
     Result := (ShFileOperation(sh) = 0);
 end;
+{$Else}
+begin
+    {$Message Error 'This function needs to be implemented for Linux!'}
+end;
+{$Endif}
 
 function ShellDeleteFile(FileName : String): Boolean;
+{$Ifdef Win32}
 var
     sh: TSHFileOpStruct;
 begin
@@ -91,10 +107,16 @@ begin
     sh.pTo := #0;
     Result := (ShFileOperation(sh) = 0);
 end;
+{$Else}
+begin
+    {$Message Error 'This function needs to be implemented for Linux!'}
+end;
+{$Endif}
 
 function  ExecuteProgram(const FileName : String; const Params : String;
     const ExecDir : String = ''; const Verb : String = 'runas';
     const WaitForFinish : Boolean = true) : Boolean;
+{$Ifdef Win32}
 var
     ShExecInfo : SHELLEXECUTEINFO;
     ExitCode : Cardinal;
@@ -127,9 +149,15 @@ begin
             GetExitCodeProcess(ShExecInfo.hProcess,ExitCode); //while the process is running
         until (ExitCode <> STILL_ACTIVE);
     end;
-end;   
+end;
+{$Else}
+begin
+    {$Message Error 'This function needs to be implemented for Linux!'}
+end;
+{$Endif}
 
 function ConvertPath(const Path : String) : String;
+{$Ifdef Win32}
 var
     Drive : String;
 begin
@@ -141,6 +169,11 @@ begin
         Result := 'cygdrive/' + Drive[1] + Result;
     end;
     Result := StringReplace(Result,'\','/',[rfReplaceAll]);
+end;     
+{$Else}
+begin
+    Result := StringReplace(Result,'\','/',[rfReplaceAll]);
 end;
+{$Endif}
 
 end.
