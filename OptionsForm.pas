@@ -82,6 +82,7 @@ type
     pnlParam7zip: TPanel;
     lblParam7zip: TLabel;
     edtParam7zip: TEdit;
+    memPathsHelp: TMemo;
     procedure btnProg7zipClick(Sender: TObject);
     procedure btnSchemaClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -149,31 +150,31 @@ end;
 procedure TfrmOptions.btnChmodClick(Sender: TObject);
 begin
     if opdExeFile.Execute then
-        edtProgChmod.Text := opdExeFile.FileName;
+        edtProgChmod.Text := StringReplace(opdExeFile.FileName,ExtractFilePath(Application.ExeName),'',[]);
 end;
 
 procedure TfrmOptions.btnMkSquashClick(Sender: TObject);
 begin
     if opdExeFile.Execute then
-        edtProgMkSquash.Text := opdExeFile.FileName;
+        edtProgMkSquash.Text := StringReplace(opdExeFile.FileName,ExtractFilePath(Application.ExeName),'',[]);
 end;
 
 procedure TfrmOptions.btnUnSquashClick(Sender: TObject);
 begin
     if opdExeFile.Execute then
-        edtProgUnSquash.Text := opdExeFile.FileName;
+        edtProgUnSquash.Text := StringReplace(opdExeFile.FileName,ExtractFilePath(Application.ExeName),'',[]);
 end;   
 
 procedure TfrmOptions.btnProg7zipClick(Sender: TObject);
 begin
     if opdExeFile.Execute then
-        edtProg7zip.Text := opdExeFile.FileName;
+        edtProg7zip.Text := StringReplace(opdExeFile.FileName,ExtractFilePath(Application.ExeName),'',[]);
 end;
 
 procedure TfrmOptions.btnSchemaClick(Sender: TObject);
 begin
     if opdSchema.Execute then
-        edtSchema.Text := opdSchema.FileName;
+        edtSchema.Text := StringReplace(opdExeFile.FileName,ExtractFilePath(Application.ExeName),'',[]);
 end;
 
 procedure TfrmOptions.btnOKClick(Sender: TObject);

@@ -227,6 +227,9 @@ implementation
     // DONE: Option to show message, log or both on error
     // DONE: Add proper licensing information
     // DONE: Scroll down Log automatically to reveal latest line
+    // DONE: Dropping a file onto another file (blue selection) will not trigger the overwrite promt
+    // TODO: Moving a file within PNDTools will not trigger the overwrite promt
+    // TODO: Command line utilities
 
 
 uses

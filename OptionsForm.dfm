@@ -4,7 +4,7 @@ object frmOptions: TfrmOptions
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsDialog
   Caption = 'Options'
-  ClientHeight = 493
+  ClientHeight = 534
   ClientWidth = 510
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -133,7 +133,7 @@ object frmOptions: TfrmOptions
     Left = 4
     Top = 142
     Width = 502
-    Height = 129
+    Height = 172
     Margins.Left = 4
     Margins.Top = 4
     Margins.Right = 4
@@ -307,7 +307,6 @@ object frmOptions: TfrmOptions
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 3
-      ExplicitTop = 78
       object lblSchema: TLabel
         AlignWithMargins = True
         Left = 0
@@ -359,8 +358,6 @@ object frmOptions: TfrmOptions
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 4
-      ExplicitLeft = 8
-      ExplicitTop = 89
       object lblProg7zip: TLabel
         AlignWithMargins = True
         Left = 0
@@ -387,8 +384,6 @@ object frmOptions: TfrmOptions
         Align = alClient
         TabOrder = 0
         Text = 'edtMkSquash'
-        ExplicitLeft = 79
-        ExplicitWidth = 386
       end
       object btnProg7zip: TButton
         Left = 469
@@ -401,11 +396,38 @@ object frmOptions: TfrmOptions
         OnClick = btnProg7zipClick
       end
     end
+    object memPathsHelp: TMemo
+      AlignWithMargins = True
+      Left = 6
+      Top = 124
+      Width = 490
+      Height = 41
+      Margins.Left = 4
+      Margins.Top = 4
+      Margins.Right = 4
+      Margins.Bottom = 0
+      Align = alTop
+      BevelInner = bvNone
+      BevelOuter = bvNone
+      BorderStyle = bsNone
+      Color = clBtnFace
+      Enabled = False
+      Lines.Strings = (
+        
+          'In case of a problem, there are batch scripts available in the t' +
+          'ools folder, which will give you better '
+        
+          'error output. Just change any .exe extension to .bat. Keep in mi' +
+          'nd that parameters below won'#39't '
+        'work in that case, but you can manually edit the scripts.')
+      ReadOnly = True
+      TabOrder = 5
+    end
   end
   object grbParams: TGroupBox
     AlignWithMargins = True
     Left = 4
-    Top = 275
+    Top = 318
     Width = 502
     Height = 182
     Margins.Left = 4
@@ -415,7 +437,6 @@ object frmOptions: TfrmOptions
     Align = alTop
     Caption = '   Parameters   '
     TabOrder = 2
-    ExplicitTop = 277
     object memParams: TMemo
       AlignWithMargins = True
       Left = 6
@@ -583,8 +604,6 @@ object frmOptions: TfrmOptions
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 4
-      ExplicitLeft = 4
-      ExplicitTop = 155
       object lblParam7zip: TLabel
         AlignWithMargins = True
         Left = 0
@@ -617,7 +636,7 @@ object frmOptions: TfrmOptions
   object pnlButtons: TPanel
     AlignWithMargins = True
     Left = 4
-    Top = 464
+    Top = 505
     Width = 502
     Height = 25
     Margins.Left = 4
@@ -627,7 +646,6 @@ object frmOptions: TfrmOptions
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 3
-    ExplicitTop = 417
     object btnCancel: TButton
       Left = 427
       Top = 0

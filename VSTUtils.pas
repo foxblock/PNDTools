@@ -118,7 +118,7 @@ function IsFile(Sender : TBaseVirtualTree; Node: PVirtualNode) : Boolean;
 var
     PData : PFileTreeData;
 begin
-    if Node = nil then
+    if (Node = nil) OR (Node = Sender.RootNode) then
     begin
         Result := false;
         Exit;
@@ -207,6 +207,14 @@ begin
         end;
     end;
 
+    if IsFile(Sender,Parent) then // Files may not be parent/not have children
+    begin // Dropping on a file will add to parent folder (if it exists)
+        if Parent.Parent = Sender.RootNode then // File has no parent folder
+            Parent := nil
+        else
+            Parent := Parent.Parent;
+    end;
+
     // TODO: Clean this mess up
     // Check for existance
     Result := CheckForExistance(Sender,Sender.GetFirstChild(Parent),SR.Name);
@@ -240,8 +248,6 @@ begin
             end;
         end;
     end;
-    if IsFile(Sender,Parent) then // Files may not be parent/not have children
-        Parent := nil;
 
     if (Result = nil) OR ((ConflictAction <> fcReplace) AND (ConflictAction <> fcReplaceAll)) then
     begin

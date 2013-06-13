@@ -29,7 +29,7 @@ interface
 
 uses
     VirtualTrees,
-    vstUtils,
+    VSTUtils,
     ActiveX, ShellAPI, Classes, Types, Windows;
 
 type
