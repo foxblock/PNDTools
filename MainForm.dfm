@@ -116,6 +116,8 @@ object frmMain: TfrmMain
       ClipboardFormats.Strings = (
         'Virtual Tree Data')
       DragMode = dmAutomatic
+      DragOperations = [doMove]
+      DrawSelectionMode = smBlendedRectangle
       Header.AutoSizeIndex = 0
       Header.Font.Charset = DEFAULT_CHARSET
       Header.Font.Color = clWindowText

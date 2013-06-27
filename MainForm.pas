@@ -189,7 +189,7 @@ type
   end;
 
 const
-    VERSION : String           = '0.7.0';
+    VERSION : String           = '0.7.1';
     BUILD_DATE : String        = '2013-04-23';
 
     // Default tool paths
@@ -228,7 +228,7 @@ implementation
     // DONE: Add proper licensing information
     // DONE: Scroll down Log automatically to reveal latest line
     // DONE: Dropping a file onto another file (blue selection) will not trigger the overwrite promt
-    // TODO: Moving a file within PNDTools will not trigger the overwrite promt
+    // DONE: Moving a file within PNDTools will not trigger the overwrite promt
     // TODO: Command line utilities
 
 

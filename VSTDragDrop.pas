@@ -55,7 +55,7 @@ type
 
 implementation
 
-uses ComObj;
+uses ComObj, Dialogs;
 
 procedure TDragEvent.VSTDragDrop(Sender: TBaseVirtualTree;
     Source: TObject; DataObject: IDataObject; Formats: TFormatArray;
@@ -64,11 +64,12 @@ procedure TDragEvent.VSTDragDrop(Sender: TBaseVirtualTree;
 var
     I : Integer;
     MyList : TStringList;
+    Node : PVirtualNode;
 begin
     MyList := TStringList.Create;
     Sender.BeginUpdate;
     try
-        for i := 0 to High(formats) - 1 do
+        for I := 0 to High(formats) - 1 do
         begin
             if Formats[i] = CF_HDROP then // Explorer drop
             begin
@@ -83,18 +84,26 @@ begin
                     AddItemList(Sender,nil,MyList,true);
                 end;
             end else
-            if Formats[i] = CF_VIRTUALTREE then // VirtualTree drop
+            if Formats[I] = CF_VIRTUALTREE then // VirtualTree drop
             begin
                 case Mode of
                     dmNowhere: Sender.ProcessDrop(DataObject,nil,Effect,amAddChildLast);
-                    dmAbove: Sender.ProcessDrop(DataObject,Sender.DropTargetNode,Effect,amInsertBefore);
-                    dmOnNode:
+                    dmAbove:
+                    begin
+                        Node := Sender.GetPrevious(Sender.DropTargetNode,true);
+                        if not IsFile(Sender,Node) then
+                            Sender.ProcessDrop(DataObject,Node,Effect,amAddChildLast)
+                        else
+                            Sender.ProcessDrop(DataObject,Node.Parent,Effect,amAddChildLast)
+                    end;
+                    dmOnNode..dmBelow:
                     begin
                         if not IsFile(Sender,Sender.DropTargetNode) then
-                            Sender.ProcessDrop(DataObject,Sender.DropTargetNode,Effect,amAddChildLast);
+                            Sender.ProcessDrop(DataObject,Sender.DropTargetNode,Effect,amAddChildLast)
+                        else
+                            Sender.ProcessDrop(DataObject,Sender.DropTargetNode.Parent,Effect,amAddChildLast)
                     end;
-                    dmBelow: Sender.ProcessDrop(DataObject,Sender.DropTargetNode,Effect,amInsertAfter);
-                end;                     
+                end;
             end;
         end;
     finally
