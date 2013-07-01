@@ -55,7 +55,7 @@ type
 
 implementation
 
-uses ComObj, Dialogs;
+uses ComObj;
 
 procedure TDragEvent.VSTDragDrop(Sender: TBaseVirtualTree;
     Source: TObject; DataObject: IDataObject; Formats: TFormatArray;
