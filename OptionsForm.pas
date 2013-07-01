@@ -117,14 +117,17 @@ begin
         cbxSmartAdd.Checked := SmartAdd;
         cbxIcons.Checked := ShowIcons;
         cbxBinary.Checked := SizeBinary;
-        edtProgMkSquash.Text := ProgMkSquash;
-        edtProgUnSquash.Text := ProgUnSquash;
-        edtProgChmod.Text := ProgChmod;
-        edtProg7zip.Text := Prog7zip;
-        edtParamMkSquash.Text := ParamMkSquash;
-        edtParamUnSquash.Text := ParamUnSquash;
-        edtParamChmod.Text := ParamChmod;
-        edtParam7zip.Text := Param7zip;
+        with Tools do
+        begin
+            edtProgMkSquash.Text := ProgMkSquash;
+            edtProgUnSquash.Text := ProgUnSquash;
+            edtProgChmod.Text := ProgChmod;
+            edtProg7zip.Text := Prog7zip;
+            edtParamMkSquash.Text := ParamMkSquash;
+            edtParamUnSquash.Text := ParamUnSquash;
+            edtParamChmod.Text := ParamChmod;
+            edtParam7zip.Text := Param7zip;
+        end;
         edtSchema.Text := SchemaFile;
         cobLog.ItemIndex := LogLevel;
         cobDialogue.ItemIndex := DialogueLevel - 1; // no "info" option
@@ -185,14 +188,17 @@ begin
         ShowIcons := cbxIcons.Checked;
         SizeBinary := cbxBinary.Checked;
         ShowIcons := cbxIcons.Checked;
-        ProgMkSquash := edtProgMkSquash.Text;
-        ProgUnSquash := edtProgUnSquash.Text;
-        ProgChmod := edtProgChmod.Text;
-        Prog7zip := edtProg7zip.Text;
-        ParamMkSquash := edtParamMkSquash.Text;
-        ParamUnSquash := edtParamUnSquash.Text;
-        ParamChmod := edtParamChmod.Text;
-        Param7zip := edtParam7zip.Text;
+        with Tools do
+        begin
+            ProgMkSquash := edtProgMkSquash.Text;
+            ProgUnSquash := edtProgUnSquash.Text;
+            ProgChmod := edtProgChmod.Text;
+            Prog7zip := edtProg7zip.Text;
+            ParamMkSquash := edtParamMkSquash.Text;
+            ParamUnSquash := edtParamUnSquash.Text;
+            ParamChmod := edtParamChmod.Text;
+            Param7zip := edtParam7zip.Text;
+        end;
         SchemaFile := edtSchema.Text;
         LogLevel := cobLog.ItemIndex;
         DialogueLevel := cobDialogue.ItemIndex + 1; // no "info" option

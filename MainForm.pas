@@ -37,10 +37,7 @@ type
   TExtractBehaviour = (ebTemp, ebUser, ebAsk);
   TWarningLevel = (wlInfo, wlSuccess, wlWarning, wlError, wlNone);
 
-  rSettings = record
-    SmartAdd : Boolean;
-    ShowIcons : Boolean;
-    SizeBinary : Boolean;
+  rToolSettings = record  
     ProgMkSquash : String;
     ProgUnSquash : String;
     ProgChmod : String;
@@ -49,6 +46,13 @@ type
     ParamUnSquash : String;
     ParamChmod : String;
     Param7zip : String;
+  end;
+
+  rSettings = record
+    SmartAdd : Boolean;
+    ShowIcons : Boolean;
+    SizeBinary : Boolean;
+    Tools : rToolSettings;
     SchemaFile : String;
     LogLevel : Integer;
     DialogueLevel : Integer;
@@ -421,13 +425,13 @@ begin
     LogLine('Extracting PND to ' + Param + '... this might take a while');
     if IsISO then
     begin
-        Prog := Settings.Prog7zip;
-        Param := StringReplace(Settings.Param7zip,SOURCE_VAR,FileName,[rfReplaceAll]);
+        Prog := Settings.Tools.Prog7zip;
+        Param := StringReplace(Settings.Tools.Param7zip,SOURCE_VAR,FileName,[rfReplaceAll]);
         Param := StringReplace(Param,TARGET_VAR,TEMP_PATH,[rfReplaceAll]);
     end else // squashFS
     begin
-        Prog := Settings.ProgUnSquash;
-        Param := StringReplace(Settings.ParamUnSquash,SOURCE_VAR,ConvertPath(FileName),[rfReplaceAll]);
+        Prog := Settings.Tools.ProgUnSquash;
+        Param := StringReplace(Settings.Tools.ParamUnSquash,SOURCE_VAR,ConvertPath(FileName),[rfReplaceAll]);
         Param := StringReplace(Param,TARGET_VAR,ConvertPath(TEMP_PATH),[rfReplaceAll]);
     end;
     LogLine('Calling program: ' + Prog + ' ' + Param);
@@ -494,8 +498,8 @@ begin
     CopyTreeToFolder(vstFiles,Param);
 
     // set corrent file flags to work on the Pandora
-    Prog := Settings.ProgChmod;
-    Param := StringReplace(Settings.ParamChmod,SOURCE_VAR,ConvertPath(TEMP_PATH),[rfReplaceAll]);
+    Prog := Settings.Tools.ProgChmod;
+    Param := StringReplace(Settings.Tools.ParamChmod,SOURCE_VAR,ConvertPath(TEMP_PATH),[rfReplaceAll]);
     LogLine('Calling program: ' + Prog + ' ' + Param);
     if not ExecuteProgram(Prog,Param) then
     begin
@@ -505,8 +509,8 @@ begin
     end;
 
     // Make the squashFS filesystem from the temporary files
-    Prog := Settings.ProgMkSquash;
-    Param := StringReplace(Settings.ParamMkSquash,SOURCE_VAR,ConvertPath(TEMP_PATH),[rfReplaceAll]);
+    Prog := Settings.Tools.ProgMkSquash;
+    Param := StringReplace(Settings.Tools.ParamMkSquash,SOURCE_VAR,ConvertPath(TEMP_PATH),[rfReplaceAll]);
     Param := StringReplace(Param,TARGET_VAR,ConvertPath(FileName),[rfReplaceAll]);
     LogLine('Calling program: ' + Prog + ' ' + Param);
     if not ExecuteProgram(Prog,Param) then
@@ -547,18 +551,21 @@ begin
             SmartAdd := Ini.ReadBool('General','SmartAdd',true);
             ShowIcons := Ini.ReadBool('General','ShowIcons',true);
             SizeBinary := Ini.ReadBool('General','SizeBinary',false);
-            ProgMkSquash := Ini.ReadString('Paths','MkSquash',MKSQUASH_PATH);
-            ProgUnSquash := Ini.ReadString('Paths','UnSquash',UNSQUASHFS_PATH);
-            ProgChmod := Ini.ReadString('Paths','Chmod',CHMOD_PATH);  
-            Prog7zip := Ini.ReadString('Paths','7zip',ZIP_PATH);
-            ParamMkSquash := Ini.ReadString('Params','MkSquash','"' +
-                SOURCE_VAR + '" "' + TARGET_VAR + '" -nopad -no-recovery -noappend');
-            ParamUnSquash := Ini.ReadString('Params','UnSquash','-f -d "' +
-                TARGET_VAR + '" "' + SOURCE_VAR + '"');
-            ParamChmod := Ini.ReadString('Params','Chmod','-R 755 "' +
-                SOURCE_VAR + '"');    
-            Param7zip := Ini.ReadString('Params','7zip','x "' +
-                SOURCE_VAR + '" -o"' + TARGET_VAR + '" -y');
+            with Tools do
+            begin
+                ProgMkSquash := Ini.ReadString('Paths','MkSquash',MKSQUASH_PATH);
+                ProgUnSquash := Ini.ReadString('Paths','UnSquash',UNSQUASHFS_PATH);
+                ProgChmod := Ini.ReadString('Paths','Chmod',CHMOD_PATH);
+                Prog7zip := Ini.ReadString('Paths','7zip',ZIP_PATH);
+                ParamMkSquash := Ini.ReadString('Params','MkSquash','"' +
+                    SOURCE_VAR + '" "' + TARGET_VAR + '" -nopad -no-recovery -noappend');
+                ParamUnSquash := Ini.ReadString('Params','UnSquash','-f -d "' +
+                    TARGET_VAR + '" "' + SOURCE_VAR + '"');
+                ParamChmod := Ini.ReadString('Params','Chmod','-R 755 "' +
+                    SOURCE_VAR + '"');
+                Param7zip := Ini.ReadString('Params','7zip','x "' +
+                    SOURCE_VAR + '" -o"' + TARGET_VAR + '" -y');
+            end;
             SchemaFile := Ini.ReadString('Paths','Schema',SCHEMA_PATH);
             LogLevel := Ini.ReadInteger('General','LogLevel',Ord(wlInfo));
             DialogueLevel := Ini.ReadInteger('General','DialogueLevel',Ord(wlError));
@@ -582,14 +589,17 @@ begin
             Ini.WriteBool('General','SmartAdd',SmartAdd);
             Ini.WriteBool('General','ShowIcons',ShowIcons);
             Ini.WriteBool('General','SizeBinary',SizeBinary);
-            Ini.WriteString('Paths','MkSquash',ProgMkSquash);
-            Ini.WriteString('Paths','UnSquash',ProgUnSquash);
-            Ini.WriteString('Paths','Chmod',ProgChmod);     
-            Ini.WriteString('Paths','7zip',Prog7zip);
-            Ini.WriteString('Params','MkSquash',ParamMkSquash);
-            Ini.WriteString('Params','UnSquash',ParamUnSquash);
-            Ini.WriteString('Params','Chmod',ParamChmod);   
-            Ini.WriteString('Params','7zip',Param7zip);
+            with Tools do
+            begin
+                Ini.WriteString('Paths','MkSquash',ProgMkSquash);
+                Ini.WriteString('Paths','UnSquash',ProgUnSquash);
+                Ini.WriteString('Paths','Chmod',ProgChmod);
+                Ini.WriteString('Paths','7zip',Prog7zip);
+                Ini.WriteString('Params','MkSquash',ParamMkSquash);
+                Ini.WriteString('Params','UnSquash',ParamUnSquash);
+                Ini.WriteString('Params','Chmod',ParamChmod);
+                Ini.WriteString('Params','7zip',Param7zip);
+            end;
             Ini.WriteString('Paths','Schema',SchemaFile);
             Ini.WriteInteger('General','LogLevel',LogLevel); 
             Ini.WriteInteger('General','DialogueLevel',DialogueLevel);

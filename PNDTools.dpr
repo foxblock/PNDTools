@@ -17,7 +17,8 @@ uses
   FileSelectForm in 'FileSelectForm.pas' {frmFileSelect},
   GraphicUtils in 'GraphicUtils.pas',
   AboutForm in 'AboutForm.pas' {frmAbout},
-  FileConflictForm in 'FileConflictForm.pas' {frmFileConflict};
+  FileConflictForm in 'FileConflictForm.pas' {frmFileConflict},
+  PNDUtils in 'PNDUtils.pas';
 
 {$R *.res}
 
