@@ -189,8 +189,8 @@ type
   end;
 
 const
-    VERSION : String           = '0.7.1';
-    BUILD_DATE : String        = '2013-04-23';
+    VERSION : String           = '0.7.2';
+    BUILD_DATE : String        = '2014-06-03';
 
     // Default tool paths
     UNSQUASHFS_PATH : String   = 'tools\unsquashfs.exe';
@@ -230,7 +230,7 @@ implementation
     // DONE: Dropping a file onto another file (blue selection) will not trigger the overwrite promt
     // DONE: Moving a file within PNDTools will not trigger the overwrite promt
     // TODO: Command line utilities
-    // TODO: "Open folder": explorer.exe /select
+    // DONE: "Open folder": explorer.exe /select
 
 
 uses
@@ -706,7 +706,8 @@ var
 begin
     Node := vstFiles.GetFirstSelected();
     PData := vstFiles.GetNodeData(Node);
-    ExecuteProgram(ExtractFilePath(PData.Name),'','','explore',false);
+    ExecuteProgram('explorer','/select,"' + PData.Name + '"','','runas',false);
+    //ExecuteProgram(ExtractFilePath(PData.Name),'','','explore',false);
 end;
 
 procedure TfrmMain.pomFilesOpenClick(Sender: TObject);
