@@ -230,6 +230,7 @@ implementation
     // DONE: Dropping a file onto another file (blue selection) will not trigger the overwrite promt
     // DONE: Moving a file within PNDTools will not trigger the overwrite promt
     // TODO: Command line utilities
+    // TODO: "Open folder": explorer.exe /select
 
 
 uses
