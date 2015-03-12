@@ -189,14 +189,14 @@ type
   end;
 
 const
-    VERSION : String           = '0.7.2';
-    BUILD_DATE : String        = '2014-06-03';
+    VERSION : String           = '0.7.3';
+    BUILD_DATE : String        = '2015-03-12';
 
     // Default tool paths
     UNSQUASHFS_PATH : String   = 'tools\unsquashfs.exe';
     MKSQUASH_PATH : String     = 'tools\mksquashfs.exe';
     CHMOD_PATH : String        = 'tools\chmod.exe';
-    ZIP_PATH : String         = 'tools\7z.exe';
+    ZIP_PATH : String          = 'tools\7z.exe';
     SETTINGS_PATH : String     = 'settings.ini';
     SCHEMA_PATH : String       = 'tools\PXML_schema.xml';
 
@@ -231,6 +231,7 @@ implementation
     // DONE: Moving a file within PNDTools will not trigger the overwrite promt
     // TODO: Command line utilities
     // DONE: "Open folder": explorer.exe /select
+    // DONE: Add warnings to PXML Creator (no description, no icon, etc.)
 
 
 uses

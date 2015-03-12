@@ -27,7 +27,7 @@ object frmCreator: TfrmCreator
     Margins.Top = 0
     Margins.Right = 0
     Margins.Bottom = 0
-    ActivePage = pgcMain1
+    ActivePage = pgcMain5
     Align = alClient
     MultiLine = True
     Style = tsFlatButtons
@@ -420,14 +420,14 @@ object frmCreator: TfrmCreator
         Margins.Right = 4
         Margins.Bottom = 0
         Align = alTop
-        Caption = 'Description'
+        Caption = 'Description (optional)'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 64
+        ExplicitWidth = 123
       end
       object lblExe: TLabel
         AlignWithMargins = True
@@ -685,10 +685,10 @@ object frmCreator: TfrmCreator
       object cbxExeSettings: TCheckBox
         Left = 18
         Top = 205
-        Width = 197
+        Width = 255
         Height = 17
         Anchors = [akLeft, akBottom]
-        Caption = 'Advanced Executable Settings'
+        Caption = 'Advanced Executable Settings (optional)'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -11
@@ -1135,7 +1135,7 @@ object frmCreator: TfrmCreator
         Margins.Right = 0
         Margins.Bottom = 0
         Align = alClient
-        Caption = '   Screenshots   '
+        Caption = '   Screenshots (optional)   '
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -11
@@ -1258,7 +1258,7 @@ object frmCreator: TfrmCreator
         Margins.Right = 0
         Margins.Bottom = 4
         Align = alTop
-        Caption = '   Icon   '
+        Caption = '   Icon (optional)   '
         DragMode = dmAutomatic
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -1783,7 +1783,7 @@ object frmCreator: TfrmCreator
         Margins.Right = 0
         Margins.Bottom = 0
         Align = alTop
-        Caption = '   Advanced   '
+        Caption = '   Advanced (optional)   '
         Constraints.MaxHeight = 256
         Constraints.MinHeight = 18
         Font.Charset = DEFAULT_CHARSET

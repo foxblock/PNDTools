@@ -226,6 +226,8 @@ var
   // Starting point of double-linked list of TScreenshotPanels
   First : TScreenshotPanel;
   Successful : Boolean;
+  ErrorCount : Integer;
+  WarningCount : Integer;
 
 implementation
 
@@ -235,7 +237,8 @@ uses {$Ifdef Win32}ControlHideFix,{$Endif} MainForm, FileSelectForm, StrUtils,
 {$R *.dfm}
 
 procedure TfrmCreator.ChangeVersionNumber(Target: TCustomEdit; const Delta: Integer);
-var temp : Integer;
+var
+    temp : Integer;
 begin
     // TODO: Extract numbers from Strings with letters also
     try
@@ -257,53 +260,71 @@ begin
     redErrors.SelLength := Length(redErrors.Text) - redErrors.SelStart;
     redErrors.SelAttributes.Color := Color;
     redErrors.SelLength := 0;
+    if Color = frmMain.LOG_ERROR_COLOR then
+        Inc(ErrorCount)
+    else if Color = frmMain.LOG_WARNING_COLOR then
+        Inc(WarningCount);
 end;
 
 procedure TfrmCreator.CheckForErrors;
 begin         
     redErrors.Clear;
+    ErrorCount := 0;
+    WarningCount := 0;
     // Page 2
     if (Length(edtName.Text) = 0) then
-        AddError('Invalid or no author name specified!',frmMain.LOG_ERROR_COLOR);
+        AddError('No author name specified! (2)',frmMain.LOG_ERROR_COLOR);
     if (cbxPort.Checked) AND (Length(edtAppAuthor.Text) = 0) then
-        AddError('Invalid or no name for the application author entered!',frmMain.LOG_ERROR_COLOR);
+        AddError('No name for the application author entered! (2)',frmMain.LOG_ERROR_COLOR);
     // Page 3
     if (Length(edtTitle.Text) = 0) then
-        AddError('Invalid or no title set!',frmMain.LOG_ERROR_COLOR);
+        AddError('No title set! (3)',frmMain.LOG_ERROR_COLOR);
+    if (Length(memDescription.Text) = 0) then
+        AddError('No application description has been entered. (3)',frmMain.LOG_WARNING_COLOR);
     if Length(edtExe.Text) = 0 then
-        AddError('No executable specified!',frmMain.LOG_ERROR_COLOR)
+        AddError('No executable specified! (3)',frmMain.LOG_ERROR_COLOR)
     else if CheckForExistance(frmMain.vstFiles,edtExe.Text) = nil then
-        AddError('The selected executable does not exist!',frmMain.LOG_ERROR_COLOR);
+        AddError('The selected executable does not exist! (3)',frmMain.LOG_ERROR_COLOR);
     if Length(cobCategory.Text) = 0 then
-        AddError('No category specified!',frmMain.LOG_ERROR_COLOR);
+        AddError('No category specified! (3)',frmMain.LOG_ERROR_COLOR);
     if Length(cobSubcategory.Text) = 0 then
-        AddError('No sub-category set!',frmMain.LOG_ERROR_COLOR);
+        AddError('No sub-category set! (3)',frmMain.LOG_ERROR_COLOR);
     // Page 4
     if Length(edtIcon.Text) = 0 then
-        AddError('No icon specified!',frmMain.LOG_ERROR_COLOR)
+        AddError('No icon specified. (4)',frmMain.LOG_WARNING_COLOR)
     else if CheckForExistance(frmMain.vstFiles,edtIcon.Text) = nil then
-        AddError('The specified icon does not exist!',frmMain.LOG_ERROR_COLOR);
+        AddError('The specified icon does not exist! (4)',frmMain.LOG_ERROR_COLOR);
     if First = nil then
-        AddError('No screenshots added!',frmMain.LOG_ERROR_COLOR);
+        AddError('No screenshots added. (4)',frmMain.LOG_WARNING_COLOR);
     // Page 5
+    if (Length(edtInfoFile.Text) = 0) AND (Length(edtInfoName.Text) = 0) then
+        AddError('No info/readme specified. (5)',frmMain.LOG_WARNING_COLOR)
+    else if (Length(edtInfoFile.Text) = 0) OR (Length(edtInfoName.Text) = 0) then
+        AddError('You need to input an info file AND name (or neither)! (5)',frmMain.LOG_ERROR_COLOR);
+    if (Length(edtInfoFile.Text) > 0) then
+        if CheckForExistance(frmMain.vstFiles,edtExe.Text) = nil then
+            AddError('Selected info file does not exist in the PND! (5)',frmMain.LOG_ERROR_COLOR); 
     if Length(cobLicense.Text) = 0 then
-        AddError('No license set!',frmMain.LOG_ERROR_COLOR);
+        AddError('No license set! (5)',frmMain.LOG_ERROR_COLOR);
     if cbxAdvanced.Checked then
     begin
         if Length(edtID.Text) = 0 then
-            AddError('Invalid ID entered!',frmMain.LOG_ERROR_COLOR);
-        if Length(edtAppdata.Text) = 0 then
-            AddError('Invalid appdata directory entered!',frmMain.LOG_ERROR_COLOR);
+            AddError('Invalid ID entered! (5)',frmMain.LOG_ERROR_COLOR);
     end;
-    
 
-    if redErrors.Lines.Count = 0 then
+    if (ErrorCount = 0) AND (WarningCount = 0) then
     begin
         AddError('All valid, good job! The PXML can now be created by pressing the ''Finish'' button at the bottom.',frmMain.LOG_SUCCESS_COLOR);
         btnNext.Enabled := true;
+    end else if (ErrorCount = 0) then
+    begin
+        AddError('',frmMain.LOG_INFO_COLOR);
+        AddError('This PXML is technically valid, however there are a few warnings. You don''t need to fix these, although it is highly recommended!',frmMain.LOG_WARNING_COLOR);
+        btnNext.Enabled := true;
     end else
-    begin  
-        AddError('You need to go back and fix these errors before the PXML can be created.',frmMain.LOG_ERROR_COLOR);
+    begin
+        AddError('',frmMain.LOG_INFO_COLOR);
+        AddError('You need to go back and fix these errors before the PXML can be created!',frmMain.LOG_ERROR_COLOR);
         btnNext.Enabled := false;
     end;
 end;
@@ -339,9 +360,12 @@ function TfrmCreator.SavePXMLFile(const Filename: string) : Boolean;
         temp := CreateNode('title',CreateNode('titles',Node));
         temp.Attributes['lang'] := 'en_US';
         temp.NodeValue := edtTitle.Text;
-        temp := CreateNode('description',CreateNode('descriptions',Node));
-        temp.Attributes['lang'] := 'en_US';
-        temp.NodeValue := memDescription.Text;
+        if Length(memDescription.Text) > 0 then
+        begin
+            temp := CreateNode('description',CreateNode('descriptions',Node));
+            temp.Attributes['lang'] := 'en_US';
+            temp.NodeValue := memDescription.Text;
+        end;
     end;
 
 var Doc : IXMLDocument;
@@ -388,30 +412,37 @@ begin
         SetTitleDescrInfo(appNode);
         temp := Doc.CreateNode('Extra block for compatibility with OS versions before HF6',ntComment);
         appNode.ChildNodes.Add(temp);
-        temp := CreateNode('title',appNode);
-        temp.Attributes['lang'] := 'en_US';
+        temp := CreateNode('title',appNode); 
+        temp.Attributes['lang'] := 'en_US';  
         temp.NodeValue := edtTitle.Text;
-        temp := CreateNode('description',appNode);
-        temp.Attributes['lang'] := 'en_US';
-        temp.NodeValue := memDescription.Text;
+        if Length(memDescription.Text) > 0 then
+        begin
+            temp := CreateNode('description',appNode);
+            temp.Attributes['lang'] := 'en_US';
+            temp.NodeValue := memDescription.Text;
+        end;
         temp := Doc.CreateNode('END Extra block',ntComment);
         appNode.ChildNodes.Add(temp);
-        temp := CreateNode('icon',appNode);
-        temp.Attributes['src'] := edtIcon.Text;
         temp := CreateNode('license',CreateNode('licenses',appNode));
         temp.Attributes['name'] := cobLicense.Text;
         if Length(edtLicenseURL.Text) > 0 then
             temp.Attributes['url'] := edtLicenseURL.Text;
         if Length(edtSourceURL.Text) > 0 then
             temp.Attributes['sourcecodeurl'] := edtSourceURL.Text;
-        temp := CreateNode('icon',appNode);
-        temp.Attributes['src'] := edtIcon.Text;
-        temp := CreateNode('previewpics',appNode);
-        tempScreen := First;
-        while tempScreen <> nil do
+        if Length(edtIcon.Text) > 0 then
         begin
-            CreateNode('pic',temp).Attributes['src'] := tempScreen.Filename;
-            tempScreen := tempScreen.Next;
+            temp := CreateNode('icon',appNode);
+            temp.Attributes['src'] := edtIcon.Text;
+        end;
+        if First <> nil then
+        begin
+            temp := CreateNode('previewpics',appNode);
+            tempScreen := First;
+            while tempScreen <> nil do
+            begin
+                CreateNode('pic',temp).Attributes['src'] := tempScreen.Filename;
+                tempScreen := tempScreen.Next;
+            end;
         end;
         if (Length(edtInfoFile.Text) > 0) AND (Length(edtInfoName.Text) > 0) then
         begin

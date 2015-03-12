@@ -18,14 +18,15 @@
 		<titles>
 			<title lang="en_US">Title of the application</title>
 		</titles>
-		<title lang="en_US">Title of the application (element for pre HF6 compatibility)</title> 
+		<title lang="en_US">Title of the application (element for pre HF6 compatibility, just copy the same title)</title> 
 		<descriptions>
-			<description lang="en_US">Short description of the application</description>
+			<description lang="en_US">Short description of the application (optional, you may delete this and its parent node)</description>
 		</descriptions>
-		<description lang="en_US">Short description of the application (element for pre HF6 compatibility)</description>
+		<description lang="en_US">Short description of the application (element for pre HF6 compatibility, just copy the same description text)</description>
 		<licenses>
 			<license name="License name"/>
 		</licenses>
+		<icon src="path_to_icon"/>
 		<categories>
 			<category name="Main category">
 				<subcategory name="Sub category matching the used main category"/>

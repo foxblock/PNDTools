@@ -52,10 +52,10 @@
       <description lang="required,string,language" elemdesc="descriptions\descriptions.rtf" max="0">CONTENT</description>
     </descriptions>
     <description lang="required,string,language" elemdesc="descriptions\descriptions.rtf">CONTENT</description> <!--Extra block for compatibility with OS versions before HF6-->
-    <icon src="required,string,path" elemdesc="descriptions\icon.rtf"/>
     <licenses elemdesc="descriptions\license.rtf" min="0">
       <license name="required,string" url="optional,string" sourcecodeurl="optional,string" elemdesc="descriptions\license.rtf" max="0"/>
     </licenses>
+    <icon src="required,string,path" elemdesc="descriptions\icon.rtf"/>
     <previewpics elemdesc="descriptions\previewpics.rtf" min="0">
       <pic src="required,string,path" elemdesc="descriptions\previewpics.rtf" max="0"/>
     </previewpics> 
