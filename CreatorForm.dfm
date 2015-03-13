@@ -1173,7 +1173,7 @@ object frmCreator: TfrmCreator
             
               'Put the most representive screenshot at the top of the list, it ' +
               'will be displayed first (or only) by '
-            'applications like PNDManager or PND websites.')
+            'applications like PNDManager or PND repository websites.')
           ParentFont = False
           ReadOnly = True
           TabOrder = 0

@@ -174,6 +174,9 @@ type
     function SavePXMLFile(const Filename : String) : Boolean;
     { Load icon from file and render it to the TImage component }
     procedure LoadIcon(const Filename : String);
+    { Render a placeholder graphic in case of a missing or erroneous image to
+      the passed TImage component }
+    procedure DrawMissingIcon(img : TImage);
     { Reverse lookup the filename on the disk) for the icon set in the creator
       (which was set as the local filename in the PND)
       Returns nil if icon cannot be found inside the PND's content }
@@ -484,21 +487,68 @@ begin
         imgIcon.Canvas.FillRect(Rect(0,0,imgIcon.Width,imgIcon.Height));
         imgIcon.Canvas.StretchDraw(GetStretchRect(temp.Width,temp.Height,
             imgIcon.Width,imgIcon.Height),temp.Graphic);
-        lblIconInfo.Caption := UpperCase(ExtractFileExt(Filename)) + ', ' +
+        lblIconInfo.Caption := UpperCase(MidStr(ExtractFileExt(Filename),2,6)) + ', ' +
                                IntToStr(temp.Width) + 'x' + IntToStr(temp.Height);
         temp.Free;
     except
         // Draw "missing" image
-        imgIcon.Canvas.Brush.Color := clWhite;
-        imgIcon.Canvas.Pen.Color := clBlack;
-        imgIcon.Canvas.Pen.Width := 2;
-        imgIcon.Canvas.Rectangle(0,0,imgIcon.Width,imgIcon.Height);
-        imgIcon.Canvas.MoveTo(0,0);
-        imgIcon.Canvas.LineTo(imgIcon.Width,imgIcon.Height);
-        imgIcon.Canvas.MoveTo(imgIcon.Width,0);
-        imgIcon.Canvas.LineTo(0,imgIcon.Height);
+        DrawMissingIcon(imgIcon);
         lblIconInfo.Caption := 'No icon loaded';
         temp.Free;
+    end;
+end;
+
+procedure TfrmCreator.DrawMissingIcon(img: TImage);
+var s1, s2, s3, sp, h : Integer;
+const spacing : Integer = 2;
+begin
+    img.Canvas.Brush.Color := clGray;
+    img.Canvas.Pen.Color := clSilver;
+    img.Canvas.Font.Color := img.Canvas.Pen.Color;
+    img.Canvas.Font.Style := img.Canvas.Font.Style + [fsBold]; 
+    img.Canvas.Pen.Width := 2; 
+    img.Canvas.FillRect(Rect(0,0,img.Width,img.Height));
+
+    // Check whether there is enough room for a placeholder text
+    // (also check multi-line configurations)
+    // else draw generic cross image
+    s1 := img.Canvas.TextWidth('NO');
+    s2 := img.Canvas.TextWidth('PREVIEW');
+    s3 := img.Canvas.TextWidth('AVAILABLE');
+    sp := img.Canvas.TextWidth(' ');
+    h := img.Canvas.TextHeight('N');
+    // I use the extra width of one space to determine how many lines to use, so
+    // the text ends up with some margin around it and does not looked too crammed
+    if (img.Width > s1 + s2 + s3 + 2*sp) AND (img.Height > h) then // one line
+    begin
+        img.Canvas.TextOut(Round((img.Width - s1 - s2 - s3 - 2*sp) / 2.0),
+            Round((img.Height - h) / 2.0),
+            'NO PREVIEW AVAILABLE');
+    end else if (img.Width > s1 + s2 + sp) AND (img.Height > 2*h + spacing) then // two lines
+    begin
+        img.Canvas.TextOut(Round((img.Width - s1 - s2 - sp) / 2.0),
+            Round((img.Height - 2*h - spacing) / 2.0),
+            'NO PREVIEW');  
+        img.Canvas.TextOut(Round((img.Width - s3) / 2.0),
+            Round((img.Height - 2*h - spacing) / 2.0 + h + spacing),
+            'AVAILABLE');
+    end else if (img.Width > s3) AND (img.Height > 3*h + 2*spacing) then // three lines
+    begin
+        img.Canvas.TextOut(Round((img.Width - s1) / 2.0),
+            Round((img.Height - 3*h - 2*spacing) / 2.0),
+            'NO');
+        img.Canvas.TextOut(Round((img.Width - s2) / 2.0),
+            Round((img.Height - 3*h - 2*spacing) / 2.0 + h + spacing),
+            'PREVIEW'); 
+        img.Canvas.TextOut(Round((img.Width - s3) / 2.0),
+            Round((img.Height - 3*h - 2*spacing) / 2.0 + 2*h + 2*spacing),
+            'AVAILABLE');
+    end else // generic image
+    begin
+        img.Canvas.MoveTo(0,0);
+        img.Canvas.LineTo(img.Width,img.Height);
+        img.Canvas.MoveTo(img.Width,0);
+        img.Canvas.LineTo(0,img.Height);
     end;
 end;
 
@@ -585,7 +635,8 @@ begin
     LoadIcon('');
     pgcMain.ActivePageIndex := 0; 
     btnPrev.Enabled := false;    
-    btnNext.Caption := 'Next ->';
+    btnNext.Caption := 'Next ->';   
+    btnCancel.Caption := 'Cancel';
     ShowModal;
     Result := Successful;
 end;
@@ -617,7 +668,6 @@ end;
 
 procedure TfrmCreator.btnCancelClick(Sender: TObject);
 begin
-    Successful := false;
     Close;
 end;
 
@@ -673,7 +723,12 @@ begin
             begin
                 FFilename := sadPXML.Filename;
                 Successful := true;
-                Close;
+                MessageDlg('PXML successfully created and saved to:'#13#10 +
+                    FFilename + #13#10 +
+                    'You may close the PXMLCreator now by pressing the button in the bottom-right corner.'#13#10 +
+                    'Alternatively check the PXML for errors, make changes to the data you''ve input and'#13#10 +
+                    'create another file by pressing the finish button again.',mtInformation,[mbOK],0);
+                btnCancel.Caption := 'Close';
             end else
                 MessageDlg('An error occurred while attempting to save PXML file.'#13#10 +
                     'Sorry about that...'#13#10 +
@@ -803,7 +858,9 @@ begin
         end;
     end;
     if pgcMain.ActivePageIndex = pgcMain.PageCount-1 then // Finish tab
-       btnNext.Caption := 'Finish...'
+    begin
+       btnNext.Caption := 'Finish...';
+    end
     else
         begin
         btnNext.Caption := 'Next ->';
@@ -1053,11 +1110,12 @@ begin
         imgScreenshot.Canvas.FillRect(Rect(0,0,imgScreenshot.Width,imgScreenshot.Height));
         imgScreenshot.Canvas.StretchDraw(GetStretchRect(temp.Width,temp.Height,
             imgScreenshot.Width,imgScreenshot.Height),temp.Graphic);
-        lblSize.Caption := UpperCase(ExtractFileExt(Filename)) + ', ' +
+        lblSize.Caption := UpperCase(MidStr(ExtractFileExt(Filename),2,6)) + ', ' +
                             IntToStr(temp.Width) + 'x' + IntToStr(temp.Height);
         temp.Free;
     except
-        lblSize.Caption := 'No icon loaded';
+        frmCreator.DrawMissingIcon(imgScreenshot);
+        lblSize.Caption := 'Error loading icon preview';
         temp.Free;
     end;
 end;

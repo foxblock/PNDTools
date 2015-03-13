@@ -1006,11 +1006,13 @@ begin
     if not IsExistingFile then
         MessageDlg('The necessary structure for a valid PXML file will be auto-generated.'#13#10 +
                    'You must enter valid data to all those nodes (execpt where optional).'#13#10 +
-                   'It is also recommended you add optional data such as an icon to make your PND'#13#10 +
-                   'more recognizable. You can do so with the buttons at the bottom of the window.'#13#10 +
-                   'Click on nodes in the structure on the left to show input fields to their values.'#13#10 +
-                   'Don''t forget to update mandatory package information, such as id and name, on'#13#10 +
-                   'the application and package tags!',
+                   'A description and icon for example are optional and may be removed, '#13#10 +
+                   'but it is still highly recommended you fill these out anyway to make '#13#10 +
+                   'your PND more recognisable.'#13#10 +
+                   'You can add new nodes with the buttons at the bottom of the window.'#13#10 +
+                   'The selection of buttons is dependent on which node you have selected.'#13#10 +
+                   'Don''t forget to update mandatory package information, such as id and'#13#10 +
+                   'name, on the application and package tags!',
                    mtInformation,[mbOK],0);
 end;
 

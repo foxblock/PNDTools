@@ -190,7 +190,7 @@ type
 
 const
     VERSION : String           = '0.7.3';
-    BUILD_DATE : String        = '2015-03-12';
+    BUILD_DATE : String        = '2015-03-13';
 
     // Default tool paths
     UNSQUASHFS_PATH : String   = 'tools\unsquashfs.exe';
@@ -232,6 +232,8 @@ implementation
     // TODO: Command line utilities
     // DONE: "Open folder": explorer.exe /select
     // DONE: Add warnings to PXML Creator (no description, no icon, etc.)
+    // DONE: Don't close PXMLCreator automatically, instead change "Cancel" to "Close" and alert user to press that
+    // DONE: Investigate adding gifs as screenshots (better display if not able to load)
 
 
 uses
