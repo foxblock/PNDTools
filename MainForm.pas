@@ -213,7 +213,7 @@ implementation
 
 
     // DONE: Graphical browser and editor for the PXML
-    // TODO: Display icon
+    // TODO: Display icon in main form
     // DONE: Ask for overwrite on copy to file tree
     // DONE: Open PND
     // DONE: Show total uncompressed size
@@ -234,6 +234,8 @@ implementation
     // DONE: Add warnings to PXML Creator (no description, no icon, etc.)
     // DONE: Don't close PXMLCreator automatically, instead change "Cancel" to "Close" and alert user to press that
     // DONE: Investigate adding gifs as screenshots (better display if not able to load)
+    // TODO: Better error handling when tools cannot be found (open/save PND)
+    // TODO: Configure button in OptionsForm to generate mksquashfs and unsquashfs options (for beginners)
 
 
 uses
@@ -460,8 +462,8 @@ begin
     if vstFiles.GetFirst = nil then
         LogLine('No files have been added, this most likely is due to an ' +
                 'error while extracting the PND.'#13#10 +
-                'The PND might use the ISO file-system, in which case you can '+
-                'simply open it in a program like 7-zip or WinRAR.',wlError)
+                'You can get a more detailed error report, by using the supplied '+
+                'batch scripts. See the Readme.txt for more info and how to use them.',wlError)
     else
         LogLine('PND successfully extracted to ' +
             ExtractFilePath(Application.ExeName) + TEMP_PATH,wlSuccess);

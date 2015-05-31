@@ -65,6 +65,9 @@ object frmAbout: TfrmAbout
       
         '   http://fragilematter.blogspot.de/2010/02/squashfs-tools-40-wi' +
         'ndows-binaries.html'
+      
+        '   http://domoticx.com/bestandssysteem-squashfs-tools-linux/ (4.' +
+        '3 version)'
       'Cygwin packages under the GPL'
       '   http://www.cygwin.com/'
       '7zip command line utility under the LGPL'
